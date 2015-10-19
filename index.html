@@ -1,22 +1,23 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title></title>
-    <meta content="">
-    <style></style>
+    <title>Design and fill your form easily</title>
+    <meta content="utf8">
 
-    <!-- Stuff that is only required in this demo (no need to copy) -->
-    <link rel="stylesheet" href="framework/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="framework/vendor/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="framework/vendor/prism.css">
-    <link rel="stylesheet" href="framework/demo-framework.css">
-    <link rel="stylesheet" type="text/css" href="nested/nested.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/framework.css">
+    <link rel="stylesheet" href="assets/css/dragdroplist.css" />
+    <link rel="stylesheet" href="assets/css/formless3.css" />
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-    <script src="angular-drag-and-drop-lists.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/angular.js"></script>
+    <script src="assets/js/angular-route.js"></script>
+    
+    <script src="app/angular-drag-and-drop-lists.js"></script>
+    <script src="app/formless3.js"></script>    
   </head>
-<body ng-app="demo">
-    	<div class="container nestedDemo" ng-controller="NestedListsDemoController">
+<body ng-app="MainApp">
+	<div class="container nestedDemo" ng-controller="FormDesignCtr">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -35,7 +36,7 @@
 		</li>
 	    </ul>
 	</script>
-
+	
 	<!-- This template is responsible for rendering a container element. It uses
 	     the above list template to render each container column -->
 	<script type="text/ng-template" id="container.html">
@@ -45,33 +46,33 @@
 		<div class="clearfix"></div>
 	    </div>
 	</script>
-
+	
 	<!-- Template for a normal list item -->
 	<script type="text/ng-template" id="item.html">
 	    <div class="item">Item {{item.id}}</div>
 	</script>
-
+	
 	<!-- Main area with dropzones and source code -->
 	<div class="col-md-10">
 	    <div class="row">
-		<div ng-repeat="(zone, list) in models.dropzones" class="col-md-6">
+		<div ng-repeat="(zone, list) in models.dropzones" class="col-md-12">
 		    <div class="dropzone box box-yellow">
 		        <!-- The dropzone also uses the list template -->
-		        <h3>Dropzone {{zone}}</h3>
+		        <h3> {{zone}}</h3>
 		        <div ng-include="'list.html'"></div>
 		    </div>
 		</div>
 	    </div>
-
+	
 	    <div view-source="nested" highlight-lines="{markup: '1-18, 20-28, 40-42, 57-68, 78-82'}"></div>
-
+	
 	    <h2>Generated Model</h2>
 	    <pre>{{modelAsJson}}</pre>
 	</div>
-
+	
 	<!-- Sidebar -->
 	<div class="col-md-2">
-
+	
 	    <div class="toolbox box box-grey box-padding">
 		<h3>New Elements</h3>
 		<ul>
@@ -86,21 +87,23 @@
 		    </li>
 		</ul>
 	    </div>
-
+	
 	    <div ng-if="models.selected" class="box box-grey box-padding">
 		<h3>Selected</h3>
 		<strong>Type: </strong> {{models.selected.type}}<br>
 		<input type="text" ng-model="models.selected.id" class="form-control" style="margin-top: 5px" />
 	    </div>
-
+	
 	    <div class="trashcan box box-grey box-padding">
 		<!-- If you use [] as referenced list, the dropped elements will be lost -->
 		<h3>Trashcan</h3>
 		<ul dnd-list="[]">
-		    <li><img src="trashcan.jpg"></li>
+		    <li>
+		    	<img src="assets/img/trashcan.png">
+		    </li>
 		</ul>
 	    </div>
-
+	
 	</div>
 </body>
 </html>
