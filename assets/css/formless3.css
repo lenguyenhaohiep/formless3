@@ -1,3 +1,54 @@
 .nestedDemo .dropzone .container-element .column {
 	width: 100%;
 }
+
+.list-field{
+	padding-left: 0;
+	overflow: scroll;
+	width: auto;
+	white-space: nowrap;
+}
+.list-field-item{
+	text-align: center;
+	height: 60px;
+	min-width: 100px;
+	background-color: #f9f9f9;
+	border: 1px solid #fff;
+	padding: 10px;
+	font-size: 12px;
+	display: inline-block;
+	margin: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.list-field-item:hover{
+	color: white;
+	background-color: #245580;
+}
+
+.glyphicon {
+    margin-top: 0px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.glyphicon-text {
+    display: block;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.ribbon-tab{
+	border: 1px solid #ddd;
+	border-top: none;
+	border-radius: 0px 0px 4px 4px;
+}
+
+.ribbon {
+	margin-bottom: 20px;
+}
+
+.container{
+	margin-top: -60px;
+}
