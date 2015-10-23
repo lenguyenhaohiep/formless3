@@ -45,7 +45,7 @@
 	     the above list template to render each container column -->
 	<script type="text/ng-template" id="container.html">
 	    <div class="container-element box box-blue">
-		<h3>Container {{item.id}}</h3>
+		<h3>{{item.name}} {{item.id}}</h3>
 		<div class="column" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
 		<div class="clearfix"></div>
 	    </div>
@@ -54,13 +54,19 @@
 	<!-- Template for a normal list item -->
 	<script type="text/ng-template" id="item.html">
 	    <div class="item">
-	    	{{item.label}}
-	    	<html-render html="{{item.component}}"></html-render>
+	    	<div class='label-block'>
+	    		<label class='label-field'>{{item.label}}</label>
+	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
+	    	</div>
+	    	<div class='item-block'>
+	    		<html-render html="{{item.component}}"></html-render>
+    			<div bind-unsafe-html="{{item.component}}"></div>
+	    	</div>
 	    </div>
 	</script>
 	
 	<!-- Main area with dropzones and source code -->
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<div class="ribbon">
 		  <uib-tabset>
 		    <uib-tab heading="File">	
@@ -106,7 +112,7 @@
 		    <uib-tab heading="Objects">
 		    <div class='ribbon-tab'>
 			    <div class="list-field">
-				    <div class="list-field-item" ng-repeat="item in models.templates"
+				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type: 'item'}"
 				        dnd-draggable="item"
 				        dnd-effect-allowed="copy"
 				        dnd-copied="item.id = item.id + 1">
@@ -119,7 +125,7 @@
 		    <uib-tab heading="Fields">
 		    <div class='ribbon-tab'>
 		    	<div class="list-field">
-				    <div class="list-field-item" ng-repeat="item in models.templates"
+				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'container'}"
 				        dnd-draggable="item"
 				        dnd-effect-allowed="copy"
 				        dnd-copied="item.id = item.id + 1"
@@ -135,36 +141,45 @@
 		</div>
 
 	    <div class="row">
-		<div ng-repeat="(zone, list) in models.dropzones" class="col-md-12">
-		    <div class="dropzone box box-yellow">
-		        <!-- The dropzone also uses the list template -->
-		        <h3> {{zone}}</h3>
-		        <div ng-include="'list.html'"></div>
-		    </div>
-		</div>
+			<div ng-repeat="(zone, list) in models.dropzones" class="col-md-9 template-zone">
+			    <div class="dropzone box box-yellow">
+			        <!-- The dropzone also uses the list template -->
+			        <h3> {{zone}}</h3>
+			        <div ng-include="'list.html'"></div>
+			    </div>
+			</div>
+
+			<div class="col-md-3">	
+
+			   	<div ng-if="models.selected.type == 'item'" class="box box-grey box-padding">
+					<h3>Selected</h3>
+					<strong>Type: </strong> {{models.selected.name}}<br>
+					<strong ng-if="models.selected.required != null">
+						Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
+					</strong><br/>
+					<strong>Label: </strong> <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+				</div>
+
+				<div ng-if="models.selected.type == 'container'" class="box box-grey box-padding">
+					<h3>Selected</h3>
+					<strong>Object: </strong> {{models.selected.name}}<br>
+					<strong>ID: </strong> {{models.selected.id}}
+				</div>
+
+				<div class="trashcan box box-grey box-padding">
+				<!-- If you use [] as referenced list, the dropped elements will be lost -->
+				<h3>Trashcan</h3>
+				<ul dnd-list="[]">
+				    <li>
+				    	<img src="assets/img/trashcan.png">
+				    </li>
+				</ul>
+			    </div>
+			</div>
 	    </div>
 	</div>
 	
 	<!-- Sidebar -->
-	<div class="col-md-2">	
 
-	
-	    <div class="trashcan box box-grey box-padding">
-		<!-- If you use [] as referenced list, the dropped elements will be lost -->
-		<h3>Trashcan</h3>
-		<ul dnd-list="[]">
-		    <li>
-		    	<img src="assets/img/trashcan.png">
-		    </li>
-		</ul>
-	    </div>
-
-	   	<div ng-if="models.selected" class="box box-grey box-padding">
-			<h3>Selected</h3>
-			<strong>Type: </strong> {{models.selected.type}}<br>
-			<input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
-		</div>
-	
-	</div>
 </body>
 </html>
