@@ -71,7 +71,7 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 icon:'glyphicon-record', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='radio' ng-model='option.checked' ng-repeat-start='option in item.field_options' name='{{item.name}}{{item.id}}' value='{{option.label}}' ng-checked='{{option.checked}}'/>\
+                component: "<input type='radio' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.checked}}' ng-checked='{{option.checked}}'/>\
                                 <span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end/>", 
                 field_options:[
                             {label: "Radio 1", checked: true},
@@ -86,7 +86,7 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 icon:'glyphicon-ok-circle', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' ng-model='option' name='{{item.name}}{{item.id}}' value='{{option.label}}' ng-checked='{{option.checked}}'/>\
+                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' ng-checked='{{option.checked}}'/>\
                                 <span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end />", 
                 field_options:[
                             {label: "Checkbox 1", checked: true},
