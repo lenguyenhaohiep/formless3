@@ -7,6 +7,15 @@ mainApp.controller("FormDesignCtr", function($scope) {
     var DEFAULT_LABEL = "Untitled";
     var NO_LABEL = "";
     var REQ_DEFAULT = 'yes';
+    var PROPERTIES_DEFAULT = "<div class='option-item' ng-repeat='option in item.field_options'>\
+                                <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked'/>\
+                                <input type='text' value='{{option.label}}' ng-model='option.label'/>\
+                                <a class='mini-item item-add glyphicon-plus'></a>\
+                                <a class='mini-item item-remove glyphicon-minus'></a>\
+                            </div>\
+                            <button type='button' class='btn btn-primary btn-xs'>Add option</button>";
+
+
     $scope.models = {
         selected: null,
         templates: [
@@ -62,18 +71,28 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 icon:'glyphicon-record', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='radio' name='{{item.name}}{{item.id}}' value='radio 1'/>Radio 1<input type='radio' name='{{item.name}}{{item.id}}' value='radio 2'/> Radio 2", 
-                options: []
+                component: "<input type='radio' ng-model='option.checked' ng-repeat-start='option in item.field_options' name='{{item.name}}{{item.id}}' value='{{option.label}}' ng-checked='{{option.checked}}'/>\
+                                <span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end/>", 
+                field_options:[
+                            {label: "Radio 1", checked: true},
+                            {label: "Radio 2", checked: true}
+                        ],
+                properties: PROPERTIES_DEFAULT
             },
             {
                 type: "item", 
                 id: 0, 
-                name: "Checkbox(es)"  , 
+                name: "Checkbox"  , 
                 icon:'glyphicon-ok-circle', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='Checkbox' />Checkbox 1<input type='Checkbox' />Checkbox2", 
-                options: []
+                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' ng-model='option' name='{{item.name}}{{item.id}}' value='{{option.label}}' ng-checked='{{option.checked}}'/>\
+                                <span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end />", 
+                field_options:[
+                            {label: "Checkbox 1", checked: true},
+                            {label: "Checkbox 2", checked: false}
+                        ],
+                properties: PROPERTIES_DEFAULT
             },
             {
                 type: "item", 
@@ -82,11 +101,14 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 icon:'glyphicon-collapse-down', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<select><option>{{item.label}}</option></select>", 
+                component: "<select>\
+                                <option ng-repeat='option in item.field_options' value='{{option.label}}'>{{option.label}}</option>\
+                             </select>", 
                 field_options: [
-                                    {label: "option 1", checked: "yes"},
-                                    {label: "option 2", checked: "no"}
-                                ]
+                                    {label: "Option 1", checked: true},
+                                    {label: "Option 2", checked: false}
+                                ],
+                properties: PROPERTIES_DEFAULT
             },
             {
                 type: "item", 
@@ -163,22 +185,24 @@ mainApp.controller("FormDesignCtr", function($scope) {
 
 });
 
-mainApp.directive('htmlRender', function($compile) {
+mainApp.directive('htmlRender', function($compile, $sce) {
   return {
     restrict: 'E',
-    scope: { html: '@' },
+    transclude: true,
+    scope: { item: '=' , val: '@'},
     link: function(scope, element) {
-      scope.$watch('html', function(value) {
+
+        var value = scope.item[scope.val];
         if (!value) return;        
-        var wrapper = angular.element('<div>');
+        var wrapper = angular.element('<div>');value
+        value=$sce.trustAsHtml(value);
         wrapper.html(value);
         var markup = $compile(wrapper.contents())(scope);
         element.append(markup)
         console.log(markup);
-      });
     }
-  };
-})
+  }
+});
 
 mainApp.directive('bindUnsafeHtml', ['$compile', function ($compile) {
       return function(scope, element, attrs) {

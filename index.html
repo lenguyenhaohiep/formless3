@@ -55,12 +55,11 @@
 	<script type="text/ng-template" id="item.html">
 	    <div class="item">
 	    	<div class='label-block'>
-	    		<label class='label-field'>{{item.label}}</label>
+	    		<label class='label-field' {{item.label}}>{{item.label}}</label>
 	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
 	    	</div>
 	    	<div class='item-block'>
-	    		<html-render html="{{item.component}}"></html-render>
-    			<div bind-unsafe-html="{{item.component}}"></div>
+	    		<html-render item="item" val='component'></html-render>
 	    	</div>
 	    </div>
 	</script>
@@ -158,6 +157,10 @@
 						Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
 					</strong><br/>
 					<strong>Label: </strong> <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+
+					<div ng-if='models.selected.properties != null'>
+						<html-render item='models.selected' val='properties'></html-render>
+					</div>
 				</div>
 
 				<div ng-if="models.selected.type == 'container'" class="box box-grey box-padding">
@@ -166,15 +169,21 @@
 					<strong>ID: </strong> {{models.selected.id}}
 				</div>
 
+				<!--
 				<div class="trashcan box box-grey box-padding">
+				-->
 				<!-- If you use [] as referenced list, the dropped elements will be lost -->
+				<!--
 				<h3>Trashcan</h3>
 				<ul dnd-list="[]">
 				    <li>
 				    	<img src="assets/img/trashcan.png">
 				    </li>
 				</ul>
+				-->
+				<!--
 			    </div>
+				-->
 			</div>
 	    </div>
 	</div>

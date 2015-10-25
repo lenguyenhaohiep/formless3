@@ -75,3 +75,27 @@
 	position: fixed;
 	bottom: 0;
 }
+
+.mini-item, .mini-item:focus, .mini-item:hover{
+    padding: 3px 6px;
+    color: white;
+    border-radius: 3px;
+    text-decoration: none;	
+}
+.mini-item:hover{
+	cursor: pointer;
+}
+
+.item-add {
+    background-color: #245580;
+
+}
+
+.item-remove {
+    background-color: #d43f3a;
+}
+
+.option-item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
