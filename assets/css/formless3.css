@@ -60,6 +60,11 @@
     min-width: 150px;
 }
 
+.item-block{
+	display: inline-block;
+	width: 60%;
+}
+
 .required-field {
     color: red;
 }
@@ -93,6 +98,14 @@
 
 .item-remove {
     background-color: #d43f3a;
+}
+
+.item-fix{
+	position: absolute;
+	right: 15px;
+	top: 15px;
+	line-height: 1.1;
+	display: none;
 }
 
 .option-item {
