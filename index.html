@@ -37,7 +37,7 @@
 		    dnd-selected="models.selected = item"
 		    ng-class="{selected: models.selected === item}"
 		    ng-include="item.type + '.html'"
-		    fl-item>
+		    flitem="models">
 
 		</li>
 	    </ul>
@@ -50,7 +50,7 @@
 	<script type="text/ng-template" id="container.html">
 	    <div class="container-element box box-blue">
 		<h3>{{item.name}} {{item.id}}</h3>
-		<div class="column" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+		<div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
 		<div class="clearfix"></div>
 	    </div>
 	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem($index)'></a>
@@ -166,7 +166,7 @@
 			<div class="col-md-3">	
 
 			   	<div ng-if="models.selected.type == 'item'" class="box box-grey box-padding">
-					<h3>Selected</h3>
+					<h3>Field</h3>
 					<strong>Type: </strong> {{models.selected.name}}<br>
 					<strong ng-if="models.selected.required != null">
 						Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
@@ -180,9 +180,15 @@
 				</div>
 
 				<div ng-if="models.selected.type == 'container'" class="box box-grey box-padding">
-					<h3>Selected</h3>
-					<strong>Object: </strong> {{models.selected.name}}<br>
+					<h3>Object</h3>
+					<strong>Type: </strong> {{models.selected.name}}<br>
 					<strong>ID: </strong> {{models.selected.id}}
+				</div>
+
+				<div ng-if="models.selected.semantic != null" class="box box-grey box-padding">
+					<h3>Semantic infomation</h3>
+					<strong>Class: </strong> {{models.semantic.class}}<br>
+					<strong>Properties: </strong> <input type="text" ng-model="models.selected.property" class="form-control" style="margin-top: 5px" />
 				</div>
 
 				<!--

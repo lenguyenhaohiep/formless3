@@ -112,3 +112,16 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+input:valid {
+    color: black;
+}
+
+input:invalid ~ .input-validation::before {
+	content: "Matched format required";    
+	color: red;
+}
+
+input:invalid {
+    color: red;
+}

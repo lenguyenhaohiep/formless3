@@ -3,7 +3,7 @@
  */
 var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
-mainApp.controller("FormDesignCtr", function($scope) {
+mainApp.controller("FormDesignCtr", ['$scope', "findParent", function($scope, findParent) {
     /**
     *   Some default values
     */
@@ -32,7 +32,8 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='text' class='form-control' ng-model='item.value' />"            
+                component: "<input type='text' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+                semantic: {class: null, property: null}            
             },
             {
                 type: "item", 
@@ -42,7 +43,7 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='number' class='form-control' ng-model='item.value'/>"
+                component: "<input type='number' class='form-control' ng-model='item.value'/><div class='input-validation'></div>"
             },
             {
                 type: "item", 
@@ -52,7 +53,7 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='date' class='form-control' ng-model='item.value'/>",
+                component: "<input type='date' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
             },
             {
                 type: "item", 
@@ -62,7 +63,7 @@ mainApp.controller("FormDesignCtr", function($scope) {
                 required: REQ_DEFAULT, 
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='email' pattern='([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})' class='form-control' ng-model='item.value'/>"
+                component: "<input type='email' class='form-control' ng-model='item.value'/><div class='input-validation'></div>"
             },
             {
                 type: "item", 
@@ -168,25 +169,25 @@ mainApp.controller("FormDesignCtr", function($scope) {
                     {name: "Sexe", type: "text"}
                     ]
                 ,
-                columns: [[]]
+                templates: [[]]
             }
             ,            
             {
                 type: "container", 
                 id: 1, 
                 name: "Teacher", 
-                columns: [[]]
+                templates: [[]]
             }
             ,            
             {
                 type: "container", 
                 id: 1, 
                 name: "Project", 
-                columns: [[]]
+                templates: [[]]
             }
         ],
         dropzones: {
-            DEFAULT_ZONE: [
+            templates: [
             ]
         }
     };
@@ -197,7 +198,6 @@ mainApp.controller("FormDesignCtr", function($scope) {
     */
     $scope.setSelect = function(item, option){
         if (item.name != 'Checkbox'){
-            alert(item.name);
             angular.forEach(item.field_options, function(i){
                 i.checked = false;
             });
@@ -243,17 +243,47 @@ mainApp.controller("FormDesignCtr", function($scope) {
     *   Delete an item in the current model
     */
     $scope.removeItem = function(index) {
-        $scope.models.dropzones.DEFAULT_ZONE.splice(index,1);
+        $scope.models.dropzones.templates.splice(index,1);
         $scope.models.selected = null;
-    }
+    };
 
     $scope.$watch('models.dropzones', function(model) {
         $scope.modelAsJson = angular.toJson(model, true);
         //console.log($scope.modelAsJson);
     }, true);
 
-});
+    $scope.updateSemantic = function (list, node){
+        angular.forEach(list.templates, function (item) {
+            if (item[0] == node){
+                alert("Found");
+                return list;
+            }
+            if (item.templates != null){
+                    if (item.templates.length != 0)
+                        $scope.updateSemantic(item, node);
+            }
+        });
+    };
 
+}]);
+
+
+
+/**
+*   Find parent of a node in the models
+*/
+mainApp.service('findParent', function(){
+    return function (list, node){
+        angular.forEach(list, function (item) {
+            if (item == node)
+                return list;
+            if (item.columns != null){
+                    if (item.columns.length != 0)
+                        return findParent(item.columns, child);
+            }
+        });
+    }
+});
 
 /**
 * This directive is used to render code HTML from text to the page, this method is unsafe method, pay attention in use
@@ -284,19 +314,28 @@ mainApp.directive('htmlRender', function($compile, $sce) {
 /**
 * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
 */
-mainApp.directive('flItem', function (){
-    return function(scope, element, attr){
-        var delete_button = angular.element(element[0].querySelector('.item-fix'));
+mainApp.directive('flitem', function (){
+    return {
+        restrict: "A",
+        scope : {"flitem": "="},
+        link: function(scope, element, attr){
+            var delete_button = angular.element(element[0].querySelector('.item-fix'));
 
-        //Upon mouse leaves
-        element.on('mouseleave',function(){
-            delete_button.css("display","none");
-        });
+            //Upon mouse leaves
+            element.on('mouseleave',function(){
+                delete_button.css("display","none");
+            });
 
-        //Upon mouse enters
-        element.on('mouseenter', function(){
-            delete_button.css("display","block");
-        });
+            //Upon mouse enters
+            element.on('mouseenter', function(){
+                delete_button.css("display","block");
+            });
+
+            element.on('click', function(ev){
+                var model = (scope.flitem);
+                scope.$parent.updateSemantic(model.dropzones, model.selected);
+            });
+        }
     }
 });
 
