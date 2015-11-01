@@ -3,7 +3,7 @@
  */
 var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
-mainApp.controller("FormDesignCtr", ['$scope', "findParent", function($scope, findParent) {
+mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL" , function($scope, findParent, parseOWL) {
     /**
     *   Some default values
     */
@@ -265,6 +265,10 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", function($scope, fi
         });
     };
 
+    $scope.$on = function(){
+        parseOWL();
+    };
+
 }]);
 
 
@@ -284,6 +288,14 @@ mainApp.service('findParent', function(){
         });
     }
 });
+
+mainApp.service('parseOWL',['$http',function($http){
+    return function(){
+        $http.get('http://localhost/userdata/structure.owl').success(function(data) {
+        });
+    }
+
+}]);
 
 /**
 * This directive is used to render code HTML from text to the page, this method is unsafe method, pay attention in use

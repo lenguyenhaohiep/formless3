@@ -18,7 +18,9 @@
 
     
     <script src="app/angular-drag-and-drop-lists.js"></script>
+
     <script src="app/formless3.js"></script>    
+
   </head>
 <body ng-app="MainApp">
 	<div class="container nestedDemo" ng-controller="FormDesignCtr">
@@ -121,7 +123,7 @@
 		    <uib-tab heading="Objects">
 		    <div class='ribbon-tab'>
 			    <div class="list-field">
-				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type: 'item'}"
+				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type: 'container'}"
 				        dnd-draggable="item"
 				        dnd-effect-allowed="copy"
 				        dnd-copied="item.id = item.id + 1">
@@ -134,7 +136,7 @@
 		    <uib-tab heading="Fields">
 		    <div class='ribbon-tab'>
 		    	<div class="list-field">
-				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'container'}"
+				    <div class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'item'}"
 				        dnd-draggable="item"
 				        dnd-effect-allowed="copy"
 				        dnd-copied="item.id = item.id + 1"
