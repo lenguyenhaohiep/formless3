@@ -3,195 +3,11 @@
  */
 var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
-mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL" , function($scope, findParent, parseOWL) {
-    /**
-    *   Some default values
-    */
-    var DEFAULT_LABEL = "Untitled";
-    var NO_LABEL = "";
-    var REQ_DEFAULT = 'yes';
-    var PROPERTIES_DEFAULT ="<div class='option-item' ng-repeat='option in item.field_options'>\
-                                <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked' ng-click='$parent.$parent.setSelect(item, option)'/>\
-                                <input type='text' value='{{option.label}}' ng-model='option.label'/>\
-                                <a class='mini-item item-add glyphicon-plus' ng-click='$parent.$parent.addOption(item, $index+1)'></a>\
-                                <a class='mini-item item-remove glyphicon-minus' ng-click='$parent.$parent.removeOption(item, $index)'></a>\
-                                </div>\
-                                <button type='button' class='btn btn-primary btn-xs' ng-click='$parent.$parent.addOption(item, -1)'>Add option</button>";
-    var DEFAULT_LABEL_OPTION = "Option";
-    var DEFAULT_CHECK_OPTION = false;
+mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontologyStructure", "formModel" , function($scope, findParent, parseOWL, ontologyStructure, formModel) {
+    $scope.ontologyStructure = ontologyStructure;
 
 
-    $scope.models = {
-        selected: null,
-        templates: [
-            {
-                type: "item", 
-                id: 0, 
-                name: "Text"  , 
-                icon:'glyphicon-font', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<input type='text' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
-                semantic: {class: null, property: null}            
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Number", 
-                icon:'glyphicon-sound-5-1', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<input type='number' class='form-control' ng-model='item.value'/><div class='input-validation'></div>"
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Date"  , 
-                icon:'glyphicon-calendar', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<input type='date' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Email" , 
-                icon:'glyphicon-envelope',
-                required: REQ_DEFAULT, 
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<input type='email' class='form-control' ng-model='item.value'/><div class='input-validation'></div>"
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Paragraph", 
-                icon:'glyphicon-align-justify',
-                required: REQ_DEFAULT, 
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<textarea rows='5' class='form-control' ng-model='item.value' /></textarea>"
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Radio", 
-                icon:'glyphicon-record', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                component: "<input type='radio' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' ng-model='item.value' ng-value='option' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end/>", 
-                field_options:[
-                            {label: "Radio 1", checked: false},
-                            {label: "Radio 2", checked: false}
-                        ],
-                value: null,
-                properties: PROPERTIES_DEFAULT
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Checkbox"  , 
-                icon:'glyphicon-ok-circle', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' ng-checked='{{option.checked}}' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end />", 
-                field_options:[
-                            {label: "Checkbox 1", checked: false},
-                            {label: "Checkbox 2", checked: false}
-                        ],
-                value: null,
-                properties: PROPERTIES_DEFAULT
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Dropdown" , 
-                icon:'glyphicon-collapse-down', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                component: "<select class='form-control' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>", 
-                field_options: [
-                                    {label: "Option 1", checked: false},
-                                    {label: "Option 2", checked: false}
-                                ],
-                value: null,
-                properties: PROPERTIES_DEFAULT
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Signature"  , 
-                icon:'glyphicon-pencil', 
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL, 
-                value: null,
-                component: "<input type='file' />"
-            },
-            {
-                type: "item", 
-                id: 0, 
-                name: "Attached File(s)", 
-                required: REQ_DEFAULT,
-                icon:'glyphicon-paperclip', 
-                label: DEFAULT_LABEL,
-                value: null, 
-                component: "<input type='file' multiple/>"
-            },
-            {
-                type: "item", 
-                noinput: true,
-                id: 0, 
-                name: "Header"  , 
-                icon:'glyphicon-header', 
-                label: "Header of the form", 
-                component: "<h1>{{item.label}}</h1>"
-            },
-            {
-                type: "item", 
-                noinput: true,
-                id: 0, 
-                name: "Section", 
-                icon:'glyphicon-minus', 
-                label: "Section", 
-                component: "<h3>{{item.label}}</h3>"
-            },       
-            {
-                type: "container", 
-                id: 1, 
-                name: "Student", 
-                properties: [
-                    {name: "Nom", type: "text"},
-                    {name: "Prenom", type: "text"},
-                    {name: "Date de naissance", type: "date"},
-                    {name: "Sexe", type: "text"}
-                    ]
-                ,
-                templates: [[]]
-            }
-            ,            
-            {
-                type: "container", 
-                id: 1, 
-                name: "Teacher", 
-                templates: [[]]
-            }
-            ,            
-            {
-                type: "container", 
-                id: 1, 
-                name: "Project", 
-                templates: [[]]
-            }
-        ],
-        dropzones: {
-            templates: [
-            ]
-        }
-    };
-
+    $scope.models = formModel.models;
 
     /**
     *   When an options for checkbox/radio/dropdown is selected, we mark them as checked=true
@@ -255,7 +71,8 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL" , functi
     $scope.updateSemantic = function (list, node){
         angular.forEach(list.templates, function (item) {
             if (item[0] == node){
-                alert("Found");
+                node.semantic.class = list.name;
+                node.semantic.id = list.id;
                 return list;
             }
             if (item.templates != null){
@@ -265,13 +82,206 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL" , functi
         });
     };
 
-    $scope.$on = function(){
-        parseOWL();
-    };
-
+    $scope.selectItem = function(item){
+        $scope.models.selected = item;
+        $scope.updateSemantic($scope.models.dropzones, $scope.models.selected);
+    }
 }]);
 
 
+mainApp.service('formModel',function(){
+    var formModel = {}; 
+    /**
+    *   Some default values
+    */
+    var DEFAULT_LABEL = "Untitled";
+    var NO_LABEL = "";
+    var REQ_DEFAULT = 'yes';
+    var PROPERTIES_DEFAULT ="<div class='option-item' ng-repeat='option in item.field_options'>\
+                                <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked' ng-click='$parent.$parent.setSelect(item, option)'/>\
+                                <input type='text' value='{{option.label}}' ng-model='option.label'/>\
+                                <a class='mini-item item-add glyphicon-plus' ng-click='$parent.$parent.addOption(item, $index+1)'></a>\
+                                <a class='mini-item item-remove glyphicon-minus' ng-click='$parent.$parent.removeOption(item, $index)'></a>\
+                                </div>\
+                                <button type='button' class='btn btn-primary btn-xs' ng-click='$parent.$parent.addOption(item, -1)'>Add option</button>";
+    var DEFAULT_LABEL_OPTION = "Option";
+    var DEFAULT_CHECK_OPTION = false;
+    var DEFAULT_SEMANTIC = {class: null, id: null, property: null};
+    formModel.models = {
+        selected: null,
+        templates: [
+            {
+                type: "item", 
+                id: 0, 
+                name: "Text"  , 
+                icon:'glyphicon-font', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<input type='text' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+                semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Number", 
+                icon:'glyphicon-sound-5-1', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<input type='number' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Date"  , 
+                icon:'glyphicon-calendar', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<input type='date' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                semantic: DEFAULT_SEMANTIC            
+
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Email" , 
+                icon:'glyphicon-envelope',
+                required: REQ_DEFAULT, 
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<input type='email' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                semantic: DEFAULT_SEMANTIC
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Paragraph", 
+                icon:'glyphicon-align-justify',
+                required: REQ_DEFAULT, 
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<textarea rows='5' class='form-control' ng-model='item.value' /></textarea>",
+                semantic: DEFAULT_SEMANTIC            
+
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Radio", 
+                icon:'glyphicon-record', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                component: "<input type='radio' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' ng-model='item.value' ng-value='option' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end/>", 
+                field_options:[
+                            {label: "Radio 1", checked: false},
+                            {label: "Radio 2", checked: false}
+                        ],
+                value: null,
+                properties: PROPERTIES_DEFAULT,
+                semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Checkbox"  , 
+                icon:'glyphicon-ok-circle', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' ng-checked='{{option.checked}}' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end />", 
+                field_options:[
+                            {label: "Checkbox 1", checked: false},
+                            {label: "Checkbox 2", checked: false}
+                        ],
+                value: null,
+                properties: PROPERTIES_DEFAULT,
+                semantic: DEFAULT_SEMANTIC            
+
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Dropdown" , 
+                icon:'glyphicon-collapse-down', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                component: "<select class='form-control' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>", 
+                field_options: [
+                                    {label: "Option 1", checked: false},
+                                    {label: "Option 2", checked: false}
+                                ],
+                value: null,
+                properties: PROPERTIES_DEFAULT,
+                semantic: DEFAULT_SEMANTIC            
+
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Signature"  , 
+                icon:'glyphicon-pencil', 
+                required: REQ_DEFAULT,
+                label: DEFAULT_LABEL, 
+                value: null,
+                component: "<input type='file' />",
+                semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "item", 
+                id: 0, 
+                name: "Attached File(s)", 
+                required: REQ_DEFAULT,
+                icon:'glyphicon-paperclip', 
+                label: DEFAULT_LABEL,
+                value: null, 
+                component: "<input type='file' multiple/>",
+                semantic: DEFAULT_SEMANTIC
+            },
+            {
+                type: "item", 
+                noinput: true,
+                id: 0, 
+                name: "Header"  , 
+                icon:'glyphicon-header', 
+                label: "Header of the form", 
+                component: "<h1>{{item.label}}</h1>",
+                semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "item", 
+                noinput: true,
+                id: 0, 
+                name: "Section", 
+                icon:'glyphicon-minus', 
+                label: "Section", 
+                component: "<h3>{{item.label}}</h3>",
+                semantic: DEFAULT_SEMANTIC            
+            }
+        ],
+        dropzones: {
+            templates: [
+            ]
+        }
+    };
+
+    formModel.initialize = function(ontologyStructure){
+        angular.forEach(ontologyStructure.class,function(key,val){
+            var container = {
+                type: "container", 
+                id: 1, 
+                name: val, 
+                icon: 'glyphicon-record',
+                templates: [[]]
+            };
+        formModel.models.templates.push(container);
+        });
+    };
+
+    return formModel;
+
+});
 
 /**
 *   Find parent of a node in the models
@@ -291,10 +301,7 @@ mainApp.service('findParent', function(){
 
 mainApp.service('parseOWL',['$http',function($http){
     return function(){
-        $http.get('http://localhost/userdata/structure.owl').success(function(data) {
-        });
     }
-
 }]);
 
 /**
@@ -326,10 +333,10 @@ mainApp.directive('htmlRender', function($compile, $sce) {
 /**
 * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
 */
-mainApp.directive('flitem', function (){
+mainApp.directive('flitem', ['formModel',function (formModel){
     return {
         restrict: "A",
-        scope : {"flitem": "="},
+        scope : {"flitem": "@"},
         link: function(scope, element, attr){
             var delete_button = angular.element(element[0].querySelector('.item-fix'));
 
@@ -343,13 +350,12 @@ mainApp.directive('flitem', function (){
                 delete_button.css("display","block");
             });
 
-            element.on('click', function(ev){
-                var model = (scope.flitem);
-                scope.$parent.updateSemantic(model.dropzones, model.selected);
-            });
+//            element.on('click', function(ev){
+//                alert(formModel.models.selected);
+//            });
         }
     }
-});
+}]);
 
 
 mainApp.controller("FileMenuCtr", function($scope){

@@ -12,18 +12,20 @@
 
 
     <script src="assets/js/angular.js"></script>
-
     <script src="assets/js/angular-route.js"></script>
-    <script src="assets/js/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
+    <script src="assets/js/xml2json.js"></script>    
 
-    
-    <script src="app/angular-drag-and-drop-lists.js"></script>
-
+	<script src="app/angular-drag-and-drop-lists.js"></script>
     <script src="app/formless3.js"></script>    
+    <script src="app/formless3_2.js"></script>    
+
 
   </head>
 <body ng-app="MainApp">
-	<div class="container nestedDemo" ng-controller="FormDesignCtr">
+
+<div ng-controller="FormDesignCtr">
+	<div class="container nestedDemo" ng-if="ontologyStructure.structure != null">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -36,7 +38,7 @@
 		    dnd-draggable="item"
 		    dnd-effect-allowed="move"
 		    dnd-moved="list.splice($index, 1)"
-		    dnd-selected="models.selected = item"
+		    dnd-selected="selectItem(item)"
 		    ng-class="{selected: models.selected === item}"
 		    ng-include="item.type + '.html'"
 		    flitem="models">
@@ -189,8 +191,10 @@
 
 				<div ng-if="models.selected.semantic != null" class="box box-grey box-padding">
 					<h3>Semantic infomation</h3>
-					<strong>Class: </strong> {{models.semantic.class}}<br>
-					<strong>Properties: </strong> <input type="text" ng-model="models.selected.property" class="form-control" style="margin-top: 5px" />
+					<strong>Object: </strong> {{models.selected.semantic.class}}<br>
+					<strong>ID: </strong> {{models.selected.semantic.id}}<br>
+					<strong>Properties: </strong> 
+					<select class='form-control' ng-model='models.selected.semantic.property' ng-options='option for option in ontologyStructure.class[models.selected.semantic.class]'></select>
 				</div>
 
 				<!--
@@ -211,8 +215,15 @@
 			</div>
 	    </div>
 	</div>
-	
-	<!-- Sidebar -->
+</div>
+</div>
 
+<div ng-controller="SourceCtr">
+	<div class="container" ng-if="ontologyStructure.structure == null">
+		<h3>Please select an OWL file</h3>
+		File can be found at : <b>{{ontologyStructure.path}}</b>
+  		<input type="file" data-file="ontologyStructure.structure"/>
+   <div>
+</div>
 </body>
 </html>
