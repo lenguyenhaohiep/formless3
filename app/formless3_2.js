@@ -55,6 +55,31 @@ mainApp.service('ontologyStructure', ["formModel", function(formModel){
   ontologyStructure.relationship = {};
 
 
+  ontologyStructure.findProperties = function(_class){
+    var properties = [];
+
+    var stop = false
+    var list = ontologyStructure.class[_class];
+
+    while (!stop){
+      var nextClass = null;
+      angular.forEach(list, function(v,k){
+        if (k=="subclass"){
+          nextClass = v;
+        }
+        else{
+          properties.push(k);
+        }
+      });
+
+      if (nextClass != null){
+        list = ontologyStructure.class[nextClass];
+      }else
+        stop = true;
+    }
+    return properties;
+  }
+
   ontologyStructure.update = function(data){
     ontologyStructure.structure = data;
   }
@@ -64,6 +89,8 @@ mainApp.service('ontologyStructure', ["formModel", function(formModel){
     var x2js = new X2JS();  
     // Parse XML String to JSON array
     var jsonObj = x2js.xml_str2json(this.structure);
+
+    console.log(jsonObj);
 
     // Retrieve namespaces
     ontologyStructure.namespaces["xmlns"] = jsonObj["RDF"]["_xmlns"];
@@ -81,13 +108,15 @@ mainApp.service('ontologyStructure', ["formModel", function(formModel){
       ontologyStructure.class[str] = {};
       if (item["subClassOf"] != null){
         //get name of the subclass
-        var str2 = item["_rdf:about"];
+        var str2 = item["subClassOf"]["_rdf:resource"];
         str2 = str2.substring(str2.indexOf("#")+1, str2.length);
         ontologyStructure.class[str2] = {};
         ontologyStructure.class[str]["subclass"] = str2;
 
       }
     });
+
+    console.log(ontologyStructure.class);
 
     //Retrieve Properties
     angular.forEach(jsonObj["RDF"]["DatatypeProperty"],function(item){

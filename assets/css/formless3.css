@@ -1,5 +1,14 @@
+body {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .nestedDemo .dropzone .container-element .column {
 	width: 100%;
+}
+
+.nestedDemo .dropzone li, .nestedDemo .dropzone .selected .item{
+    min-height: 70px;
 }
 
 .list-field{
@@ -31,7 +40,7 @@
 .glyphicon {
     margin-top: 0px;
     margin-bottom: 5px;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .glyphicon-text {
@@ -111,6 +120,21 @@
 .option-item {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.menubar span{
+	padding: 5px;
+	margin: 5px;
+	color: black;
+	text-decoration: none;
+}
+.menubar span:hover{
+	color: #428bca;
+	text-decoration: none;
+}
+
+.label-semantic{
+	font-size: 10px;
 }
 
 input:valid {

@@ -5,9 +5,9 @@ var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
 mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontologyStructure", "formModel" , function($scope, findParent, parseOWL, ontologyStructure, formModel) {
     $scope.ontologyStructure = ontologyStructure;
-
-
     $scope.models = formModel.models;
+
+    $scope.models.vocab = ontologyStructure.namespaces["xml:base:rdf"];
 
     /**
     *   When an options for checkbox/radio/dropdown is selected, we mark them as checked=true
@@ -58,9 +58,9 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontolo
     /*
     *   Delete an item in the current model
     */
-    $scope.removeItem = function(index) {
-        $scope.models.dropzones.templates.splice(index,1);
+    $scope.removeItem = function(item) {
         $scope.models.selected = null;
+        $scope.removeNode($scope.models.dropzones, item)
     };
 
     $scope.$watch('models.dropzones', function(model) {
@@ -68,16 +68,44 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontolo
         //console.log($scope.modelAsJson);
     }, true);
 
+    $scope.removeNode = function (list, node){
+        var l; 
+        if (list.templates[0] instanceof Array){
+            l = list.templates[0];
+        }
+        else
+            l =list.templates;
+
+        for (i=0;i<l.length;i++) {
+            item = l[i];
+            if (item == node){
+                l.splice(i,1);
+                return ;
+            }
+            if (item.templates != null){
+                $scope.removeNode(item, node);
+            }
+        }
+    };
+
     $scope.updateSemantic = function (list, node){
-        angular.forEach(list.templates, function (item) {
-            if (item[0] == node){
+        if (node.type == 'container')
+            return;
+        var l; 
+        if (list.templates[0] instanceof Array){
+            l = list.templates[0];
+        }
+        else
+            l =list.templates;
+
+        angular.forEach(l, function (item) {
+            if (item == node){
                 node.semantic.class = list.name;
                 node.semantic.id = list.id;
                 return list;
             }
             if (item.templates != null){
-                    if (item.templates.length != 0)
-                        $scope.updateSemantic(item, node);
+                $scope.updateSemantic(item, node);
             }
         });
     };
@@ -85,7 +113,11 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontolo
     $scope.selectItem = function(item){
         $scope.models.selected = item;
         $scope.updateSemantic($scope.models.dropzones, $scope.models.selected);
-    }
+    };
+
+    $scope.findProperties = function(_class){
+        return ontologyStructure.findProperties(_class);
+    };
 }]);
 
 
@@ -107,7 +139,10 @@ mainApp.service('formModel',function(){
     var DEFAULT_LABEL_OPTION = "Option";
     var DEFAULT_CHECK_OPTION = false;
     var DEFAULT_SEMANTIC = {class: null, id: null, property: null};
+    var prefix = "fl:";
     formModel.models = {
+        prefix: prefix,
+        vocab: null,
         selected: null,
         templates: [
             {
@@ -118,7 +153,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='text' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+                component: "<input type='text' property='"+prefix+"{{item.semantic.class}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -261,8 +296,7 @@ mainApp.service('formModel',function(){
             }
         ],
         dropzones: {
-            templates: [
-            ]
+            templates: []
         }
     };
 
@@ -358,31 +392,19 @@ mainApp.directive('flitem', ['formModel',function (formModel){
 }]);
 
 
-mainApp.controller("FileMenuCtr", function($scope){
+mainApp.controller("MenuCtr", function($scope){
     $scope.commands = [ {name: "Open", icon: "glyphicon-folder-open"},
                         {name: "New" , icon: "glyphicon-plus"},
                         {name: "New from Template" , icon: "glyphicon-list-alt"},
                         {name: "Save" , icon: "glyphicon-floppy-disk"},
                         {name: "Save As" , icon: "glyphicon-floppy-save"},
                         {name: "Quit" , icon: "glyphicon-log-out"},
-                    ];
-});
-
-mainApp.controller("EditMenuCtr", function($scope){
-    $scope.commands = [ {name: "Clear" , icon: "glyphicon-remove"},
+                        {name: "Clear" , icon: "glyphicon-remove"},
                         {name: "Sign" , icon: "glyphicon-pencil"},
                         {name: "Verify" , icon: "glyphicon-ok"},
-                    ];
-});
-
-mainApp.controller("ViewMenuCtr", function($scope){
-    $scope.commands = [ {name: "Design view" , icon: "glyphicon-wrench"},
-                        {name: "Edit view" , icon: "glyphicon-edit"}                        
-                    ];
-});
-
-mainApp.controller("ToolMenuCtr", function($scope){
-    $scope.commands = [ {name: "Settings" , icon: "glyphicon-cog"},
+                        {name: "Design view" , icon: "glyphicon-wrench"},
+                        {name: "Edit view" , icon: "glyphicon-edit"},
+                        {name: "Settings" , icon: "glyphicon-cog"},
                         {name: "About" , icon: "glyphicon-info-sign"}                        
                     ];
 });

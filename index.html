@@ -25,7 +25,7 @@
 <body ng-app="MainApp">
 
 <div ng-controller="FormDesignCtr">
-	<div class="container nestedDemo" ng-if="ontologyStructure.structure != null">
+	<div class="container-fluid nestedDemo" ng-if="ontologyStructure.structure != null">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -52,12 +52,12 @@
 	<!-- This template is responsible for rendering a container element. It uses
 	     the above list template to render each container column -->
 	<script type="text/ng-template" id="container.html">
-	    <div class="container-element box box-blue">
+	    <div class="container-element box box-blue" vocab="{{models.vocab}}" about="{{models.prefix}}{{item.name}}{{item.id}}" typeof="{{models.prefix}}{{item.name}}" >
 		<h3>{{item.name}} {{item.id}}</h3>
 		<div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
 		<div class="clearfix"></div>
 	    </div>
-	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem($index)'></a>
+	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
 	</script>
 	
 	<!-- Template for a normal list item -->
@@ -66,6 +66,8 @@
 	    	<div class='label-block'>
 	    		<label class='label-field' {{item.label}}>{{item.label}}</label>
 	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
+	    		<br/>
+	    		<span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
 	    	</div>
 	    	<div class='item-block'>
 	    		<html-render item="item" val='component'></html-render>
@@ -75,11 +77,12 @@
 	    <div ng-if='item.noinput != null' class="item">
 	    	<html-render item="item" val='component'></html-render>
 	    </div>
-	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem($index)'></a>
+	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
 	</script>
 	
 	<!-- Main area with dropzones and source code -->
 	<div class="col-md-12">
+		<!--
 		<div class="ribbon">
 		  <uib-tabset>
 		    <uib-tab heading="File">	
@@ -152,16 +155,53 @@
 
 		  </uib-tabset>
 		</div>
+	-->
 
 	    <div class="row">
-			<div ng-repeat="(zone, list) in models.dropzones" class="col-md-9 template-zone">
+	    	<div class="col-md-3">
+	    		<div class="box box-grey box-padding">
+					<h3>Toolbox</h3>
+
+					<div class='menubar' ng-controller="MenuCtr">
+			    		<span href="#" ng-repeat="item in commands" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+			    		</span>
+					</div>
+					
+						<h5>Fields</h5>
+						<div class="menubar">
+							<span href="#" ng-repeat="item in models.templates | filter: {type : 'item'}"
+						        dnd-draggable="item"
+						        dnd-effect-allowed="copy"
+						        dnd-copied="item.id = item.id + 1"
+						        tooltip-placement="bottom" uib-tooltip="{{item.name}}"
+						        class="glyphicon {{item.icon}}" aria-hidden="true">
+						    </span>
+				    	</div>
+
+						<h5>Objects</h5>
+						<div>
+							<input type="text" placeholder='Type to search an object' class='form-control' ng-model="foundObject" uib-typeahead="item.name for item in models.templates | filter: {type : 'container'} | filter:$viewValue | limitTo:8" class="form-control">
+
+					<div ng-if="foundObject != '' && foundObject != null" class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'container'} | filter:foundObject"
+				        dnd-draggable="item"
+				        dnd-effect-allowed="copy"
+				        dnd-copied="item.id = item.id + 1"
+				        >
+				        	<span class="glyphicon {{item.icon}}" aria-hidden="true"></span>
+				        	<span class="glyphicon-text" aria-hidden="true">{{item.name}}</span>
+				    </div>
+
+						</div>
+				</div>
+	    	</div>
+			<div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
 			    <div class="dropzone box box-grey">
 			        <!-- The dropzone also uses the list template -->
 			        <h3> Form Design</h3>
 			        <div ng-include="'list.html'"></div>
 			    </div>
 
-
+			    <pre>{{models.selected}}</pre>
 			    <pre>{{modelAsJson}}</pre>
 
 			</div>
@@ -169,32 +209,38 @@
 
 			<div class="col-md-3">	
 
-			   	<div ng-if="models.selected.type == 'item'" class="box box-grey box-padding">
-					<h3>Field</h3>
-					<strong>Type: </strong> {{models.selected.name}}<br>
-					<strong ng-if="models.selected.required != null">
-						Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
-					</strong><br/>
-					<strong>Label: </strong> <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+			   	<div class="box box-grey box-padding">
+			   		<h3>Properties</h3>
 
-					<div ng-if='models.selected.properties != null'>
-						<html-render item='models.selected' val='properties'></html-render>
+				   	<div ng-if="models.selected.type == 'item'">
+						<h5>Field</h5>
+						<strong>Type: </strong> {{models.selected.name}}<br>
+						<strong ng-if="models.selected.required != null">
+							Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
+						</strong><br/>
+						<strong>Label: </strong> <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+
+						<div ng-if='models.selected.properties != null'>
+							<html-render item='models.selected' val='properties'></html-render>
+						</div>
+
 					</div>
 
-				</div>
+					<div ng-if="models.selected.type == 'container'">
+						<h5>Object</h5>
+						<strong>Type: </strong> {{models.selected.name}}<br>
+						<strong>ID: </strong> {{models.selected.id}}
+					</div>
 
-				<div ng-if="models.selected.type == 'container'" class="box box-grey box-padding">
-					<h3>Object</h3>
-					<strong>Type: </strong> {{models.selected.name}}<br>
-					<strong>ID: </strong> {{models.selected.id}}
-				</div>
-
-				<div ng-if="models.selected.semantic != null" class="box box-grey box-padding">
-					<h3>Semantic infomation</h3>
-					<strong>Object: </strong> {{models.selected.semantic.class}}<br>
-					<strong>ID: </strong> {{models.selected.semantic.id}}<br>
-					<strong>Properties: </strong> 
-					<select class='form-control' ng-model='models.selected.semantic.property' ng-options='option for option in ontologyStructure.class[models.selected.semantic.class]'></select>
+					<div ng-if="models.selected.semantic.class != null">
+						<h5>Semantic infomation</h5>
+						<strong>Object: </strong> {{models.selected.semantic.class}}<br>
+						<strong>ID: </strong> {{models.selected.semantic.id}}<br>
+						<strong>Properties: </strong> 
+						<select class='form-control' ng-model='models.selected.semantic.property'>
+	    					<option ng-repeat="property in findProperties(models.selected.semantic.class)" value="{{property}}">{{property}}</option>
+						</select>
+					</div>
 				</div>
 
 				<!--
