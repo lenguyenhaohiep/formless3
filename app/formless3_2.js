@@ -157,7 +157,7 @@ mainApp.service('ontologyStructure', ["formModel", function(formModel){
       ontologyStructure.relationship[domain]= temp;
     });
 
-    formModel.initialize(this);
+    //formModel.initialize(this);
   }
 
   return ontologyStructure;

@@ -8,7 +8,7 @@ body {
 }
 
 .nestedDemo .dropzone li, .nestedDemo .dropzone .selected .item{
-    min-height: 70px;
+    min-height: 80px;
 }
 
 .list-field{
@@ -67,6 +67,9 @@ body {
     display: inline-block;
     float: left;
     min-width: 150px;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid #ccc;
 }
 
 .item-block{
@@ -79,10 +82,21 @@ body {
 }
 
 .template-zone {
-	height: 650px;
-    max-height: 650px;
+	height: 96vh;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+.leftbar{
+	height: 96vh;
+}
+
+.rightbar{
+	height: 96vh;
+}
+
+.centerarea{
+	height: 96vh;	
 }
 
 .trashcan{
@@ -140,6 +154,9 @@ body {
 input:valid {
     color: black;
 }
+.label-field{
+	font-weight: bold;
+}
 
 input:invalid ~ .input-validation::before {
 	content: "Matched format required";    
@@ -148,4 +165,9 @@ input:invalid ~ .input-validation::before {
 
 input:invalid {
     color: red;
+}
+
+.input-transparent{
+	border: transparent;
+	background: transparent;
 }

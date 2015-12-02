@@ -18,14 +18,14 @@
 
 	<script src="app/angular-drag-and-drop-lists.js"></script>
     <script src="app/formless3.js"></script>    
-    <script src="app/formless3_2.js"></script>    
+    <script src="app/schema.js"></script>    
 
 
   </head>
 <body ng-app="MainApp">
 
 <div ng-controller="FormDesignCtr">
-	<div class="container-fluid nestedDemo" ng-if="ontologyStructure.structure != null">
+	<div class="container-fluid nestedDemo" ng-if="schema.jsonText != null">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -53,7 +53,12 @@
 	     the above list template to render each container column -->
 	<script type="text/ng-template" id="container.html">
 	    <div class="container-element box box-blue" vocab="{{models.vocab}}" about="{{models.prefix}}{{item.name}}{{item.id}}" typeof="{{models.prefix}}{{item.name}}" >
-		<h3>{{item.name}} {{item.id}}</h3>
+		<h3> 
+			Object = <input class='input-transparent' type='text' ng-model="item.name" value="item.name"/>
+			<br/>
+			ID = <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
+		</h3>
+
 		<div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
 		<div class="clearfix"></div>
 	    </div>
@@ -64,9 +69,15 @@
 	<script type="text/ng-template" id="item.html">
 	    <div ng-if='item.noinput == null' class="item">
 	    	<div class='label-block'>
-	    		<label class='label-field' {{item.label}}>{{item.label}}</label>
 	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
+	    		<input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label"/>
 	    		<br/>
+	    			<div ng-if="item.semantic.class != null">
+						Property = 
+						<select class='input-transparent' ng-model='item.semantic.property'>
+	    					<option ng-repeat="property in findProperties(item.semantic.class)" value="{{property}}">{{property}}</option>
+						</select>
+					</div>
 	    		<span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
 	    	</div>
 	    	<div class='item-block'>
@@ -159,7 +170,7 @@
 
 	    <div class="row">
 	    	<div class="col-md-3">
-	    		<div class="box box-grey box-padding">
+	    		<div class="box box-grey box-padding leftbar">
 					<h3>Toolbox</h3>
 
 					<div class='menubar' ng-controller="MenuCtr">
@@ -169,7 +180,7 @@
 					
 						<h5>Fields</h5>
 						<div class="menubar">
-							<span href="#" ng-repeat="item in models.templates | filter: {type : 'item'}"
+							<span href="#" ng-repeat="item in models.templates"
 						        dnd-draggable="item"
 						        dnd-effect-allowed="copy"
 						        dnd-copied="item.id = item.id + 1"
@@ -177,30 +188,36 @@
 						        class="glyphicon {{item.icon}}" aria-hidden="true">
 						    </span>
 				    	</div>
-
+				    <!--
 						<h5>Objects</h5>
 						<div>
+							
 							<input type="text" placeholder='Type to search an object' class='form-control' ng-model="foundObject" uib-typeahead="item.name for item in models.templates | filter: {type : 'container'} | filter:$viewValue | limitTo:8" class="form-control">
+						
 
-					<div ng-if="foundObject != '' && foundObject != null" class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'container'} | filter:foundObject"
-				        dnd-draggable="item"
-				        dnd-effect-allowed="copy"
-				        dnd-copied="item.id = item.id + 1"
-				        >
-				        	<span class="glyphicon {{item.icon}}" aria-hidden="true"></span>
-				        	<span class="glyphicon-text" aria-hidden="true">{{item.name}}</span>
-				    </div>
+							<div class="list-field-item" ng-repeat="item in models.templates | filter: {type : 'container'}"
+						        dnd-draggable="item"
+						        dnd-effect-allowed="copy"
+						        dnd-copied="item.id = item.id + 1"
+						        >
+						        	<span class="glyphicon {{item.icon}}" aria-hidden="true"></span>
+						        	<span class="glyphicon-text" aria-hidden="true">{{item.name}}</span>
+						    </div>
+						
 
 						</div>
+					-->
 				</div>
 	    	</div>
 			<div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-			    <div class="dropzone box box-grey">
+			    <div class="dropzone box box-grey centerarea">
 			        <!-- The dropzone also uses the list template -->
 			        <h3> Form Design</h3>
 			        <div ng-include="'list.html'"></div>
 			    </div>
 
+
+			    <pre>{{schema}}</pre>
 			    <pre>{{models.selected}}</pre>
 			    <pre>{{modelAsJson}}</pre>
 
@@ -209,7 +226,7 @@
 
 			<div class="col-md-3">	
 
-			   	<div class="box box-grey box-padding">
+			   	<div class="box box-grey box-padding rightbar">
 			   		<h3>Properties</h3>
 
 				   	<div ng-if="models.selected.type == 'item'">
@@ -228,8 +245,8 @@
 
 					<div ng-if="models.selected.type == 'container'">
 						<h5>Object</h5>
-						<strong>Type: </strong> {{models.selected.name}}<br>
-						<strong>ID: </strong> {{models.selected.id}}
+						<strong>Type: </strong> <input type='text' ng-model="models.selected.name" class='form-control'/><br>
+						<strong>ID: </strong> <input type='number' ng-model="models.selected.id" class='form-control'/>
 					</div>
 
 					<div ng-if="models.selected.semantic.class != null">
@@ -264,11 +281,11 @@
 </div>
 </div>
 
-<div ng-controller="SourceCtr">
-	<div class="container" ng-if="ontologyStructure.structure == null">
+<div ng-controller="SchemaCtr">
+	<div class="container" ng-if="schema.structure == null">
 		<h3>Please select an OWL file</h3>
-		File can be found at : <b>{{ontologyStructure.path}}</b>
-  		<input type="file" data-file="ontologyStructure.structure"/>
+		File can be found at : <b>{{schema.path}}</b>
+  		<input type="file" data-file="schema.structure"/>
    <div>
 </div>
 </body>

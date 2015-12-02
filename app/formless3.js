@@ -3,11 +3,12 @@
  */
 var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
-mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontologyStructure", "formModel" , function($scope, findParent, parseOWL, ontologyStructure, formModel) {
-    $scope.ontologyStructure = ontologyStructure;
+mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "formModel", "schema", function($scope, findParent, parseOWL, formModel, schema) {
+    //$scope.ontologyStructure = ontologyStructure;
     $scope.models = formModel.models;
+    $scope.schema = schema;
 
-    $scope.models.vocab = ontologyStructure.namespaces["xml:base:rdf"];
+    //$scope.models.vocab = ontologyStructure.namespaces["xml:base:rdf"];
 
     /**
     *   When an options for checkbox/radio/dropdown is selected, we mark them as checked=true
@@ -37,7 +38,7 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "ontolo
     *   When index=-1, we add an option at the end
     */
     $scope.addOption = function(item, index){
-        var new_option = {label: DEFAULT_LABEL, checked: DEFAULT_CHECK_OPTION};
+        var new_option = {label: "Untitled", checked: false};
         //Last of the list
         if (index == -1){
             index = item.field_options.length;
@@ -293,7 +294,15 @@ mainApp.service('formModel',function(){
                 label: "Section", 
                 component: "<h3>{{item.label}}</h3>",
                 semantic: DEFAULT_SEMANTIC            
+            },
+            {
+                type: "container", 
+                id: 1, 
+                name: "Untitled", 
+                icon: 'glyphicon-user',
+                templates: [[]]
             }
+
         ],
         dropzones: {
             templates: []
@@ -390,6 +399,58 @@ mainApp.directive('flitem', ['formModel',function (formModel){
         }
     }
 }]);
+
+
+mainApp.directive("editInline", function($window){
+    return function(scope, element, attr){
+      // a method to update the width of an input
+      // based on it's value.
+      var updateWidth = function () {
+          // create a dummy span, we'll use this to measure text.
+          var tester = angular.element('<span>'),
+          
+          // get the computed style of the input
+              elemStyle = $window.document.defaultView
+                .getComputedStyle(element[0], '');
+          
+          // apply any styling that affects the font to the tester span.
+          tester.css({
+            'font-family': elemStyle.fontFamily,
+            'line-height': elemStyle.lineHeight,
+            'font-size': elemStyle.fontSize,
+            'font-weight': elemStyle.fontWeight
+          });
+          
+          // update the text of the tester span
+          tester.text(element.val());
+          
+          // put the tester next to the input temporarily.
+          element.parent().append(tester);
+          
+          // measure!
+          var r = tester[0].getBoundingClientRect();
+          var w = r.width;
+          
+          // apply the new width!
+          element.css('width', w + 'px');
+          
+          // remove the tester.
+          tester.remove();
+        };
+        
+        // initalize the input
+        updateWidth();
+        
+        // do it on keydown so it updates "real time"
+        element.bind("keydown", function(){
+          
+          // set an immediate timeout, so the value in
+          // the input has updated by the time this executes.
+          $window.setTimeout(updateWidth, 0);
+        });
+        
+    }
+});
 
 
 mainApp.controller("MenuCtr", function($scope){
