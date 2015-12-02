@@ -8,6 +8,7 @@ mainApp.service('schema', function(){
     schema.json = null;
     schema.objects = [];
     schema.path = 'userdata/schemaorg.json';
+    schema.test = [];
 
     schema.initialize = function(jsonString){
         schema.json = angular.fromJson(jsonString);
@@ -15,6 +16,11 @@ mainApp.service('schema', function(){
             schema.objects.push(value);
         });
     }
+
+    schema.findProperties = function(_class){
+        return schema.json["types"][_class]["properties"];
+    }
+
     return schema;
 });
 

@@ -7,7 +7,7 @@ body {
 	width: 100%;
 }
 
-.nestedDemo .dropzone li, .nestedDemo .dropzone .selected .item{
+.row-form{
     min-height: 80px;
 }
 

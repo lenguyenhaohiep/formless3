@@ -41,7 +41,8 @@
 		    dnd-selected="selectItem(item)"
 		    ng-class="{selected: models.selected === item}"
 		    ng-include="item.type + '.html'"
-		    flitem="models">
+		    flitem="models"
+		    class="row-form">
 
 		</li>
 	    </ul>
@@ -54,16 +55,17 @@
 	<script type="text/ng-template" id="container.html">
 	    <div class="container-element box box-blue" vocab="{{models.vocab}}" about="{{models.prefix}}{{item.name}}{{item.id}}" typeof="{{models.prefix}}{{item.name}}" >
 		<h3> 
-			Object = 
+			[Object] 
 			<input 
 				class='input-transparent' 
 				type='text' 
 				ng-model="item.name" 
 				value="item.name"
-				uib-typeahead="object in schema.objects | filter:$viewValue | limitTo:8"
-				/>
-			<br/>
-			ID = <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
+				uib-typeahead="object for object in schema.objects | filter:$viewValue"/>
+
+			[Type] (optional) <input class='input-transparent' type='text' ng-model="item.subtype"/>
+						
+			[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
 		</h3>
 
 		<div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
@@ -74,13 +76,13 @@
 	
 	<!-- Template for a normal list item -->
 	<script type="text/ng-template" id="item.html">
-	    <div ng-if='item.noinput == null' class="item">
+	    <div ng-if='item.noinput == null' class="item row-form">
 	    	<div class='label-block'>
 	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
 	    		<input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label"/>
 	    		<br/>
 	    			<div ng-if="item.semantic.class != null">
-						Property = 
+						[Property] 
 						<select class='input-transparent' ng-model='item.semantic.property'>
 	    					<option ng-repeat="property in findProperties(item.semantic.class)" value="{{property}}">{{property}}</option>
 						</select>
@@ -235,7 +237,6 @@
 			   		<h3>Properties</h3>
 
 				   	<div ng-if="models.selected.type == 'item'">
-						<h5>Field</h5>
 						<strong>Type: </strong> {{models.selected.name}}<br>
 						<strong ng-if="models.selected.required != null">
 							Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
@@ -250,15 +251,27 @@
 
 					<div ng-if="models.selected.type == 'container'">
 						<h5>Object</h5>
-						<strong>Type: </strong> <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object in schema.objects | filter:$viewValue | limitTo:8"/><br>
+						<strong>Object: </strong> <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue"/><br>
+						<strong>Type(optional): </strong> <input type='text' ng-model="models.selected.subtype" class='form-control' /><br>
 						<strong>ID: </strong> <input type='number' ng-model="models.selected.id" class='form-control'/>
 					</div>
 
 					<div ng-if="models.selected.semantic.class != null">
-						<h5>Semantic infomation</h5>
 						<strong>Object: </strong> {{models.selected.semantic.class}}<br>
 						<strong>ID: </strong> {{models.selected.semantic.id}}<br>
-						<strong>Properties: </strong> 
+						<strong>Properties: </strong>
+
+						<input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue"/>
+						<input 
+							type='text' 
+							ng-model="models.selected.semantic.property" 
+							class='form-control' 
+							uib-typeahead="p for property in schema.objects | filter:$viewValue"/> 
+						<input 
+							type='text' 
+							ng-model="models.selected.semantic.property" 
+							class='form-control' 
+							uib-typeahead="p for property in schema.json['types'][models.selected.semantic.class]['properties'] | filter:$viewValue"/> 
 						<select class='form-control' ng-model='models.selected.semantic.property'>
 	    					<option ng-repeat="property in findProperties(models.selected.semantic.class)" value="{{property}}">{{property}}</option>
 						</select>
@@ -287,10 +300,10 @@
 </div>
 
 <div ng-controller="SchemaCtr">
-	<div class="container" ng-if="schema.structure == null">
+	<div class="container" ng-if="schema.json==null">
 		<h3>Please select an OWL file</h3>
 		File can be found at : <b>{{schema.path}}</b>
-  		<input type="file" data-file="schema.structure"/>
+  		<input type="file" data-file="schema.json"/>
    <div>
 </div>
 </body>

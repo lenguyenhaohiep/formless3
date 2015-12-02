@@ -117,7 +117,7 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "formMo
     };
 
     $scope.findProperties = function(_class){
-        return ontologyStructure.findProperties(_class);
+        return schema.findProperties(_class);
     };
 }]);
 
@@ -298,7 +298,8 @@ mainApp.service('formModel',function(){
             {
                 type: "container", 
                 id: 1, 
-                name: "Untitled", 
+                name: "Untitled Object", 
+                subtype: null,
                 icon: 'glyphicon-user',
                 templates: [[]]
             }
