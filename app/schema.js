@@ -5,11 +5,15 @@ mainApp.controller('SchemaCtr',['$scope', "schema", function($scope, schema){
 
 mainApp.service('schema', function(){
     var  schema = {};
-    schema.jsonText = null;
+    schema.json = null;
+    schema.objects = [];
     schema.path = 'userdata/schemaorg.json';
 
     schema.initialize = function(jsonString){
-        schema.jsonText = jsonString;
+        schema.json = angular.fromJson(jsonString);
+        angular.forEach(schema.json["types"], function(key,value){
+            schema.objects.push(value);
+        });
     }
     return schema;
 });

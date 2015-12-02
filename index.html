@@ -25,7 +25,7 @@
 <body ng-app="MainApp">
 
 <div ng-controller="FormDesignCtr">
-	<div class="container-fluid nestedDemo" ng-if="schema.jsonText != null">
+	<div class="container-fluid nestedDemo" ng-if="schema.json != null">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -54,7 +54,14 @@
 	<script type="text/ng-template" id="container.html">
 	    <div class="container-element box box-blue" vocab="{{models.vocab}}" about="{{models.prefix}}{{item.name}}{{item.id}}" typeof="{{models.prefix}}{{item.name}}" >
 		<h3> 
-			Object = <input class='input-transparent' type='text' ng-model="item.name" value="item.name"/>
+			Object = 
+			<input 
+				class='input-transparent' 
+				type='text' 
+				ng-model="item.name" 
+				value="item.name"
+				uib-typeahead="object in schema.objects | filter:$viewValue | limitTo:8"
+				/>
 			<br/>
 			ID = <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
 		</h3>
@@ -216,9 +223,7 @@
 			        <div ng-include="'list.html'"></div>
 			    </div>
 
-
-			    <pre>{{schema}}</pre>
-			    <pre>{{models.selected}}</pre>
+			    <pre>{{schema.objects}}</pre>
 			    <pre>{{modelAsJson}}</pre>
 
 			</div>
@@ -245,7 +250,7 @@
 
 					<div ng-if="models.selected.type == 'container'">
 						<h5>Object</h5>
-						<strong>Type: </strong> <input type='text' ng-model="models.selected.name" class='form-control'/><br>
+						<strong>Type: </strong> <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object in schema.objects | filter:$viewValue | limitTo:8"/><br>
 						<strong>ID: </strong> <input type='number' ng-model="models.selected.id" class='form-control'/>
 					</div>
 
