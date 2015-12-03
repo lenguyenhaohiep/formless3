@@ -18,7 +18,13 @@ mainApp.service('schema', function(){
     }
 
     schema.findProperties = function(_class){
+        if (schema.json["types"][_class] == null)
+            return [];
         return schema.json["types"][_class]["properties"];
+    }
+
+    schema.getDescription = function(){
+        
     }
 
     return schema;

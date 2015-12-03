@@ -199,7 +199,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT, 
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<textarea rows='5' class='form-control' ng-model='item.value' /></textarea>",
+                component: "<textarea rows='3' class='form-control' ng-model='item.value' /></textarea>",
                 semantic: DEFAULT_SEMANTIC            
 
             },
@@ -282,7 +282,7 @@ mainApp.service('formModel',function(){
                 name: "Header"  , 
                 icon:'glyphicon-header', 
                 label: "Header of the form", 
-                component: "<h1>{{item.label}}</h1>",
+                component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -292,7 +292,7 @@ mainApp.service('formModel',function(){
                 name: "Section", 
                 icon:'glyphicon-minus', 
                 label: "Section", 
-                component: "<h3>{{item.label}}</h3>",
+                component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
