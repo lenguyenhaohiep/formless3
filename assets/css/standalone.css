@@ -1,0 +1,62 @@
+.form-final{
+	padding: 20px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+.form-final .required-field{
+	color: red;
+}
+
+.form-final h3{
+	font-size: 20px;
+	font-weight:bold;
+	text-align: center;
+}
+
+.form-final h5{
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.form-final .form-control{
+	width: 500px;
+}
+
+.form-final .label-block{
+	border: none;
+	height: 20px;
+	display: inline-block;
+	width: 100px;
+	min-width: 100px;
+}
+
+.form-final .control-block{
+	display: inline-block;
+}
+
+.form-final ul{
+	list-style: none;	
+	padding-left: 0;
+}
+
+.form-final ul li{
+	margin: 5px;
+}
+
+input:valid {
+    color: black;
+}
+
+input:invalid ~ .input-validation::before {
+	content: "Matched format required";    
+	color: red;
+}
+
+input:invalid {
+    color: red;
+}
+
+.disable{
+	display: none;
+}

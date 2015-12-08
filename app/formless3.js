@@ -3,12 +3,11 @@
  */
 var mainApp = angular.module("MainApp",["dndLists","ngRoute","ui.bootstrap"]);
 
-mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "formModel", "schema", function($scope, findParent, parseOWL, formModel, schema) {
-    //$scope.ontologyStructure = ontologyStructure;
+mainApp.controller("FormDesignCtr", ['$scope', "formModel", "schema", "currentFunction", function($scope, formModel, schema, currentFunction) {
     $scope.models = formModel.models;
     $scope.schema = schema;
+    $scope.openedfile = null;
 
-    //$scope.models.vocab = ontologyStructure.namespaces["xml:base:rdf"];
 
     /**
     *   When an options for checkbox/radio/dropdown is selected, we mark them as checked=true
@@ -119,10 +118,32 @@ mainApp.controller("FormDesignCtr", ['$scope', "findParent", "parseOWL", "formMo
     $scope.findProperties = function(_class){
         return schema.findProperties(_class);
     };
+
+    $scope.htmlModels = function(){
+        return formModel.convertToHTML();
+    }
+
+    $scope.$watch("openedfile", function(){
+        if ($scope.openedfile != null){
+            formModel.load($scope.openedfile);
+            currentFunction.change("Design view");
+        }
+    })
+
 }]);
 
 
-mainApp.service('formModel',function(){
+mainApp.service('currentFunction',function(){
+    var currentFunction = {};
+    currentFunction.value = "Design view";
+
+    currentFunction.change = function(name){
+        currentFunction.value = name;
+    }
+    return currentFunction;
+});
+
+mainApp.service('formModel',function($compile, $sce){
     var formModel = {}; 
     /**
     *   Some default values
@@ -140,9 +161,10 @@ mainApp.service('formModel',function(){
     var DEFAULT_LABEL_OPTION = "Option";
     var DEFAULT_CHECK_OPTION = false;
     var DEFAULT_SEMANTIC = {class: null, id: null, property: null};
-    var prefix = "fl:";
+
+
+    //Open Template
     formModel.models = {
-        prefix: prefix,
         vocab: null,
         selected: null,
         templates: [
@@ -154,7 +176,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='text' property='"+prefix+"{{item.semantic.class}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+                component: "<input value='{{item.value}}' type='text' property='{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -165,7 +187,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='number' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                component: "<input value='{{item.value}}' type='number' property='{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -176,7 +198,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='date' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                component: "<input value='{{item.value}}' type='date' property='{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
                 semantic: DEFAULT_SEMANTIC            
 
             },
@@ -188,7 +210,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT, 
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='email' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+                component: "<input value='{{item.value}}' type='email' property='{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
                 semantic: DEFAULT_SEMANTIC
             },
             {
@@ -199,7 +221,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT, 
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<textarea rows='3' class='form-control' ng-model='item.value' /></textarea>",
+                component: "<textarea value='{{item.value}}' rows='3' property='{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' /></textarea>",
                 semantic: DEFAULT_SEMANTIC            
 
             },
@@ -210,7 +232,7 @@ mainApp.service('formModel',function(){
                 icon:'glyphicon-record', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='radio' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' ng-model='item.value' ng-value='option' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end/>", 
+                component: "<input type='radio' property='{{item.semantic.property}}' content='{{item.value.label}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' ng-model='option.checked' ng-value='true' ng-click='$parent.$parent.setSelect(item, option)' }}'/><span class='opt'>{{option.label}}</span><br ng-repeat-end/>", 
                 field_options:[
                             {label: "Radio 1", checked: false},
                             {label: "Radio 2", checked: false}
@@ -226,7 +248,7 @@ mainApp.service('formModel',function(){
                 icon:'glyphicon-ok-circle', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<input type='checkbox' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' ng-checked='{{option.checked}}' ng-click='$parent.$parent.setSelect(item, option)'/><span ng-model='option.label'>{{option.label}}</span><br ng-repeat-end />", 
+                component: "<input type='checkbox' property='{{item.semantic.property}}'  content='{{item.value.label}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />", 
                 field_options:[
                             {label: "Checkbox 1", checked: false},
                             {label: "Checkbox 2", checked: false}
@@ -243,7 +265,7 @@ mainApp.service('formModel',function(){
                 icon:'glyphicon-collapse-down', 
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
-                component: "<select class='form-control' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>", 
+                component: "<select class='form-control' property='{{item.semantic.property}}' content='{{item.value.label}}' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>", 
                 field_options: [
                                     {label: "Option 1", checked: false},
                                     {label: "Option 2", checked: false}
@@ -261,7 +283,7 @@ mainApp.service('formModel',function(){
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL, 
                 value: null,
-                component: "<input type='file' />",
+                component: "<input property='{{item.semantic.property}}' content='{{item.value}}' type='file' />",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -272,7 +294,7 @@ mainApp.service('formModel',function(){
                 icon:'glyphicon-paperclip', 
                 label: DEFAULT_LABEL,
                 value: null, 
-                component: "<input type='file' multiple/>",
+                component: "<input property='{{item.semantic.property}}' content='{{item.value}}' type='file' multiple/>",
                 semantic: DEFAULT_SEMANTIC
             },
             {
@@ -282,7 +304,7 @@ mainApp.service('formModel',function(){
                 name: "Header"  , 
                 icon:'glyphicon-header', 
                 label: "Header of the form", 
-                component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
+                component: "<h3><input type='text' class='form-control'  ng-model='item.label' /></h3>",
                 semantic: DEFAULT_SEMANTIC            
             },
             {
@@ -310,43 +332,136 @@ mainApp.service('formModel',function(){
         }
     };
 
-    formModel.initialize = function(ontologyStructure){
-        angular.forEach(ontologyStructure.class,function(key,val){
-            var container = {
-                type: "container", 
-                id: 1, 
-                name: val, 
-                icon: 'glyphicon-record',
-                templates: [[]]
-            };
-        formModel.models.templates.push(container);
-        });
-    };
+
+    formModel.load = function(file){
+        var reader = new FileReader();
+        reader.onload = function(){
+            parser=new DOMParser();
+            htmlDoc=parser.parseFromString(reader.result, "text/html"); 
+            models = formModel.htmlToTemplate(htmlDoc, _class=null, _id=null);
+            formModel.models.dropzones.templates = models;
+        }
+        reader.readAsText(file);
+    }
+
+
+    formModel.htmlToTemplate = function(html, _class, _id){
+        var res = [];
+        var xPath="/html/body/div/div/ul/li";
+        var parser=new DOMParser();
+        var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+
+        var li = result.iterateNext();
+        //in case of a container
+
+        while (li){
+            htmlDoc=parser.parseFromString(li.innerHTML, "text/html"); 
+            //res.templates.push(formModel.htmlToTemplate(htmlDoc));
+            //check item or container
+            check = htmlDoc.evaluate(xPath, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+            if (check.iterateNext()){
+                if (res.templates == null)
+                    res.templates = [];
+
+                var container = angular.copy(formModel.models.templates[12]);
+
+                var div = htmlDoc.getElementsByTagName('div')[0];
+                container.name = div.getAttribute("typeof");
+                var temp = div.getAttribute("resource");
+                container.subtype = temp.substring(0,temp.length-1);
+                container.id = parseInt(temp.substring(temp.length-1,temp.length));
+
+                container.templates[0] = formModel.htmlToTemplate(htmlDoc, container.name, container.id);
+                res.push(container);
+            }
+            else{
+            //in case of a document
+                xpaths = [  "//html-render/input[@type='text']",
+                            "//html-render/input[@type='number']",
+                            "//html-render/input[@type='date']",
+                            "//html-render/input[@type='email']",
+                            "//html-render/textarea",
+                            "//html-render/input[@type='radio']",
+                            "//html-render/input[@type='checkbox']",
+                            "//html-render/select",
+                            "//html-render/input[@type='file']",
+                            "//html-render/input[@type='file']",
+                            "//h3",
+                            "//h5",
+                            ];
+
+                for (i=0;i<xpaths.length;i++){
+                    control = htmlDoc.evaluate(xpaths[i], htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null).iterateNext();
+                    if (control){
+                        var item = angular.copy(formModel.models.templates[i]);
+
+                        //get semantic info
+                        if (_class != null && _id != null){
+                            item.semantic.class = _class;
+                            item.semantic.id = parseInt(_id);
+                        }
+
+                        //get Labels
+                        if (i==10 || i == 11){
+                            item.label = control.innerText;
+                        } else{
+                                label = htmlDoc.getElementsByTagName("label")[0];
+                                if (label)
+                                    item.label = label.innerText;
+                                item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
+                                item.semantic.property = control.getAttribute("property");
+                        }
+
+                        //get options
+                    
+                        switch (i){ 
+                            //section, header  
+                            //radio
+                            case 5:
+                                inputs = htmlDoc.getElementsByTagName('span');
+                                item.field_options = [];
+                                for (j=1;j<inputs.length;j++){
+                                    var option = {label: inputs[j].innerText, checked: false};
+                                    item.field_options.push(option)
+                                }
+                                break;                            
+                            case 6:
+                                inputs = htmlDoc.getElementsByTagName('input');
+                                item.field_options = [];
+                                for (j=0;j<inputs.length;j++){
+                                    var option = {label: inputs[j].getAttribute("value"), checked: false};
+                                    item.field_options.push(option)
+                                }
+                                break;
+                            case 7:
+                                inputs = htmlDoc.getElementsByTagName('option');
+                                item.field_options = [];
+                                for (j=0;j<inputs.length;j++){
+                                    var option = {label: inputs[j].innerText, checked: false};
+                                    item.field_options.push(option)
+                                }
+                                break;;
+                            default: 
+                                break;
+                        }
+
+                        res.push(item);
+
+          
+                    }    
+                }
+            }
+
+            li = result.iterateNext();
+        }
+
+        return res;
+    }
 
     return formModel;
 
 });
 
-/**
-*   Find parent of a node in the models
-*/
-mainApp.service('findParent', function(){
-    return function (list, node){
-        angular.forEach(list, function (item) {
-            if (item == node)
-                return list;
-            if (item.columns != null){
-                    if (item.columns.length != 0)
-                        return findParent(item.columns, child);
-            }
-        });
-    }
-});
-
-mainApp.service('parseOWL',['$http',function($http){
-    return function(){
-    }
-}]);
 
 /**
 * This directive is used to render code HTML from text to the page, this method is unsafe method, pay attention in use
@@ -362,17 +477,17 @@ mainApp.directive('htmlRender', function($compile, $sce) {
         if (!value) return;
 
         //Wrap in case text only so that the compile can work without error        
-        var wrapper = angular.element('<div>');value
+        var wrapper = angular.element('<div>');
 
         //Trusted HTML
         value=$sce.trustAsHtml(value);
         wrapper.html(value);
         var markup = $compile(wrapper.contents())(scope);
         element.append(markup)
-        console.log(markup);
     }
   }
 });
+
 
 /**
 * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
@@ -402,71 +517,42 @@ mainApp.directive('flitem', ['formModel',function (formModel){
 }]);
 
 
-mainApp.directive("editInline", function($window){
-    return function(scope, element, attr){
-      // a method to update the width of an input
-      // based on it's value.
-      var updateWidth = function () {
-          // create a dummy span, we'll use this to measure text.
-          var tester = angular.element('<span>'),
-          
-          // get the computed style of the input
-              elemStyle = $window.document.defaultView
-                .getComputedStyle(element[0], '');
-          
-          // apply any styling that affects the font to the tester span.
-          tester.css({
-            'font-family': elemStyle.fontFamily,
-            'line-height': elemStyle.lineHeight,
-            'font-size': elemStyle.fontSize,
-            'font-weight': elemStyle.fontWeight
-          });
-          
-          // update the text of the tester span
-          tester.text(element.val());
-          
-          // put the tester next to the input temporarily.
-          element.parent().append(tester);
-          
-          // measure!
-          var r = tester[0].getBoundingClientRect();
-          var w = r.width;
-          
-          // apply the new width!
-          element.css('width', w + 'px');
-          
-          // remove the tester.
-          tester.remove();
-        };
-        
-        // initalize the input
-        updateWidth();
-        
-        // do it on keydown so it updates "real time"
-        element.bind("keydown", function(){
-          
-          // set an immediate timeout, so the value in
-          // the input has updated by the time this executes.
-          $window.setTimeout(updateWidth, 0);
-        });
-        
-    }
-});
 
-
-mainApp.controller("MenuCtr", function($scope){
-    $scope.commands = [ {name: "Open", icon: "glyphicon-folder-open"},
-                        {name: "New" , icon: "glyphicon-plus"},
-                        {name: "New from Template" , icon: "glyphicon-list-alt"},
-                        {name: "Save" , icon: "glyphicon-floppy-disk"},
-                        {name: "Save As" , icon: "glyphicon-floppy-save"},
-                        {name: "Quit" , icon: "glyphicon-log-out"},
-                        {name: "Clear" , icon: "glyphicon-remove"},
-                        {name: "Sign" , icon: "glyphicon-pencil"},
-                        {name: "Verify" , icon: "glyphicon-ok"},
-                        {name: "Design view" , icon: "glyphicon-wrench"},
-                        {name: "Edit view" , icon: "glyphicon-edit"},
-                        {name: "Settings" , icon: "glyphicon-cog"},
-                        {name: "About" , icon: "glyphicon-info-sign"}                        
+mainApp.controller("MenuCtr", ['$scope','$compile', 'currentFunction', function($scope,$compile, currentFunction){
+    $scope.currentFunction = currentFunction;
+    $scope.commands = [ {name: "Open", icon: "glyphicon-folder-open", selected:false},
+                        {name: "New" , icon: "glyphicon-plus", selected:false},
+                        {name: "New from Template" , icon: "glyphicon-list-alt", selected:false},
+                        {name: "Save" , icon: "glyphicon-floppy-disk", selected:false},            
+                        {name: "Design view" , icon: "glyphicon-wrench", selected:true},
+                        {name: "Edit view" , icon: "glyphicon-edit", selected:false},
+                        {name: "Clear" , icon: "glyphicon-remove", selected:false},
+                        {name: "Sign" , icon: "glyphicon-pencil", selected:false}, 
+                        {name: "Verify" , icon: "glyphicon-ok", selected:false}                        
                     ];
-});
+
+    $scope.selectMenu = function(name){
+        $scope.currentFunction.change(name);
+    }
+
+    $scope.openFile = function(){
+        document.getElementById("tempFile").click();
+    }
+
+    $scope.$watch("currentFunction.value", function(){
+        angular.forEach($scope.commands, function(item){
+            item.selected=false;
+            if (item.name == currentFunction.value){
+                item.selected = true;
+                if (currentFunction.value == "Open"){
+                    $scope.openFile();
+                }
+
+                if (currentFunction.value == "Edit view"){
+                    console.log(document.getElementById('formExport').innerHTML);
+                }
+            }
+
+        });
+    });
+}]);

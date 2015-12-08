@@ -1,20 +1,30 @@
 mainApp.controller('SchemaCtr',['$scope', "schema", function($scope, schema){
   $scope.schema = schema; 
-
+  $scope.$watch("schema.file",function(){
+    schema.initialize();
+  });
 }]);
 
 mainApp.service('schema', function(){
     var  schema = {};
+    schema.file = null;
     schema.json = null;
     schema.objects = [];
     schema.path = 'userdata/schemaorg.json';
     schema.test = [];
+    schema.tempFile = null;
 
-    schema.initialize = function(jsonString){
-        schema.json = angular.fromJson(jsonString);
-        angular.forEach(schema.json["types"], function(key,value){
-            schema.objects.push(value);
-        });
+    schema.initialize = function(){
+        if (schema.file==null)
+            return;
+        var reader = new FileReader();
+        reader.onload = function(){
+            schema.json = angular.fromJson(reader.result);
+            angular.forEach(schema.json["types"], function(key,value){
+                schema.objects.push(value);
+            });
+        }
+        reader.readAsText(schema.file);
     }
 
     schema.findProperties = function(_class){
@@ -23,14 +33,25 @@ mainApp.service('schema', function(){
         return schema.json["types"][_class]["properties"];
     }
 
-    schema.getDescription = function(){
-        
+    schema.getType = function (type){
+        if (schema.json["types"][type] == null)
+            return "ov:"+type;
+        return type;
+
+    }
+
+    schema.getProp = function (prop){
+        alert(prop);
+        if (schema.json["properties"][prop] == null)
+            return "ov:"+prop;
+        return prop;
+
     }
 
     return schema;
 });
 
-mainApp.directive('file',["schema", function(schema){
+mainApp.directive('file',function(schema){
     return {
         scope: {
             file: '='
@@ -39,16 +60,10 @@ mainApp.directive('file',["schema", function(schema){
             el.bind('change', function(event){
                 var files = event.target.files;
                 var file = files[0];
-                scope.file = file ? file.name : undefined;
-                scope.$apply(function(){
-                  var reader = new FileReader();
-                    reader.onload = function(){
-                        scope.contentFile = reader.result;
-                        schema.initialize(scope.contentFile);
-                    }
-                    reader.readAsText(file);
-                });
+                //scope.file = file ? file.name : undefined;
+                scope.file = file;
+                scope.$apply();
             });
         }
     };
-}]);
+});

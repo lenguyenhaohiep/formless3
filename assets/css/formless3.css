@@ -148,6 +148,10 @@ body {
 	text-decoration: none;
 }
 
+.menubar span.menuselected{
+	color: #428bca;
+}
+
 .label-semantic{
 	font-size: 10px;
 }
@@ -192,4 +196,16 @@ input:invalid {
 	font-size: 12px;
 	height: 24px;
 	padding: 0px 5px;
+}
+
+.disable{
+	display: none;
+}
+
+.main{
+	margin: 20px;
+}
+
+.btn{
+	font-size: 12px;
 }
