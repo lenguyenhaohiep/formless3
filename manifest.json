@@ -10,6 +10,14 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "tabs"
-  ]
+    	"tabs",
+	"<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "app/userdata/schemaorg.json"
+  ],
+  "background": {
+    "page": "index.html",
+    "persistent": false
+  }
 }

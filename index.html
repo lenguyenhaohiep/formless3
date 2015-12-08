@@ -22,8 +22,8 @@
     <script src="app/formless3.js"></script>    
     <script src="app/schema.js"></script>    
     <script src="app/changemode.js"></script>
-    <script src="app/openpgp.factory.js"></script>  
-
+    <script src="app/openpgp.factory.js"></script> 
+    <script src="assets/js/re.js"></script>    
 
   </head>
 <body ng-app="MainApp" ng-controller="MenuCtr">
@@ -32,7 +32,7 @@
 
 	<input id="tempFile" type="file" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0"/>
 
-	<div class="container-fluid nestedDemo" ng-if="schema.file != null">
+	<div class="container-fluid nestedDemo" ng-if="schema.json != null">
 	<!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
@@ -275,8 +275,8 @@
 </div>
 </div>
 
-<div ng-controller="SchemaCtr">
-	<div class="container" ng-if="schema.file==null">
+<div id="SchemaCtr" ng-controller="SchemaCtr">
+	<div class="container" ng-if="schema.json == null">
 		<h3>Please select an OWL file</h3>
 		File can be found at : <b>{{schema.path}}</b>
   		<input type="file" data-file="schema.file"/>

@@ -1,8 +1,12 @@
 mainApp.controller('SchemaCtr',['$scope', "schema", function($scope, schema){
-  $scope.schema = schema; 
-  $scope.$watch("schema.file",function(){
-    schema.initialize();
-  });
+    $scope.schema = schema; 
+    $scope.$watch("schema.file",function(){
+        schema.initialize();
+    });
+
+    $scope.updateSchema = function(text){
+        schema.parseFormText(text);
+    }
 }]);
 
 mainApp.service('schema', function(){
@@ -23,8 +27,16 @@ mainApp.service('schema', function(){
             angular.forEach(schema.json["types"], function(key,value){
                 schema.objects.push(value);
             });
+            alert(schema.json);
         }
         reader.readAsText(schema.file);
+    }
+
+    schema.parseFormText = function(jsonText){
+        schema.json = angular.fromJson(jsonText);
+        angular.forEach(schema.json["types"], function(key,value){
+            schema.objects.push(value);
+        });   
     }
 
     schema.findProperties = function(_class){
