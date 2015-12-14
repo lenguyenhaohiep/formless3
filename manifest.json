@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension shows a Google Image search result for the current page",
+  "name": "Formless",
+  "description": "This extension can design forms with Rdfa support, fill from others forms, sign and verify the digital signature with the standard OpenPGP",
   "version": "1.0",
 
   "browser_action": {
@@ -10,14 +10,10 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    	"tabs",
-	"<all_urls>"
+    	"tabs", "<all_urls>"
   ],
   "web_accessible_resources": [
-    "app/userdata/schemaorg.json"
-  ],
-  "background": {
-    "page": "index.html",
-    "persistent": false
-  }
+    "app/userdata/schemaorg.json",
+    "assets/js/modal.function.js"
+  ]
 }

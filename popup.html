@@ -3,21 +3,59 @@
   <head>
     	<title>Design and fill your form easily</title>
     	<meta content="utf8">
-
+    	<style type="text/css">
+    	button{
+    		border: none;
+    		background: transparent;
+    		text-decoration: underline;
+    	}
+    	li:hover{
+    		cursor: pointer;
+    		font-weight: bold;
+    	}
+    	ul{
+    		list-style: none;
+    	}
+    	span{
+    		margin-top: -5px;
+    	}
+    	</style>
   </head>
 
-<body style="width:500px; height: 120px;">
+<body style="width:300px;">
 	<center> 
 		<h2>Formless Plugin</h2>
-		<h3>Please choose a command</h3>
-		<button id='func1'>New Template</button>
-		<button id='func2'>New from Template</button>
-		<button id='func3'>Sign</button>
-		<button id='func4'>Verify</button>
-		<button id='func5'>Fill</button>
-		<button id='func6'>Save/Download</button>
 	</center>
-
+	<ul>
+		<li id='func1'>
+			<img alt='New' src='assets/img/new.png' />
+			<span>New a template</span>
+		</li>
+		<li id='func2'>
+			<img  alt='New From Template' src='assets/img/template.png' />
+			<span>New a form from this template</span>
+		</li>
+		<li id='func3'>
+			<img alt='Edit Template' src='assets/img/edit.png' />
+			<span>Edit this template</span>
+		</li>
+		<li id='func4'>
+			<img alt='Sign' src='assets/img/sign.png' />
+			<span>Sign this form</span>
+		</li>
+		<li id='func5'>
+			<img  alt='Verify' src='assets/img/verify.png' />
+			<span>Verify this form</span>
+		</li>
+		<li id='func6'>
+			<img  alt='Fill' src='assets/img/fill.png' />
+			<span>Fill automatically this form</span>
+		</li>
+		<li id='func7'>
+			<img  alt='Download' src='assets/img/download.png' />
+			<span>Download this form</span>
+		</li>
+	</ul>
 	<script src="popup.js"></script>
 </body>
 </html>

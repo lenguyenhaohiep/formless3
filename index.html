@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Design and fill your form easily</title>
     <meta content="utf8">
 
@@ -11,276 +12,269 @@
     <link rel="stylesheet" href="assets/css/formless3.css" />
     <link rel="stylesheet" href="assets/css/standalone.css" />
 
-
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/angular-route.js"></script>
     <script src="assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
-    <script src="assets/js/xml2json.js"></script>    
-    <script src="assets/js/openpgp.js"></script>    
+    <script src="assets/js/xml2json.js"></script>
+    <script src="assets/js/openpgp.js"></script>
+    <script src="assets/js/FileSaver.js"></script>
+    <script src="assets/js/beautify-html.js"></script>
+    <script src="assets/js/beautify.js"></script>
+    <script src="assets/js/beautify-css.js"></script>
 
-	<script src="app/angular-drag-and-drop-lists.js"></script>
-    <script src="app/formless3.js"></script>    
-    <script src="app/schema.js"></script>    
-    <script src="app/changemode.js"></script>
-    <script src="app/openpgp.factory.js"></script> 
-    <script src="assets/js/re.js"></script>    
 
-  </head>
-<body ng-app="MainApp" ng-controller="MenuCtr">
+    <script src="app/angular-drag-and-drop-lists.js"></script>
+    <script src="app/controllers.js"></script>
+    <script src="app/directives.js"></script>
+    <script src="app/services.js"></script>
 
-<div ng-controller="FormDesignCtr">
+</head>
 
-	<input id="tempFile" type="file" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0"/>
+<body ng-app="MainApp" ng-controller="FunctionCtr">
 
-	<div class="container-fluid nestedDemo" ng-if="schema.json != null">
-	<!-- Markup for lists inside the dropzone. It's inside a seperate template
+    <div ng-controller="FormCtr">
+
+        <input id="tempFile" file1 type="file" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" />
+
+        <div class="container-fluid nestedDemo" ng-if="schema.json != null">
+            <!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
 	     to drop elements into the referenced array. The dnd-draggable directive
 	     makes an element draggable and will transfer the object that was
 	     assigned to it. If an element was dragged away, you have to remove
 	     it from the original list yourself using the dnd-moved attribute -->
-	<script type="text/ng-template" id="list.html">
-	    <ul dnd-list="list">
-		<li ng-repeat="item in list"
-		    dnd-draggable="item"
-		    dnd-effect-allowed="move"
-		    dnd-moved="list.splice($index, 1)"
-		    dnd-selected="selectItem(item)"
-		    ng-class="{selected: models.selected === item}"
-		    ng-include="item.type + '.html'"
-		    flitem="models"
-		    class="row-form">
+            <script type="text/ng-template" id="list.html">
+                <ul dnd-list="list">
+                    <li ng-repeat="item in list" dnd-draggable="item" dnd-effect-allowed="move" dnd-moved="list.splice($index, 1)" dnd-selected="selectItem(item)" ng-class="{selected: models.selected === item}" ng-include="item.type + '.html'" flitem="models" class="row-form">
 
-		</li>
-	    </ul>
-	</script>
+                    </li>
+                </ul>
+            </script>
 
 
-	
-	<!-- This template is responsible for rendering a container element. It uses
+
+            <!-- This template is responsible for rendering a container element. It uses
 	     the above list template to render each container column -->
-	<script type="text/ng-template" id="container.html">
-	    <div class="container-element box box-blue">
-		<h3> 
-			[Object] 
-			<input 
-				class='input-transparent' 
-				type='text' 
-				ng-model="item.name" 
-				value="item.name"
-				uib-typeahead="object for object in schema.objects | filter:$viewValue | limitTo:8"/>
-
-			[Type] (optional) <input class='input-transparent' type='text' ng-model="item.subtype"/>
-						
-			[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
-		</h3>
-
-		<div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
-		<div class="clearfix"></div>
-	    </div>
-	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
-	</script>
-	
-	<!-- Template for a normal list item -->
-	<script type="text/ng-template" id="item.html">
-	    <div ng-if='item.noinput == null' class="item row-form">
-	    	<div class='label-block'>
-	    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
-	    		<input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label"/>
-	    		<br/>
-	    			<div ng-if="item.semantic.class != null">
-						[Property] 
+            <script type="text/ng-template" id="container.html">
+                <div class="container-element box box-blue">
+                    <h3> 
+						[Object] 
 						<input 
-							type='text' 
-							ng-model="item.semantic.property" 
 							class='input-transparent' 
-							uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue"/>
-					</div>
-	    		<span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
-	    	</div>
-	    	<div class='item-block'>
-	    		<html-render item="item" val='component'></html-render>
-	    	</div>
-	    </div>
+							type='text' 
+							ng-model="item.name" 
+							value="item.name"
+							uib-typeahead="object for object in schema.objects | filter:$viewValue | limitTo:8"/>
 
-	    <div ng-if='item.noinput != null' class="item">
-	    	<html-render item="item" val='component'></html-render>
-	    </div>
-	    <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
-	</script>
-	
-	<!-- Main area with dropzones and source code -->
-	<div class="col-md-12">
-	    <div class="row">
-	    	<div class="col-md-3">
-	    		<div class="box box-grey box-padding leftbar">
-					<h3>Toolbox</h3>
+						[Type] (optional) <input class='input-transparent' type='text' ng-model="item.subtype"/>
+									
+						[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
+					</h3>
 
-					<div class='menubar'>
-			    		<span href="#" ng-repeat="item in commands" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.name)">
+                    <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
+                    <div class="clearfix"></div>
+                </div>
+                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+            </script>
+
+            <!-- Template for a normal list item -->
+            <script type="text/ng-template" id="item.html">
+                <div ng-if='item.noinput == null' class="item row-form">
+                    <div class='label-block'>
+                        <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                        <input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label" />
+                        <br/>
+                        <div ng-if="item.semantic.class != null">
+                            [Property]
+                            <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" />
+                        </div>
+                        <span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
+                    </div>
+                    <div class='item-block'>
+                        <html-render item="item" val='component'></html-render>
+                    </div>
+                </div>
+
+                <div ng-if='item.noinput != null' class="item">
+                    <html-render item="item" val='component'></html-render>
+                </div>
+                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+            </script>
+
+            <!-- Main area with dropzones and source code -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="box box-grey box-padding leftbar">
+                            <h3>Toolbox</h3>
+
+                            <div class='menubar'>
+                                <span href="#" ng-repeat="item in commands" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.name)">
 			    		</span>
-					</div>
-					
-						<div class="menubar" ng-if="currentFunction.value=='Design view'">
-							<h5>Fields</h5>
-							<span href="#" ng-repeat="item in models.templates"
-						        dnd-draggable="item"
-						        dnd-effect-allowed="copy"
-						        dnd-copied="item.id = item.id + 1"
-						        tooltip-placement="bottom" uib-tooltip="{{item.name}}"
-						        class="glyphicon {{item.icon}}" aria-hidden="true">
+                            </div>
+
+                            <div class="menubar" ng-if="sharedData.currentFunction=='Design view'">
+                                <h5>Fields</h5>
+                                <span href="#" ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
 						    </span>
-				    	</div>
+                            </div>
 
-				</div>
-	    	</div>
+                        </div>
+                    </div>
 
-	    	<!--Design view -->
-	    	<div ng-if="currentFunction.value=='Design view'">
-				<div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-				    <div id="formExport" class="dropzone box box-grey centerarea">
-				        <!-- The dropzone also uses the list template -->
-				        <h3> Form Design</h3>
-				        <div ng-include="'list.html'"></div>
-				    </div>
-				    <pre>{{modelAsJson}}</pre>
+                    <!--Design view -->
+                    <div ng-if="sharedData.currentFunction=='Design view'">
+                        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
+                            <div id="formExport" class="dropzone box box-grey centerarea">
+                                <!-- The dropzone also uses the list template -->
+                                <div ng-include="'list.html'"></div>
+                            </div>
+                            <pre>{{modelAsJson}}</pre>
 
-				</div>
+                        </div>
 
 
-				<div class="col-md-3">	
+                        <div class="col-md-3">
 
-				   	<div class="box box-grey box-padding rightbar">
-				   		<h3>Properties</h3>
+                            <div class="box box-grey box-padding rightbar">
+                                <h3>Properties</h3>
 
-					   	<div ng-if="models.selected.type == 'item'">
-							<strong>Type: </strong> {{models.selected.name}}<br>
-							<strong ng-if="models.selected.required != null">
+                                <div ng-if="models.selected.type == 'item'">
+                                    <strong>Type: </strong> {{models.selected.name}}
+                                    <br>
+                                    <strong ng-if="models.selected.required != null">
 								Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
-							</strong><br/>
-							<strong>Label: </strong> <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+							</strong>
+                                    <br/>
+                                    <strong>Label: </strong>
+                                    <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
 
-							<div ng-if='models.selected.properties != null'>
-								<html-render item='models.selected' val='properties'></html-render>
-							</div>
+                                    <div ng-if='models.selected.properties != null'>
+                                        <html-render item='models.selected' val='properties'></html-render>
+                                    </div>
 
-						</div>
+                                </div>
 
-						<div ng-if="models.selected.type == 'container'">
-							<h5>Object</h5>
-							<strong>Object: </strong> <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue"/><br>
-							<strong>Type(optional): </strong> <input type='text' ng-model="models.selected.subtype" class='form-control' /><br>
-							<strong>ID: </strong> <input type='number' ng-model="models.selected.id" class='form-control'/>
-						</div>
+                                <div ng-if="models.selected.type == 'container'">
+                                    <h5>Object</h5>
+                                    <strong>Object: </strong>
+                                    <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue" />
+                                    <br>
+                                    <strong>Type(optional): </strong>
+                                    <input type='text' ng-model="models.selected.subtype" class='form-control' />
+                                    <br>
+                                    <strong>ID: </strong>
+                                    <input type='number' ng-model="models.selected.id" class='form-control' />
+                                </div>
 
-						<div ng-if="models.selected.semantic.class != null">
-							<strong>Object: </strong> {{models.selected.semantic.class}}<br>
-							<strong>ID: </strong> {{models.selected.semantic.id}}<br>
-							<strong>Properties: </strong>
-							<input 
-								type='text' 
-								ng-model="models.selected.semantic.property" 
-								class='form-control' 
-								uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue"/> 
-						</div>
-					</div>
-				</div>
-			</div>
+                                <div ng-if="models.selected.semantic.class != null">
+                                    <strong>Object: </strong> {{models.selected.semantic.class}}
+                                    <br>
+                                    <strong>ID: </strong> {{models.selected.semantic.id}}
+                                    <br>
+                                    <strong>Properties: </strong>
+                                    <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-			<!--Edit vier-->
+                    <!--Edit vier-->
 
-			<script type="text/ng-template" id="list2.html">
-			    <ul dnd-list="list">
-					<li ng-repeat="item in list"
-						ng-include="item.type + '2.html'">
-					</li>
-			    </ul>
-			</script>
+                    <script type="text/ng-template" id="list2.html">
+                        <ul dnd-list="list">
+                            <li ng-repeat="item in list" ng-include="item.type + '2.html'">
+                            </li>
+                        </ul>
+                    </script>
 
 
-			
-			<!-- This template is responsible for rendering a container element. It uses
+
+                    <!-- This template is responsible for rendering a container element. It uses
 			     the above list template to render each container column -->
-			<script type="text/ng-template" id="container2.html">
-			    <div resource="{{item.subtype}}{{item.id}}" typeof="{{schema.getType(item.name)}}">
-				<div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
-			    </div>			
-			</script>
-			
-			<!-- Template for a normal list item -->
-			<script type="text/ng-template" id="item2.html">
-			    <div ng-if='item.noinput == null'>
-			    	<div class='label-block'>
-			    		<label>{{item.label}}</label>
-			    		<span ng-if="item.required == 'yes' " class='required-field'>*</span>
-				    </div>
-			    	<div class='control-block'>
-			    		<html-render item="item" val='component'></html-render>
-			    	</div>
-			    </div>
+                    <script type="text/ng-template" id="container2.html">
+                        <div resource="{{item.subtype}}{{item.id}}" typeof="{{schema.getType(item.name)}}">
+                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        </div>
+                    </script>
 
-			    <div ng-if='item.noinput != null'>
-			    	<h3 ng-if='item.name == "Header"'>{{item.label}}</h3>
-			    	<h5 ng-if='item.name == "Section"'>{{item.label}}</h5>
-			    </div>
-			</script>
+                    <!-- Template for a normal list item -->
+                    <script type="text/ng-template" id="item2.html">
+                        <div ng-if='item.noinput == null'>
+                            <div class='label-block'>
+                                <label>{{item.label}}</label>
+                                <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                            </div>
+                            <div class='control-block'>
+                                <html-render item="item" val='component'></html-render>
+                            </div>
+                        </div>
 
-			<div ng-if="currentFunction.value=='Edit view'">
+                        <div ng-if='item.noinput != null'>
+                            <h3 ng-if='item.name == "Header"'>{{item.label}}</h3>
+                            <h5 ng-if='item.name == "Section"'>{{item.label}}</h5>
+                        </div>
+                    </script>
 
-				<div ng-repeat="(zone, list) in models.dropzones" class="col-md-9 template-zone">
-				    <div id="export" class="box box-grey centerarea">
-				        <!-- The dropzone also uses the list template -->
-				        <h3> Form Edit</h3>
-				        <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example">
-				        </div>
-				    </div>
-				</div>		
-			</div>
+                    <div ng-hide="sharedData.currentFunction !='Edit view'">
 
-			<div ng-if="currentFunction.value=='Sign'">
-				<div class="col-md-9 template-zone">
-				    <div class="box box-grey centerarea">
-				        <!-- The dropzone also uses the list template -->
-				        <h3>Sign</h3>
-				        <div class='main'>
-					        <h5>Private Key</h5>
-					        <textarea rows='15' class='form-control' placeholder="Enter your private key"></textarea>
-					        <h5>Passphrase</h5>
-					        <input type='password' class='form-control' placeholder='Enter your passphrase'/>
-					        <br/>
-					        <button class='btn'>Click to sign this form</button>
-				    	</div>
+                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-9 template-zone">
+                            <div class="box box-grey centerarea">
+                                <!-- The dropzone also uses the list template -->
+                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-				    </div>
-				</div>
-			</div>		
-			
-			<div ng-if="currentFunction.value=='Verify'">
-				<div class="col-md-9 template-zone">
-				    <div class="box box-grey centerarea">
-				        <!-- The dropzone also uses the list template -->
-				        <h3>Verify</h3>
-				        <div class='main'>
-					        <h5>Public Key</h5>
-					        <textarea rows='15' class='form-control' placeholder="Enter the public key"></textarea>
-					        <br/>
-					        <button class='btn'>Click to verify this form</button>
-				    	</div>
-				    </div>
-				</div>
-			</div>
-			</div>
-	    </div>
-	</div>
-</div>
-</div>
+                    <div ng-controller='SignCtr'>
+                        <div ng-if="sharedData.currentFunction=='Sign'">
+                            <div class="col-md-9 template-zone">
+                                <div class="box box-grey centerarea">
+                                    <!-- The dropzone also uses the list template -->
+                                    <h3>Sign</h3>
+                                    <div class='main'>
+                                        <h5>Private Key</h5>
+                                        <input file2 type="file" ng-model="keys.private_key" />
+                                        <textarea ng-model='keys.private_key' rows='15' class='form-control' placeholder="Enter your private key"></textarea>
+                                        <h5>Passphrase</h5>
+                                        <input type='password' ng-model='keys.passphrase' class='form-control' placeholder='Enter your passphrase' />
+                                        <br/>
+                                        <button class='btn' ng-click='sign()'>Click to sign this form</button>
+                                    </div>
 
-<div id="SchemaCtr" ng-controller="SchemaCtr">
-	<div class="container" ng-if="schema.json == null">
-		<h3>Please select an OWL file</h3>
-		File can be found at : <b>{{schema.path}}</b>
-  		<input type="file" data-file="schema.file"/>
-   </div>
-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="sharedData.sharedData.currentFunction=='Verify'">
+                            <div class="col-md-9 template-zone">
+                                <div class="box box-grey centerarea">
+                                    <!-- The dropzone also uses the list template -->
+                                    <h3>Verify</h3>
+                                    <div class='main'>
+                                        <h5>Public Key</h5>
+                                        <input file2 type="file" ng-model="keys.public_key" />
+                                        <textarea rows='15' ng-model='keys.public_key' class='form-control' placeholder="Enter the public key"></textarea>
+                                        <br/>
+                                        <button class='btn' ng-click='verify()'>Click to verify this form</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="SchemaCtr" ng-controller="SchemaCtr">
+        <div class="container" ng-if="schema.json == null">
+            <h3>Please select an OWL file</h3> File can be found at : <b>{{schema.path}}</b>
+            <input file1 type="file" data-file="schema.file" />
+        </div>
+    </div>
 </body>
+
 </html>
