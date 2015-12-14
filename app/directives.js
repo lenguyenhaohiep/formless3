@@ -1,4 +1,7 @@
-mainApp.directive('file1', function(schema) {
+/*
+ * Directive for selecting file and assigning a file to model
+ */
+mainApp.directive('file1', function() {
     return {
         restrict: 'EA',
         scope: {
@@ -15,7 +18,10 @@ mainApp.directive('file1', function(schema) {
     };
 });
 
-mainApp.directive('file2', function(schema) {
+/*
+ * Directive for selecting file and assigning a file to model
+ */
+mainApp.directive('file2', function() {
     return {
         restrict: 'EA',
         scope: {
@@ -37,10 +43,11 @@ mainApp.directive('file2', function(schema) {
     };
 });
 
+
 /**
  * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
  */
-mainApp.directive('flitem', ['sharedData', function(sharedData) {
+mainApp.directive('flitem', ['sharedData', function() {
     return {
         restrict: "A",
         scope: {
@@ -58,10 +65,6 @@ mainApp.directive('flitem', ['sharedData', function(sharedData) {
             element.on('mouseenter', function() {
                 delete_button.css("display", "block");
             });
-
-            //            element.on('click', function(ev){
-            //                alert(sharedData.models.selected);
-            //            });
         }
     }
 }]);
