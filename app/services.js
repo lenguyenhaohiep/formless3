@@ -338,7 +338,7 @@ mainApp.service('schema', function() {
     schema.file = null;
     schema.json = null;
     schema.objects = [];
-    schema.path = 'userdata/schemaorg.json';
+    schema.path = 'assets/schema/schemaorg.json';
     schema.test = [];
     schema.tempFile = null;
 

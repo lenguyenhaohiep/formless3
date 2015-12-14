@@ -13,7 +13,7 @@
     	"tabs", "<all_urls>"
   ],
   "web_accessible_resources": [
-    "app/userdata/schemaorg.json",
+    "assets/schema/schemaorg.json",
     "assets/js/modal.function.js"
   ]
 }

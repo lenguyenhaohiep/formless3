@@ -1,6 +1,6 @@
 //read schema from json files
 function readJsonSchema(){
-		var url = chrome.extension.getURL("app/userdata/schemaorg.json"); // full url
+		var url = chrome.extension.getURL("assets/schema/schemaorg.json"); // full url
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", url, true);
 			xhr.onreadystatechange = function() {
