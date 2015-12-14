@@ -148,7 +148,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 required: REQ_DEFAULT,
                 label: DEFAULT_LABEL,
                 value: null,
-                component: "<input property='{{item.semantic.property}}' content='{{item.value}}' type='file' />",
+                component: "<input class='fileupload' property='{{item.semantic.property}}' content='{{item.value}}' type='file'/>",
                 semantic: DEFAULT_SEMANTIC
             }, {
                 type: "item",
@@ -157,8 +157,8 @@ mainApp.service('sharedData', function($compile, $sce) {
                 required: REQ_DEFAULT,
                 icon: 'glyphicon-paperclip',
                 label: DEFAULT_LABEL,
-                value: null,
-                component: "<input property='{{item.semantic.property}}' content='{{item.value}}' type='file' multiple/>",
+                value: [],
+                component: "<input class= 'fileupload' property='{{item.semantic.property}}' content='{{item.value}}' type='file' multiple/>",
                 semantic: DEFAULT_SEMANTIC
             }, {
                 type: "item",
