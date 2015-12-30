@@ -44,6 +44,70 @@ mainApp.directive('file2', function() {
 });
 
 
+/*
+ * Directive for selecting file and assigning a file to model
+ */
+mainApp.directive('file3', function() {
+    return {
+        restrict: 'EA',
+        scope: {
+            ngModel: '=',
+            confirmAction: '&'
+        },
+        link: function(scope, el, attrs) {
+            el.bind('change', function(event) {
+                var files = event.target.files;
+
+                for (i=0; i < files.length; i++){
+                    var file = files[i];
+
+                    var reader = new FileReader();
+                    reader.onload = function() {
+                        scope.ngModel.push(reader.result);
+                        scope.$apply();
+                    }
+                    reader.readAsText(file);
+                }
+            });
+        }
+    };
+});
+
+
+mainApp.directive('fileimage', function(){
+    return{
+        restrict: 'EA',
+        scope: {
+            ngModel: '=',
+            typeMode: '='
+        },
+        link: function(scope, el, attrs){
+          el.bind('change', function(event) {
+                var files = event.target.files;
+                if (scope.typeMode==1){
+                    files = [];
+                    files.push (event.target.files[0]);
+                }
+                readers = [];
+                for (i=0; i < files.length; i++){
+                    file = files[i];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (scope.typeMode==1){
+                            scope.ngModel = [];
+                        }
+                        scope.ngModel.push({src: e.target.result, name: file.name});
+                        scope.$apply();
+                    }
+                    readers.push(reader);
+                    readers[i].readAsDataURL(file);
+                }
+            });   
+        }
+    }
+})
+
+
 /**
  * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
  */

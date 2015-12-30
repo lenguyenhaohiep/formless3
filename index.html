@@ -23,14 +23,15 @@
     <script src="assets/js/beautify-css.js"></script>
     <script src="assets/js/angular-drag-and-drop-lists.js"></script>
     <script src="assets/js/image.load.js"></script>
-    
+    <script src="assets/js/RDFa.1.2.0.js"></script>
+    <script src="app/communication.js"></script>    
     <script src="app/controllers.js"></script>
     <script src="app/directives.js"></script>
     <script src="app/services.js"></script>
 
 </head>
 
-<body ng-app="MainApp" ng-controller="FunctionCtr">
+<body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr">
 
     <div ng-controller="FormCtr">
 
@@ -86,7 +87,9 @@
                         <br/>
                         <div ng-if="item.semantic.class != null">
                             [Property]
-                            <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" />
+                            <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
+                                ng-change="matchProperty(item.semantic.property, item)"
+                                typeahead-on-select="matchProperty($item, item)"/>
                         </div>
                         <span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
                     </div>
@@ -123,15 +126,15 @@
                     </div>
 
                     <!--Design view -->
-                    <div ng-if="sharedData.currentFunction=='Design view'">
+                    <div ng-if="sharedData.currentFunction == 'Design view'">
                         <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
                             <div id="formExport" class="dropzone box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
                                 <div ng-include="'list.html'"></div>
                             </div>
-                            <pre>{{modelAsJson}}</pre>
-
-                        </div>
+                            
+<!--                             <pre>{{modelAsJson}}</pre>
+ -->                        </div>
 
 
                         <div class="col-md-3">
@@ -179,7 +182,7 @@
                         </div>
                     </div>
 
-                    <!--Edit vier-->
+                    <!--Edit view-->
 
                     <script type="text/ng-template" id="list2.html">
                         <ul dnd-list="list">
@@ -216,20 +219,19 @@
                         </div>
                     </script>
 
-                    <div ng-hide="sharedData.currentFunction !='Edit view'">
+                    <div ng-if="sharedData.currentFunction != 'Design view'">
 
-                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-9 template-zone">
+                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
                             <div class="box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
-                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example">
+                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div ng-controller='SignCtr'>
-                        <div ng-if="sharedData.currentFunction=='Sign'">
-                            <div class="col-md-9 template-zone">
+                    <div>
+                        <div ng-if="sharedData.currentFunction == 'Sign'">
+                            <div class="col-md-3 template-zone">
                                 <div class="box box-grey centerarea">
                                     <!-- The dropzone also uses the list template -->
                                     <h3>Sign</h3>
@@ -247,8 +249,8 @@
                             </div>
                         </div>
 
-                        <div ng-if="sharedData.currentFunction=='Verify'">
-                            <div class="col-md-9 template-zone">
+                        <div ng-if="sharedData.currentFunction == 'Verify'">
+                            <div class="col-md-3 template-zone">
                                 <div class="box box-grey centerarea">
                                     <!-- The dropzone also uses the list template -->
                                     <h3>Verify</h3>
@@ -262,13 +264,61 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div ng-if="sharedData.currentFunction == 'Fill'">
+                            <div class="col-md-3 template-zone">
+                                <div class="box box-grey centerarea">
+                                    <!-- The dropzone also uses the list template -->
+                                    <h3>Fill</h3>
+                                    <div class='main'>
+                                        <h5>Forms existed</h5>
+                                        <input file3 type="file" ng-model="formsInput" multiple/>
+                                        <span>{{formsInput.length}} Document(s) selected</span>
+                                        <br/>
+
+                                        <div ng-if="formsInput.length > 0"> 
+                                            <button class='btn' ng-click='analyse()'>Click to Analyse</button>
+                                            <div ng-if="rdfaCurrent.length > 0">
+                                            <h5>Mapping</h5>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Current Form <br/> [Object-Type]</th>
+                                                            <th>Forms existed <br/> [#Form-Object-Type]</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat='obj in rdfaCurrent'>
+                                                            <td>{{obj.field}}</td>
+                                                            <td>
+                                                                <select ng-model='obj.data'>
+                                                                    <option ng-repeat="option in rdfa" value="{{option}}">{{option}}</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            <button class='btn' ng-click='fill()'>Click to fill this form</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!--                             <pre>{{rdfa.data}}</pre>
+ -->                        </div>
+
                     </div>
+
+    <!--                         <pre>{{modelAsJson}}</pre>
+ -->
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </div>
     </div>
-
     <div id="SchemaCtr" ng-controller="SchemaCtr">
         <div class="container" ng-if="schema.json == null">
             <h3>Please select an OWL file</h3> File can be found at : <b>{{schema.path}}</b>

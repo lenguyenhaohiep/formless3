@@ -85,7 +85,6 @@ body {
 .template-zone {
 	height: 96vh;
     overflow-x: hidden;
-    overflow-y: scroll;
 }
 
 .leftbar{
@@ -97,7 +96,7 @@ body {
 }
 
 .centerarea{
-	height: 96vh;	
+	min-height: 100vh;	
 }
 
 .trashcan{

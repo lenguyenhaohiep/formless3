@@ -6,19 +6,17 @@ function readJsonSchema(){
 			xhr.onreadystatechange = function() {
 			  if (xhr.readyState == 4) {
 			  	localStorage.schemaorg = xhr.responseText;
-				//chrome.runtime.sendMessage({json: xhr.responseText}, function(response) {});
 			  }
 			}
 			xhr.send();
 }
 
 function display(func){
-	chrome.tabs.executeScript(null, {
+		chrome.tabs.executeScript(null, {
 		    code: 'var func = "'+ func +'"'
 		}, function() {
 		    chrome.tabs.executeScript(null, {file: "assets/js/modal.function.js"});
 		});
-
 		window.close();
 }
 
@@ -40,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	//Edit Template
 	document.getElementById('func3').addEventListener('click', function(){
 		readJsonSchema();
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});			
+        chrome.tabs.create({url: chrome.extension.getURL('index.html')});
 	});
 
 	//Sign
@@ -61,6 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	//Save - Download
 	document.getElementById('func7').addEventListener('click', function(){
-
+		display("save");
 	});
 })
