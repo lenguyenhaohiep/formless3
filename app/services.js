@@ -509,16 +509,28 @@ mainApp.service('schema', function() {
     schema.tempFile = null;
 
     schema.initialize = function() {
-        if (schema.file == null)
-            return;
-        var reader = new FileReader();
-        reader.onload = function() {
-            schema.json = angular.fromJson(reader.result);
-            angular.forEach(schema.json["types"], function(key, value) {
-                schema.objects.push(value);
-            });
-        }
-        reader.readAsText(schema.file);
+            if (schema.file == null)
+                return;
+            var reader = new FileReader();
+            reader.onload = function() {
+                try{
+                    schema.json = angular.fromJson(reader.result);
+                }catch(err){
+                    schema.file == null;
+                    alert('wrong file');
+                    return;
+                }
+
+                if (schema.json['types']==null){
+                    alert('wrong file');
+                    return;
+                }
+                angular.forEach(schema.json["types"], function(key, value) {
+                    schema.objects.push(value);
+                });
+            }
+            reader.readAsText(schema.file);
+
     }
 
     schema.parseFormText = function(jsonText) {

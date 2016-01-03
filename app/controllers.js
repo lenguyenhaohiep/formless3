@@ -213,7 +213,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
                 if (text)
                     message = text;
                 else{
-                    message = $scope.getDoc();
+                    message = $scope.getDoc(true);
                 }
 
                 privkey = $scope.keys.private_key;
@@ -388,7 +388,39 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
 
         $scope.sharedData.changeFunction(name);
 
+        if (sharedData.currentFunction == "New"){
+            window.open(window.location.href,'_blank');
+            return;
+        }
+
+        if (sharedData.currentFunction == "Open") {
+            $scope.openFile();
+            return;
+        }
+
+        if (sharedData.currentFunction == "New from Template"){
+            $scope.openFile();
+            $scope.sharedData.changeFunction("Edit view");
+            return;
+        }
+
+        if (sharedData.currentFunction == "Save") {
+            setTimeout( function() {            
+                $scope.sharedData.changeFunction("Edit view");
+                updateStateOfForm();
+                $scope.save();
+            }, 0);
+            return;
+        }
+
+        if (sharedData.originDoc != "" &&  sharedData.currentFunction != "Verify"){
+            alert("This is a signed document, modification is impossible");
+            sharedData.changeFunction("Verify");
+            return;
+        }
+
         if (sharedData.currentFunction == "Clear All"){
+
             var r = confirm('Do you want to clear both structure and data to create a new form');
             if (r == true){
                 sharedData.clearAll();
@@ -396,37 +428,21 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
             $scope.sharedData.changeFunction("Design view");
         }
 
-        if (sharedData.currentFunction == "New"){
-            window.open(window.location.href,'_blank');
-        }
-
-        if (sharedData.currentFunction == "Open") {
-            $scope.openFile();
-        }
-
-        if (sharedData.currentFunction == "New from Template"){
-            $scope.openFile();
-            $scope.sharedData.changeFunction("Edit view");
-        }
 
         if (sharedData.currentFunction == "Edit view") {
 
         }
 
         if (sharedData.currentFunction == "Design view") {
-            if (sharedData.originDoc != ""){
-                alert("This is a signed document, modification is impossible");
-                sharedData.changeFunction("Verify");
-            }
+            
         }        
 
-        if (sharedData.currentFunction == "Sign") {}
-
-        if (sharedData.currentFunction == "Save") {
-            updateStateOfForm();
-            $scope.save();
-            $scope.sharedData.changeFunction("Edit view");
+        if (sharedData.currentFunction == "Sign") {
+            setTimeout(function(){
+                disableAll('export', true);
+            }, 0);
         }
+
 
         if (sharedData.currentFunction == "Fill"){
             updateStateOfForm();
@@ -445,15 +461,20 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
         document.getElementById("tempFile").click();
     }
 
-    $scope.getDoc = function(){
+    $scope.getDoc = function(signed){
         var body = document.getElementById("export").innerHTML;
+        var code = '<script type="text/javascript">var body=document.getElementsByTagName("body")[0];body.style.color="white";var main=document.getElementById("form");main.style.color="black";</script>';
+        var disableSignature = (signed != null) ? code : '';
         var js="/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.disabled=false; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
-        var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body ng-app="MainApp" ng-controller="FunctionCtr">' + body + '</body></html>'
+        var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body ng-app="MainApp" ng-controller="FunctionCtr">' + body + '</body>'+disableSignature+'</html>';
         return html_beautify(html)
     }
 
-    $scope.save = function(text) {
+    $scope.save = function(text, signed) {
         var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
+
+        var d = new Date();
+        filename = "form-" + d.toISOString().substr(0, 10);
 
         if (text == null){
             if (sharedData.originDoc != '')
@@ -464,14 +485,12 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
             html = text;
         }
 
-        var d = new Date();
-        filename = "form-" + d.toISOString().substr(0, 10);
-
         if (html.indexOf(substring) == -1) {
             filename += ".html";
         } else {
             filename += "_signed.html";
         }
+
 
         var enterFileName = prompt("Please enter file name", filename);
         if (enterFileName != null && enterFileName !== false) {

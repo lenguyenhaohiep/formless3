@@ -100,8 +100,21 @@
 
     });
 
+    function disable(tag){
+        if (tag.disable == true)
+                tag.setAttribute('disable','true');
+            else
+                tag.removeAttribute('disable');
+    }
+
     function updateStateOfForm(){
-        var inputs = document.getElementById('export').querySelectorAll('input');
+
+        var inputs = document.getElementById('export');
+
+        if (inputs == null)
+            return;
+
+        inputs = inputs.querySelectorAll('input');
         texts = ['text', 'email', 'number'];
         choices = ['radio','checkbox'];
         for (i=0 ;i < inputs.length; i++){
@@ -116,6 +129,7 @@
                         else{
                             radios[j].removeAttribute("checked");
                         }
+                        disable(radios[j]);
                     }                        
             }
 
@@ -130,16 +144,18 @@
                         //input.removeAttribute('property');
                         input.removeAttribute("checked");
                     }
+                    disable(input);
             }
         }
 
         var selects = document.getElementsByTagName('select');
         for (i=0; i<selects.length; i++){
             select = selects[i];
-                for (j=0; j<select.options.length; j++){
+            for (j=0; j<select.options.length; j++){
                     select.options[j].removeAttribute("selected");
                 }
                 select.options[select.selectedIndex].setAttribute("selected","selected");
+                disable(select);
             }
     }
 

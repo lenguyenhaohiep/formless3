@@ -222,7 +222,7 @@
                     <div ng-if="sharedData.currentFunction != 'Design view'">
 
                         <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-                            <div class="box box-grey centerarea">
+                            <div id='form' class="box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
                                 <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
                                 </div>
