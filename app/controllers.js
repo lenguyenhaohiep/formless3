@@ -227,10 +227,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
 
                 signed.then(function(msg) {
                     alert("Signed succefully!!!");
-                    //$scope.verify(msg);
-                    console.log(msg);
                     $scope.save(msg);
-                    //document.getElementById('export').innerHTML = msg;
                 });
             } else {
                 alert("Please enter private key and passphrase");
@@ -257,14 +254,21 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
                         message = openpgp.cleartext.readArmored(sharedData.originDoc);
                     }
                     else {
-                        signed_message = document.getElementById('export').innerHTML;
+                        signed_message = $scope.msg;
+                        signed_message = sharedData.originDoc;
                         message = openpgp.cleartext.readArmored(signed_message);
                     }
                 }
                 var verified = openpgp.verifyClearSignedMessage(publicKeys.keys, message);
                 verified.then(function(res) {
                     if (res.signatures[0].valid === true) {
-                        alert("Verify succefully!!!")
+                        console.log(res.signatures);
+                        var msg_alert = "Verify succefully!!!";
+                        msg_alert += "\n Signed by the following public key";
+                        msg_alert += "\n ---------------------------------------------";
+                        msg_alert += "\n User's info: " + publicKeys.keys[0].getUserIds();
+                        msg_alert += "\n Creation: " + publicKeys.keys[0].getPrimaryUser().selfCertificate.created;                        msg_alert += "\n Expiration: " + publicKeys.keys[0]. getExpirationTime();
+                        alert(msg_alert);
                     } else {
                         alert("Verify unsuccefully!!!")
                     }
@@ -274,8 +278,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
                 alert("Please enter public key");
             }
         } catch (err) {
-            alert(err);
-            alert("Error! Please check public key and try again");
+            alert("This is not a signed form or the public key is invalid, Please try again !!!");
         }
     }
 
@@ -379,64 +382,43 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
     }
 
     $scope.sharedData = sharedData;
-    $scope.commands = [{
-        name: "Open",
-        icon: "glyphicon-folder-open",
-        selected: false
-    }, {
-        name: "New",
-        icon: "glyphicon-plus",
-        selected: false
-    }, {
-        name: "New from Template",
-        icon: "glyphicon-list-alt",
-        selected: false
-    }, {
-        name: "Save",
-        icon: "glyphicon-floppy-disk",
-        selected: false
-    }, {
-        name: "Design view",
-        icon: "glyphicon-wrench",
-        selected: true
-    }, {
-        name: "Edit view",
-        icon: "glyphicon-edit",
-        selected: false
-    }, {
-        name: "Clear",
-        icon: "glyphicon-remove",
-        selected: false
-    }, {
-        name: "Sign",
-        icon: "glyphicon-pencil",
-        selected: false
-    }, {
-        name: "Verify",
-        icon: "glyphicon-ok",
-        selected: false
-    }, {
-        name: "Fill",
-        icon: "glyphicon-indent-left",
-        selected: false
-    }];
+    $scope.commands = sharedData.commands;
 
     $scope.selectMenu = function(name) {
 
         $scope.sharedData.changeFunction(name);
 
+        if (sharedData.currentFunction == "Clear All"){
+            var r = confirm('Do you want to clear both structure and data to create a new form');
+            if (r == true){
+                sharedData.clearAll();
+            }
+            $scope.sharedData.changeFunction("Design view");
+        }
+
+        if (sharedData.currentFunction == "New"){
+            window.open(window.location.href,'_blank');
+        }
+
         if (sharedData.currentFunction == "Open") {
             $scope.openFile();
         }
 
-        if (sharedData.currentFunction == "Edit view") {
-            //disableFile(false);
+        if (sharedData.currentFunction == "New from Template"){
+            $scope.openFile();
+            $scope.sharedData.changeFunction("Edit view");
         }
 
+        if (sharedData.currentFunction == "Edit view") {
+
+        }
 
         if (sharedData.currentFunction == "Design view") {
-            //disableFile(true);
-        }
+            if (sharedData.originDoc != ""){
+                alert("This is a signed document, modification is impossible");
+                sharedData.changeFunction("Verify");
+            }
+        }        
 
         if (sharedData.currentFunction == "Sign") {}
 
@@ -449,7 +431,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
         if (sharedData.currentFunction == "Fill"){
             updateStateOfForm();
         }
-        if (sharedData.currentFunction == "Clear"){
+
+        if (sharedData.currentFunction == "Clear Data"){
             var r = confirm('Do you want to clear all data');
             if (r == true){
                 sharedData.clear();
@@ -473,7 +456,10 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
         var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
 
         if (text == null){
-            html = $scope.getDoc();          
+            if (sharedData.originDoc != '')
+                html = sharedData.originDoc;
+            else 
+                html = $scope.getDoc();          
         }else{
             html = text;
         }

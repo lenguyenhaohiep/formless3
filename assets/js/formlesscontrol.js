@@ -153,3 +153,21 @@
             signatures[i].disabled = bool;
         }
     }
+
+
+    /*
+     * Disable all form components
+     */
+
+     function disableAll(id, bool){
+        var div = document.getElementById(id);
+        var controls = ['input', 'button', 'select', 'textarea'];
+        for (k=0; k<controls.length; k++){
+            var inputs = div.querySelectorAll(controls[k]);
+
+            for (i=0; i<inputs.length; i++){
+                if (inputs[i].className.indexOf('input-transparent') == -1)
+                    inputs[i].disabled = bool;
+            }
+        }
+     }
