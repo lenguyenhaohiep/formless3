@@ -3,19 +3,19 @@ mainApp.service('sharedData', function($compile, $sce) {
     /**
      *   Some default values
      */
-    var DEFAULT_LABEL = "Untitled";
-    var NO_LABEL = "";
-    var REQ_DEFAULT = 'yes';
-    var PROPERTIES_DEFAULT = "<div class='option-item' ng-repeat='option in item.field_options'>\
-                                <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked' ng-click='$parent.$parent.setSelect(item, option)'/>\
-                                <input type='text' value='{{option.label}}' ng-model='option.label'/>\
-                                <a class='mini-item item-add glyphicon-plus' ng-click='$parent.$parent.addOption(item, $index+1)'></a>\
-                                <a class='mini-item item-remove glyphicon-minus' ng-click='$parent.$parent.removeOption(item, $index)'></a>\
-                                </div>\
-                                <button type='button' class='btn btn-primary btn-xs' ng-click='$parent.$parent.addOption(item, -1)'>Add option</button>";
-    var DEFAULT_LABEL_OPTION = "Option";
-    var DEFAULT_CHECK_OPTION = false;
-    var DEFAULT_SEMANTIC = {
+     var DEFAULT_LABEL = "Untitled";
+     var NO_LABEL = "";
+     var REQ_DEFAULT = 'yes';
+     var PROPERTIES_DEFAULT = "<div class='option-item' ng-repeat='option in item.field_options'>\
+     <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked' ng-click='$parent.$parent.setSelect(item, option)'/>\
+     <input type='text' value='{{option.label}}' ng-model='option.label'/>\
+     <a class='mini-item item-add glyphicon-plus' ng-click='$parent.$parent.addOption(item, $index+1)'></a>\
+     <a class='mini-item item-remove glyphicon-minus' ng-click='$parent.$parent.removeOption(item, $index)'></a>\
+     </div>\
+     <button type='button' class='btn btn-primary btn-xs' ng-click='$parent.$parent.addOption(item, -1)'>Add option</button>";
+     var DEFAULT_LABEL_OPTION = "Option";
+     var DEFAULT_CHECK_OPTION = false;
+     var DEFAULT_SEMANTIC = {
         class: null,
         id: null,
         property: null,
@@ -50,7 +50,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         if (list.templates[0] instanceof Array) {
             l = list.templates[0];
         } else
-            l = list.templates;
+        l = list.templates;
 
 
         for (var i = 0; i < l.length; i++) {
@@ -130,161 +130,171 @@ mainApp.service('sharedData', function($compile, $sce) {
         vocab: null,
         selected: null,
         templates: [{
-                type: "item",
-                id: 0,
-                name: "Text",
-                icon: 'glyphicon-font',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: null,
-                component: "<input disabled value='{{item.value}}' type='text' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                id: 0,
-                name: "Number",
-                icon: 'glyphicon-sound-5-1',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: null,
-                component: "<input disabled value='{{item.value}}' type='number' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                id: 0,
-                name: "Date",
-                icon: 'glyphicon-calendar',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: null,
-                component: "<input disabled value='{{item.value}}' type='date' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
-                semantic: DEFAULT_SEMANTIC
+            type: "item",
+            id: 0,
+            name: "Text",
+            icon: 'glyphicon-font',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: null,
+            component: "<input disabled value='{{item.value}}' type='text' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Number",
+            icon: 'glyphicon-sound-5-1',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: null,
+            component: "<input disabled value='{{item.value}}' type='number' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Date",
+            icon: 'glyphicon-calendar',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: null,
+            component: "<input disabled value='{{item.value}}' type='date' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            semantic: DEFAULT_SEMANTIC
 
-            }, {
-                type: "item",
-                id: 0,
-                name: "Email",
-                icon: 'glyphicon-envelope',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: null,
-                component: "<input disabled value='{{item.value}}' type='email' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                id: 0,
-                name: "Paragraph",
-                icon: 'glyphicon-align-justify',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: null,
-                component: "<textarea disabled value='{{item.value}}' rows='3' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' />{{item.value}}</textarea>",
-                semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Email",
+            icon: 'glyphicon-envelope',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: null,
+            component: "<input disabled value='{{item.value}}' type='email' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Paragraph",
+            icon: 'glyphicon-align-justify',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: null,
+            component: "<textarea disabled value='{{item.value}}' rows='3' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' />{{item.value}}</textarea>",
+            semantic: DEFAULT_SEMANTIC
 
+        }, {
+            type: "item",
+            id: 0,
+            name: "Radio",
+            icon: 'glyphicon-record',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            component: "<input disabled type='radio' property='{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
+            field_options: [{
+                label: "Radio 1",
+                checked: false
             }, {
-                type: "item",
-                id: 0,
-                name: "Radio",
-                icon: 'glyphicon-record',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                component: "<input disabled type='radio' property='{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
-                field_options: [{
-                    label: "Radio 1",
-                    checked: false
-                }, {
-                    label: "Radio 2",
-                    checked: false
-                }],
-                value: null,
-                properties: PROPERTIES_DEFAULT,
-                semantic: DEFAULT_SEMANTIC
+                label: "Radio 2",
+                checked: false
+            }],
+            value: null,
+            properties: PROPERTIES_DEFAULT,
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Checkbox",
+            icon: 'glyphicon-ok-circle',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
+            field_options: [{
+                label: "Checkbox 1",
+                checked: false
             }, {
-                type: "item",
-                id: 0,
-                name: "Checkbox",
-                icon: 'glyphicon-ok-circle',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
-                field_options: [{
-                    label: "Checkbox 1",
-                    checked: false
-                }, {
-                    label: "Checkbox 2",
-                    checked: false
-                }],
-                value: [],
-                properties: PROPERTIES_DEFAULT,
-                semantic: DEFAULT_SEMANTIC
+                label: "Checkbox 2",
+                checked: false
+            }],
+            value: [],
+            properties: PROPERTIES_DEFAULT,
+            semantic: DEFAULT_SEMANTIC
 
+        }, {
+            type: "item",
+            id: 0,
+            name: "Dropdown",
+            icon: 'glyphicon-collapse-down',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            component: "<select disabled class='form-control' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value.label}}' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>",
+            field_options: [{
+                label: "Option 1",
+                checked: false
             }, {
-                type: "item",
-                id: 0,
-                name: "Dropdown",
-                icon: 'glyphicon-collapse-down',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                component: "<select disabled class='form-control' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value.label}}' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>",
-                field_options: [{
-                    label: "Option 1",
-                    checked: false
-                }, {
-                    label: "Option 2",
-                    checked: false
-                }],
-                value: null,
-                properties: PROPERTIES_DEFAULT,
-                semantic: DEFAULT_SEMANTIC
+                label: "Option 2",
+                checked: false
+            }],
+            value: null,
+            properties: PROPERTIES_DEFAULT,
+            semantic: DEFAULT_SEMANTIC
 
-            }, {
-                type: "item",
-                id: 0,
-                name: "Signature",
-                icon: 'glyphicon-pencil',
-                required: REQ_DEFAULT,
-                label: DEFAULT_LABEL,
-                value: [],
-                component: "<input class= 'fileupload' fileimage type-mode=1 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}'><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                id: 0,
-                name: "Attached File(s)",
-                required: REQ_DEFAULT,
-                icon: 'glyphicon-paperclip',
-                label: DEFAULT_LABEL,
-                value: [],
-                component: "<input class= 'fileupload' fileimage type-mode=2 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                noinput: true,
-                id: 0,
-                name: "Header",
-                icon: 'glyphicon-header',
-                label: "Header of the form",
-                component: "<h3><input type='text' class='form-control'  ng-model='item.label' /></h3>",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "item",
-                noinput: true,
-                id: 0,
-                name: "Section",
-                icon: 'glyphicon-minus',
-                label: "Section",
-                component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
-                semantic: DEFAULT_SEMANTIC
-            }, {
-                type: "container",
-                id: 1,
-                name: "Untitled Object",
-                subtype: '',
-                icon: 'glyphicon-user',
-                templates: [
-                    []
-                ]
-            }
+        }, {
+            type: "item",
+            id: 0,
+            name: "Signature",
+            icon: 'glyphicon-pencil',
+            required: REQ_DEFAULT,
+            label: DEFAULT_LABEL,
+            value: [],
+            component: "<input class= 'fileupload' fileimage type-mode=1 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}'><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            id: 0,
+            name: "Attached File(s)",
+            required: REQ_DEFAULT,
+            icon: 'glyphicon-paperclip',
+            label: DEFAULT_LABEL,
+            value: [],
+            component: "<input class= 'fileupload' fileimage type-mode=2 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            noinput: true,
+            id: 0,
+            name: "Header",
+            icon: 'glyphicon-header',
+            label: "Header of the form",
+            component: "<h3><input type='text' class='form-control'  ng-model='item.label' /></h3>",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            noinput: true,
+            id: 0,
+            name: "Section",
+            icon: 'glyphicon-minus',
+            label: "Section",
+            component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "container",
+            id: 1,
+            name: "Untitled Object",
+            subtype: '',
+            icon: 'glyphicon-user',
+            templates: [
+            []
+            ]
+        }, {
+            type: "subProperty",
+            id: 1,
+            name: "Untitled Object",
+            subtype: '',
+            icon: 'glyphicon-unchecked',
+            semantic: DEFAULT_SEMANTIC,
+            templates: [
+            []
+            ]
+        }
 
         ],
         dropzones: {
@@ -296,6 +306,7 @@ mainApp.service('sharedData', function($compile, $sce) {
     sharedData.load = function(file) {
         var reader = new FileReader();
         reader.onload = function() {
+            var signed = false;
             parser = new DOMParser();
             var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
             if (reader.result.indexOf(substring) == -1){
@@ -303,28 +314,25 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.signed = false;
                 sharedData.originDoc = "";
                 message = reader.result;
-                sharedData.currentFunction = "Edit view";
-
 
             }else{
                 //signed
                 sharedData.signed = true;
                 sharedData.originDoc = reader.result;
                 alert("This is a signed document, you can not neither edit nor modify this document !!!");
-                sharedData.currentFunction = "Verify";
-
                 message = openpgp.cleartext.readArmored(reader.result).text;
+                signed = true;
             }
 
             //Parse the file and apply to models
             htmlDoc = parser.parseFromString(reader.result, "text/html");
             models = sharedData.htmlToTemplate(htmlDoc, _class = null, _id = null);
             sharedData.models.dropzones.templates = models;
-
-            sharedData.changeFunction(sharedData.currentFunction);
+            
             //In case of generating a new form from an existed from, we clear off all data
-            if (sharedData.currentFunction == "New from Template")
+            if (sharedData.currentFunction == "New from Template"){
                 sharedData.clear();
+            }
         }
         reader.readAsText(file);
     }
@@ -350,27 +358,48 @@ mainApp.service('sharedData', function($compile, $sce) {
                 var container = angular.copy(sharedData.models.templates[12]);
 
                 var div = htmlDoc.getElementsByTagName('div')[0];
-                container.name = div.getAttribute("typeof");
-                var temp = div.getAttribute("resource");
-                container.subtype = temp.substring(0, temp.length - 1);
-                container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
-                container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
-                res.push(container);
-            } else {
+                //container or subProperty
+                if (div.getAttribute("resource") != null){
+                    container.name = div.getAttribute("typeof");
+                    var temp = div.getAttribute("resource");
+                    container.subtype = temp.substring(0, temp.length - 1);
+                    container.id = parseInt(temp.substring(temp.length - 1, temp.length));
+
+                    container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
+                    res.push(container);
+                } else{
+                    var subProperty = angular.copy(sharedData.models.templates[13]);
+                    subProperty.name = div.getAttribute("typeof");
+                    subProperty.subtype = div.getAttribute("property");
+                    
+                    if (subProperty.subtype)
+                        if (subProperty.subtype.indexOf("ov:") == -1){
+                            subProperty.semantic.property = subProperty.subtype;
+                            subProperty.semantic.prefix = '';
+                        } else {
+                            subProperty.semantic.property = subProperty.subtype.substring(3, subProperty.subtype.length);
+                            subProperty.semantic.prefix = 'ov:';
+                        } 
+                        subProperty.semantic.class = div.getAttribute("temptype");
+
+                        subProperty.templates[0] = sharedData.htmlToTemplate(htmlDoc, subProperty.name, subProperty.id);
+                        res.push(subProperty);
+                    }
+                } else {
                 //in case of a document
                 xpaths = ["//html-render/input[@type='text']",
-                    "//html-render/input[@type='number']",
-                    "//html-render/input[@type='date']",
-                    "//html-render/input[@type='email']",
-                    "//html-render/textarea",
-                    "//html-render/input[@type='radio']",
-                    "//html-render/input[@type='checkbox']",
-                    "//html-render/select",
-                    "//html-render/input[@type='file']",
-                    "//html-render/input[@type='file']",
-                    "//h3",
-                    "//h5",
+                "//html-render/input[@type='number']",
+                "//html-render/input[@type='date']",
+                "//html-render/input[@type='email']",
+                "//html-render/textarea",
+                "//html-render/input[@type='radio']",
+                "//html-render/input[@type='checkbox']",
+                "//html-render/select",
+                "//html-render/input[@type='file']",
+                "//html-render/input[@type='file']",
+                "//h3",
+                "//h5",
                 ];
 
                 for (i = 0; i < xpaths.length; i++) {
@@ -410,78 +439,78 @@ mainApp.service('sharedData', function($compile, $sce) {
                                     item.semantic.property = prop.substring(3, prop.length);
                                     item.semantic.prefix = 'ov:';
                                 }
-                        }
+                            }
 
                         //get options
                         switch (i) {
                             case 1:
-                                item.value = parseInt(control.getAttribute("content"));
-                                break;
+                            item.value = parseInt(control.getAttribute("content"));
+                            break;
                             case 2:
-                                var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
-                                item.value = d;
-                                break;
+                            var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
+                            item.value = d;
+                            break;
                             case 0:
                             case 3:
                             case 4:
-                                item.value = control.getAttribute('content');
-                                break;
+                            item.value = control.getAttribute('content');
+                            break;
                             //radio // checkbox
                             case 5:
                             // checkbox
                             case 6:
-                                inputs = htmlDoc.getElementsByTagName('input');
-                                item.field_options = [];
-                                for (j = 0; j < inputs.length; j++) {
-                                    var option = {
-                                        label: inputs[j].getAttribute("value"),
-                                        checked: (inputs[j].getAttribute("checked")=="checked") ? true : false
-                                    };
-                                    if  (i==5)
-                                        option.label = inputs[j].getAttribute("data");
+                            inputs = htmlDoc.getElementsByTagName('input');
+                            item.field_options = [];
+                            for (j = 0; j < inputs.length; j++) {
+                                var option = {
+                                    label: inputs[j].getAttribute("value"),
+                                    checked: (inputs[j].getAttribute("checked")=="checked") ? true : false
+                                };
+                                if  (i==5)
+                                    option.label = inputs[j].getAttribute("data");
 
-                                    item.field_options.push(option)
+                                item.field_options.push(option)
 
-                                    if (inputs[j].getAttribute("checked") == "checked"){
-                                        if (i==5)
+                                if (inputs[j].getAttribute("checked") == "checked"){
+                                    if (i==5)
                                             //radio has only one value
-                                            item.value = option;
+                                        item.value = option;
                                         else 
                                             //checkbox has more than one
-                                            item.value.push (option);
+                                        item.value.push (option);
                                     }
                                 }
                                 break;
 
                             // Select
                             case 7:
-                                inputs = htmlDoc.getElementsByTagName('option');
-                                item.field_options = [];
-                                for (j = 0; j < inputs.length; j++) {
-                                    var option = {
-                                        label: inputs[j].innerText,
-                                        checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
-                                    };
-                                    item.field_options.push(option)
+                            inputs = htmlDoc.getElementsByTagName('option');
+                            item.field_options = [];
+                            for (j = 0; j < inputs.length; j++) {
+                                var option = {
+                                    label: inputs[j].innerText,
+                                    checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
+                                };
+                                item.field_options.push(option)
 
-                                    if (inputs[j].getAttribute("selected") == "selected"){
-                                        item.value = option;
-                                    }
+                                if (inputs[j].getAttribute("selected") == "selected"){
+                                    item.value = option;
                                 }
-                                break;
+                            }
+                            break;
                             // File and Multiple File
                             case 8:
                             case 9:
-                                images = htmlDoc.getElementsByTagName('img');
-                                spans = htmlDoc.getElementsByTagName('span');
+                            images = htmlDoc.getElementsByTagName('img');
+                            spans = htmlDoc.getElementsByTagName('span');
 
-                                for (j=0; j<images.length; j++){
-                                    image = {src: images[j].getAttribute('src'), name: spans[j+1].innerText};
-                                    item.value.push(image);
-                                }
-                                break;
+                            for (j=0; j<images.length; j++){
+                                image = {src: images[j].getAttribute('src'), name: spans[j+1].innerText};
+                                item.value.push(image);
+                            }
+                            break;
                             default:
-                                break;
+                            break;
                         }
                         res.push(item);
                     }
@@ -507,30 +536,30 @@ mainApp.service('schema', function() {
     schema.path = 'assets/schema/schemaorg.json';
     schema.test = [];
     schema.tempFile = null;
+    schema.load = false;
 
     schema.initialize = function() {
-            if (schema.file == null)
+        if (schema.file == null)
+            return;
+        var reader = new FileReader();
+        reader.onload = function() {
+            try{
+                schema.json = angular.fromJson(reader.result);
+            }catch(err){
+                schema.file == null;
+                alert('wrong file');
                 return;
-            var reader = new FileReader();
-            reader.onload = function() {
-                try{
-                    schema.json = angular.fromJson(reader.result);
-                }catch(err){
-                    schema.file == null;
-                    alert('wrong file');
-                    return;
-                }
-
-                if (schema.json['types']==null){
-                    alert('wrong file');
-                    return;
-                }
-                angular.forEach(schema.json["types"], function(key, value) {
-                    schema.objects.push(value);
-                });
             }
-            reader.readAsText(schema.file);
-
+            if (schema.json['types']==null){
+                alert('wrong file');
+                return
+            }
+            schema.load = true;
+            angular.forEach(schema.json["types"], function(key, value) {
+                schema.objects.push(value);
+            });
+        }
+        reader.readAsText(schema.file);
     }
 
     schema.parseFormText = function(jsonText) {
@@ -560,6 +589,12 @@ mainApp.service('schema', function() {
 
     }
 
+    schema.getPropType = function(prop){
+        if (schema.json["properties"][prop] == null)
+            return '';
+        return schema.json["properties"][prop]["ranges"][0];
+    }
+
     return schema;
 });
 
@@ -571,9 +606,9 @@ mainApp.service('rdfa', function(){
 
         // in case of signed message
         var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
-            if (html.indexOf(substring) != -1){
-                html = openpgp.cleartext.readArmored(html).text;
-            }     
+        if (html.indexOf(substring) != -1){
+            html = openpgp.cleartext.readArmored(html).text;
+        }     
 
 
         rdfaInfo = {};
@@ -586,6 +621,8 @@ mainApp.service('rdfa', function(){
             //parse objects
             _typeof = object.getAttribute('typeof');
             _resource = object.getAttribute('resource');
+            if (_resource == null)
+                _resource = object.getAttribute('property');
 
             //parse properties 
             doc = parser.parseFromString(object.innerHTML,'text/html');

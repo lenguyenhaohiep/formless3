@@ -1,17 +1,20 @@
 /*
  * Directive for selecting file and assigning a file to model
  */
-mainApp.directive('file1', function() {
+ mainApp.directive('file1', function() {
     return {
         restrict: 'EA',
         scope: {
-            file: '='
+            file: '=',
+            onFinish: '&'
         },
         link: function(scope, el, attrs) {
             el.bind('change', function(event) {
                 var files = event.target.files;
                 var file = files[0];
                 scope.file = file;
+                if (scope.onFinish != null)
+                    scope.onFinish();
                 scope.$apply();
             });
         }
@@ -21,7 +24,7 @@ mainApp.directive('file1', function() {
 /*
  * Directive for selecting file and assigning a file to model
  */
-mainApp.directive('file2', function() {
+ mainApp.directive('file2', function() {
     return {
         restrict: 'EA',
         scope: {
@@ -47,7 +50,7 @@ mainApp.directive('file2', function() {
 /*
  * Directive for selecting file and assigning a file to model
  */
-mainApp.directive('file3', function() {
+ mainApp.directive('file3', function() {
     return {
         restrict: 'EA',
         scope: {
@@ -74,7 +77,7 @@ mainApp.directive('file3', function() {
 });
 
 
-mainApp.directive('fileimage', function(){
+ mainApp.directive('fileimage', function(){
     return{
         restrict: 'EA',
         scope: {
@@ -83,35 +86,35 @@ mainApp.directive('fileimage', function(){
         },
         link: function(scope, el, attrs){
           el.bind('change', function(event) {
-                var files = event.target.files;
-                if (scope.typeMode==1){
-                    files = [];
-                    files.push (event.target.files[0]);
-                }
-                readers = [];
-                for (i=0; i < files.length; i++){
-                    file = files[i];
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (scope.typeMode==1){
-                            scope.ngModel = [];
-                        }
-                        scope.ngModel.push({src: e.target.result, name: file.name});
-                        scope.$apply();
+            var files = event.target.files;
+            if (scope.typeMode==1){
+                files = [];
+                files.push (event.target.files[0]);
+            }
+            readers = [];
+            for (i=0; i < files.length; i++){
+                file = files[i];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    if (scope.typeMode==1){
+                        scope.ngModel = [];
                     }
-                    readers.push(reader);
-                    readers[i].readAsDataURL(file);
+                    scope.ngModel.push({src: e.target.result, name: file.name});
+                    scope.$apply();
                 }
-            });   
-        }
-    }
+                readers.push(reader);
+                readers[i].readAsDataURL(file);
+            }
+        });   
+      }
+  }
 })
 
 
 /**
  * When we enter the mouse in every field/ container in the form, the "remove" button will appear and allow us delete current field/container
  */
-mainApp.directive('flitem', ['sharedData', function() {
+ mainApp.directive('flitem', ['sharedData', function() {
     return {
         restrict: "A",
         scope: {
@@ -138,7 +141,7 @@ mainApp.directive('flitem', ['sharedData', function() {
  * This directive is used to render code HTML from text to the page, this method is unsafe method, pay attention in use
  * This plugin aims to work only in the offline mode, so this method has no risk in this case
  */
-mainApp.directive('htmlRender', function($compile, $sce) {
+ mainApp.directive('htmlRender', function($compile, $sce) {
     return {
         restrict: 'E',
         transclude: true,

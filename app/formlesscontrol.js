@@ -1,7 +1,7 @@
     /*
      * Add an image after the button
      */
-    function create_line_image(object, source, name){
+     function create_line_image(object, source, name){
         var multiple = object.getAttribute('multiple');
         var parentNode = object.parentNode;
 
@@ -48,7 +48,7 @@
     /*
      * Reset when there is no image
      */
-    function reset(object){
+     function reset(object){
         var divs = object.querySelectorAll('div');
         if (divs.length == 0){
             input = object.querySelector('input');
@@ -60,7 +60,7 @@
     /*
      * Add a trigger to upload file
      */
-    function updateFileEvent() {
+     function updateFileEvent() {
         var signatures = document.getElementsByClassName('fileupload');
 
         for (i = 0; i < signatures.length; i++) {
@@ -83,44 +83,44 @@
         }
 
             //updateFileEvent();
-        var inputs = document.getElementsByClassName('input');
+            var inputs = document.getElementsByClassName('input');
 
-        for (i=0 ;i< inputs; i++){
-            input = inputs[i];
-            if (input.type == "text"){
-                input.addEventListener('change', function(){
-                    this.setAttribute('value',this.value);
-                })
+            for (i=0 ;i< inputs; i++){
+                input = inputs[i];
+                if (input.type == "text"){
+                    input.addEventListener('change', function(){
+                        this.setAttribute('value',this.value);
+                    })
+                }
             }
         }
-    }
 
 
-    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-    });
+        });
 
-    function disable(tag){
-        if (tag.disable == true)
+        function disable(tag){
+            if (tag.disable == true)
                 tag.setAttribute('disable','true');
             else
                 tag.removeAttribute('disable');
-    }
+        }
 
-    function updateStateOfForm(){
+        function updateStateOfForm(){
 
-        var inputs = document.getElementById('export');
+            var inputs = document.getElementById('export');
 
-        if (inputs == null)
-            return;
+            if (inputs == null)
+                return;
 
-        inputs = inputs.querySelectorAll('input');
-        texts = ['text', 'email', 'number'];
-        choices = ['radio','checkbox'];
-        for (i=0 ;i < inputs.length; i++){
-            input = inputs[i];
- 
-            if (input.type == "radio"){
+            inputs = inputs.querySelectorAll('input');
+            texts = ['text', 'email', 'number'];
+            choices = ['radio','checkbox'];
+            for (i=0 ;i < inputs.length; i++){
+                input = inputs[i];
+                
+                if (input.type == "radio"){
                     radios = document.getElementsByName(input.name);
                     for (j=0; j< radios.length; j++){
                         if (radios[j].checked){
@@ -131,9 +131,9 @@
                         }
                         disable(radios[j]);
                     }                        
-            }
+                }
 
-            if (input.type == "checkbox"){
+                if (input.type == "checkbox"){
                     if (input.checked){
                         //input.setAttribute("property", input.getAttribute('_property'));
                         //input.removeAttribute('_property');
@@ -145,19 +145,19 @@
                         input.removeAttribute("checked");
                     }
                     disable(input);
+                }
             }
-        }
 
-        var selects = document.getElementsByTagName('select');
-        for (i=0; i<selects.length; i++){
-            select = selects[i];
-            for (j=0; j<select.options.length; j++){
+            var selects = document.getElementsByTagName('select');
+            for (i=0; i<selects.length; i++){
+                select = selects[i];
+                for (j=0; j<select.options.length; j++){
                     select.options[j].removeAttribute("selected");
                 }
                 select.options[select.selectedIndex].setAttribute("selected","selected");
                 disable(select);
             }
-    }
+        }
 
     /*
      * diable/enable upload file
@@ -186,4 +186,4 @@
                     inputs[i].disabled = bool;
             }
         }
-     }
+    }

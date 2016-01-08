@@ -22,12 +22,12 @@
     <script src="assets/js/beautify.js"></script>
     <script src="assets/js/beautify-css.js"></script>
     <script src="assets/js/angular-drag-and-drop-lists.js"></script>
-    <script src="assets/js/formlesscontrol.js"></script>
     <script src="assets/js/RDFa.1.2.0.js"></script>
     <script src="app/communication.js"></script>    
     <script src="app/controllers.js"></script>
     <script src="app/directives.js"></script>
     <script src="app/services.js"></script>
+    <script src="app/formlesscontrol.js"></script>
 
 </head>
 
@@ -52,14 +52,12 @@
                 </ul>
             </script>
 
-
-
             <!-- This template is responsible for rendering a container element. It uses
 	     the above list template to render each container column -->
             <script type="text/ng-template" id="container.html">
                 <div class="container-element box box-blue">
                     <h3> 
-						[Object] 
+						[Type] 
 						<input 
 							class='input-transparent' 
 							type='text' 
@@ -67,10 +65,32 @@
 							value="item.name"
 							uib-typeahead="object for object in schema.objects | filter:$viewValue | limitTo:8"/>
 
-						[Type] (optional) <input class='input-transparent' type='text' ng-model="item.subtype"/>
+						[Subtype] <input class='input-transparent' type='text' ng-model="item.subtype"/>
 									
 						[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
 					</h3>
+
+                    <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
+                    <div class="clearfix"></div>
+                </div>
+                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+            </script>
+
+             <script type="text/ng-template" id="subProperty.html">
+                <div class="container-element box box-yellow">
+                    <h3> 
+                        [Property] 
+                        <input 
+                            class='input-transparent' 
+                            type='text' 
+                            ng-model="item.subtype" 
+                            value="item.subtype"
+                            uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
+                                ng-change="matchTypeOfProperty(item.subtype, item)"
+                                typeahead-on-select="matchTypeOfProperty($item, item)"/>
+
+                        [Type] <span>{{item.name}}</span>
+                    </h3>
 
                     <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
                     <div class="clearfix"></div>
@@ -159,11 +179,10 @@
                                 </div>
 
                                 <div ng-if="models.selected.type == 'container'">
-                                    <h5>Object</h5>
-                                    <strong>Object: </strong>
+                                    <strong>Object Type: </strong>
                                     <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue" />
                                     <br>
-                                    <strong>Type(optional): </strong>
+                                    <strong>SubType: </strong>
                                     <input type='text' ng-model="models.selected.subtype" class='form-control' />
                                     <br>
                                     <strong>ID: </strong>
@@ -171,11 +190,12 @@
                                 </div>
 
                                 <div ng-if="models.selected.semantic.class != null">
-                                    <strong>Object: </strong> {{models.selected.semantic.class}}
+                                    <strong>Object Type: </strong> {{models.selected.semantic.class}}
                                     <br>
+                                    {{models.selected.semantic}}
                                     <strong>ID: </strong> {{models.selected.semantic.id}}
                                     <br>
-                                    <strong>Properties: </strong>
+                                    <strong>Property: </strong>
                                     <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" />
                                 </div>
                             </div>
@@ -197,6 +217,12 @@
 			     the above list template to render each container column -->
                     <script type="text/ng-template" id="container2.html">
                         <div resource="{{item.subtype}}{{item.id}}" typeof="{{schema.getType(item.name)}}">
+                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        </div>
+                    </script>
+
+                    <script type="text/ng-template" id="subProperty2.html">
+                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" temptype={{item.semantic.class}}>
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
                     </script>
@@ -271,7 +297,7 @@
                                     <!-- The dropzone also uses the list template -->
                                     <h3>Fill</h3>
                                     <div class='main'>
-                                        <h5>Forms existed</h5>
+                                        <h5>Forms</h5>
                                         <input file3 type="file" ng-model="formsInput" multiple/>
                                         <span>{{formsInput.length}} Document(s) selected</span>
                                         <br/>
@@ -281,17 +307,11 @@
                                             <div ng-if="rdfaCurrent.length > 0">
                                             <h5>Mapping</h5>
                                                 <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Current Form <br/> [Object-Type]</th>
-                                                            <th>Forms existed <br/> [#Form-Object-Type]</th>
-                                                        </tr>
-                                                    </thead>
                                                     <tbody>
                                                         <tr ng-repeat='obj in rdfaCurrent'>
-                                                            <td>{{obj.field}}</td>
                                                             <td>
-                                                                <select ng-model='obj.data'>
+                                                                <label>{{obj.field}}</label>
+                                                                <select class='form-control' ng-change='fill()' ng-model='obj.data'>
                                                                     <option ng-repeat="option in rdfa" value="{{option}}">{{option}}</option>
                                                                 </select>
                                                             </td>
@@ -322,7 +342,7 @@
     <div id="SchemaCtr" ng-controller="SchemaCtr">
         <div class="container" ng-if="schema.json == null">
             <h3>Please select an OWL file</h3> File can be found at : <b>{{schema.path}}</b>
-            <input file1 type="file" data-file="schema.file" />
+            <input file1 type="file" on-finish='initialize()' data-file="schema.file" />
         </div>
     </div>
 </body>
