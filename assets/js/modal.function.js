@@ -14,7 +14,7 @@ switch (func) {
         var check = document.getElementById('append');
         if (check)
             check.remove();
-        localStorage.text = document.documentElement.outerHTML;
+        localStorage.currentForm = document.documentElement.outerHTML;
         break;
     default:
         break;
@@ -95,7 +95,7 @@ if (check.length != 0) {
         case "save":
             var data= {func: func, text: document.documentElement.outerHTML};
 
-                    var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
+            var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
             if (data.text.indexOf(substring) != -1){
                 data.text = document.body.innerHTML;
             }

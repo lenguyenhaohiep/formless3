@@ -1,23 +1,40 @@
 //read schema from json files
 function readJsonSchema(){
-		var url = chrome.extension.getURL("assets/schema/schemaorg.json"); // full url
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", url, true);
-			xhr.onreadystatechange = function() {
-			  if (xhr.readyState == 4) {
-			  	localStorage.schemaorg = xhr.responseText;
-			  }
-			}
-			xhr.send();
+	var url = chrome.extension.getURL("assets/schema/schemaorg.json"); // full url
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url, true);
+	xhr.onreadystatechange = function() {
+	  if (xhr.readyState == 4) {
+	  	localStorage.schemaorg = xhr.responseText;
+	  }
+	}
+	xhr.send();
 }
 
+
 function display(func){
-		chrome.tabs.executeScript(null, {
-		    code: 'var func = "'+ func +'"'
-		}, function() {
-		    chrome.tabs.executeScript(null, {file: "assets/js/modal.function.js"});
-		});
-		window.close();
+		executeScripts(null, [ 
+	        { code: "var func = '"+ func +"'" },
+	       	{ file: "assets/js/modal.function.js" }
+	    ]);
+	    return;
+}
+
+function executeScripts(tabId, injectDetailsArray)
+{
+    function createCallback(tabId, injectDetails, innerCallback) {
+        return function () {
+            chrome.tabs.executeScript(tabId, injectDetails, innerCallback);
+        };
+    }
+
+    var callback = null;
+
+    for (var i = injectDetailsArray.length - 1; i >= 0; --i)
+        callback = createCallback(tabId, injectDetailsArray[i], callback);
+
+    if (callback !== null)
+        callback();   // execute outermost function
 }
 
 
@@ -31,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//New a form from a template
 	document.getElementById('func2').addEventListener('click', function(){
-		readJsonSchema();
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});	
+		chrome.tabs.create({url: chrome.extension.getURL('index.html')});
 	});
 
 	//Edit Template

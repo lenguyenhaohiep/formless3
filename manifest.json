@@ -12,11 +12,6 @@
   "permissions": [
     	"tabs", "<all_urls>"
   ],
-  "background": {
-    "page": "background.html",
-    "persistent": false
-  },
-
   "content_scripts": [
     {
       "matches":    ["*://*/*"],
@@ -27,5 +22,9 @@
   "web_accessible_resources": [
     "assets/schema/schemaorg.json",
     "assets/js/modal.function.js"
-  ]
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
 }

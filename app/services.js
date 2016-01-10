@@ -306,26 +306,31 @@ mainApp.service('sharedData', function($compile, $sce) {
     sharedData.load = function(file) {
         var reader = new FileReader();
         reader.onload = function() {
-            var signed = false;
+            sharedData.parseForm(reader.result);
+        }
+        reader.readAsText(file);
+    }
+
+    sharedData.parseForm = function(html){
             parser = new DOMParser();
+            var signed = false;
+
             var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
-            if (reader.result.indexOf(substring) == -1){
+            if (html.indexOf(substring) == -1){
                 //clear
                 sharedData.signed = false;
                 sharedData.originDoc = "";
-                message = reader.result;
 
             }else{
                 //signed
                 sharedData.signed = true;
                 sharedData.originDoc = reader.result;
                 alert("This is a signed document, you can not neither edit nor modify this document !!!");
-                message = openpgp.cleartext.readArmored(reader.result).text;
                 signed = true;
             }
 
             //Parse the file and apply to models
-            htmlDoc = parser.parseFromString(reader.result, "text/html");
+            htmlDoc = parser.parseFromString(html, "text/html");
             models = sharedData.htmlToTemplate(htmlDoc, _class = null, _id = null);
             sharedData.models.dropzones.templates = models;
             
@@ -333,8 +338,6 @@ mainApp.service('sharedData', function($compile, $sce) {
             if (sharedData.currentFunction == "New from Template"){
                 sharedData.clear();
             }
-        }
-        reader.readAsText(file);
     }
 
     sharedData.htmlToTemplate = function(html, _class, _id) {
