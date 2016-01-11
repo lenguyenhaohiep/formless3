@@ -12,19 +12,8 @@
   "permissions": [
     	"tabs", "<all_urls>"
   ],
-  "content_scripts": [
-    {
-      "matches":    ["*://*/*"],
-      "js": ["assets/js/angular.js"]
-    }
-  ],
-
   "web_accessible_resources": [
-    "assets/schema/schemaorg.json",
-    "assets/js/modal.function.js"
-  ],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
+    "assets/schema/schemaorg.json"  
+  ]
+
 }

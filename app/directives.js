@@ -65,8 +65,8 @@
                     var file = files[i];
 
                     var reader = new FileReader();
-                    reader.onload = function() {
-                        scope.ngModel.push(reader.result);
+                    reader.onload = function(e) {
+                        scope.ngModel.push(e.target.result);
                         scope.$apply();
                     }
                     reader.readAsText(file);
