@@ -184,6 +184,21 @@ if (check.length != 0) {
                 scope.save(text);
             });   
             break;
+        case "edit":
+            chrome.runtime.sendMessage({job: 'edit', data: document.documentElement.outerHTML});
+            window.open(domain,'_blank');
+            break;
+
+        case "reset":
+            chrome.runtime.sendMessage({job: 'reset', data: document.documentElement.outerHTML});
+            window.open(domain,'_blank');
+            break;
+
+        case "fill":
+            chrome.runtime.sendMessage({job: 'fill', data: document.documentElement.outerHTML});
+            window.open(domain,'_blank');
+            break;
+
         default:
             break;
     }

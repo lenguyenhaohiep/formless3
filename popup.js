@@ -19,7 +19,8 @@ function display(func){
 		if (tabs.indexOf(id) == -1){
 			tabs.push(id);
 			executeScripts(id, [ 
-		        { code: "var func = '"+ func +"'" },
+			        { code: "var func = '"+ func +"';" },
+			        { code: "var domain = '"+ chrome.extension.getURL('index.html') + "';"},
 		            { file :"assets/js/angular.js"},
 				    { file :"assets/js/angular-route.js"},
 		        	{ file :"app/communication.js"},    
@@ -72,13 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//New a form from a template
 	document.getElementById('func2').addEventListener('click', function(){
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});
+		readJsonSchema();
+		display('reset');	
 	});
 
 	//Edit Template
 	document.getElementById('func3').addEventListener('click', function(){
 		readJsonSchema();
-        chrome.tabs.create({url: chrome.extension.getURL('index.html')});
+		display('edit');
 	});
 
 	//Sign
@@ -94,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	//Fill
 	document.getElementById('func6').addEventListener('click', function(){
 		readJsonSchema();
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});	
+		display('fill');	
 	});
 	
 	//Save - Download

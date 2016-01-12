@@ -13,7 +13,11 @@
     	"tabs", "<all_urls>"
   ],
   "web_accessible_resources": [
-    "assets/schema/schemaorg.json"  
-  ]
+    "assets/schema/schemaorg.json" 
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
 
 }
