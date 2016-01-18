@@ -27,6 +27,7 @@ mainApp.service('sharedData', function($compile, $sce) {
 
     //Current Function
     sharedData.currentFunction = "Design view";
+
     sharedData.changeFunction = function(name) {
         sharedData.currentFunction = name;
         
@@ -324,7 +325,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             }else{
                 //signed
                 sharedData.signed = true;
-                sharedData.originDoc = reader.result;
+                sharedData.originDoc = html;
                 alert("This is a signed document, you can not neither edit nor modify this document !!!");
                 signed = true;
             }

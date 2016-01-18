@@ -2,40 +2,7 @@
  * Read the schema.org
  */
 
-    try{
-        chrome.runtime.onMessage.addListener(
-          function(request, sender, sendResponse) {
-            
-        //download
-        if (request.job.func == "save"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.save(request.job.text);
-            });        
-        }
-
-        //sign
-        if (request.job.func == "sign"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.sign(request.job.text, request.job.private_key, request.job.passphrase);
-            });        
-        }
-        //verify
-        if (request.job.func == "verify"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.verify(request.job.text, request.job.public_key);
-            });        
-        }
-
-        alert(request.job.func);
-
-    });
-    } catch (err){
-    }
-
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 
     //read schema
     try{
@@ -48,35 +15,32 @@
 
 
     try{
-        chrome.runtime.onMessage.addListener(
-          function(request, sender, sendResponse) {
-            
-        //download
-        if (request.job.func == "save"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.save(request.job.text);
-            });        
+        var job = localStorage.job;
+        var data = localStorage.data;
+
+        if (job != "" && job != undefined){
+            if (data != '' && data != undefined){
+                var scope = angular.element(document.getElementById("SchemaCtr")).scope();
+                switch (job){
+                    case 'edit':
+                        scope.selectMenu('Design view');
+                        scope.sharedData.parseForm(data);
+                        break;
+                    case 'reset':
+                        scope.selectMenu('Edit view');
+                        scope.sharedData.parseForm(data);
+                        break;
+                    case 'fill':
+                        scope.selectMenu('Fill');
+                        scope.sharedData.parseForm(data);
+                        break;
+                    default: 
+                        break;
+                }
+            }
         }
 
-        //sign
-        if (request.job.func == "sign"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.sign(request.job.text, request.job.private_key, request.job.passphrase);
-            });        
-        }
-        //verify
-        if (request.job.func == "verify"){
-            var scope = angular.element(document.getElementById("FunctionCtr")).scope();
-            scope.$apply(function() {
-                scope.verify(request.job.text, request.job.public_key);
-            });        
-        }
-
-        alert(request.job.func);
-
-    });
+        localStorage.clear();
     } catch (err){
     }
 

@@ -1,3 +1,4 @@
+var tabs = [];
 //read schema from json files
 function readJsonSchema(){
 	var url = chrome.extension.getURL("assets/schema/schemaorg.json"); // full url
@@ -13,11 +14,35 @@ function readJsonSchema(){
 
 
 function display(func){
-		executeScripts(null, [ 
-	        { code: "var func = '"+ func +"'" },
-	       	{ file: "assets/js/modal.function.js" }
-	    ]);
-	    return;
+	chrome.tabs.getSelected(null, function(tab){ 
+		var id = tab.id; 
+		if (tabs.indexOf(id) == -1){
+			tabs.push(id);
+			executeScripts(id, [ 
+			        { code: "var func = '"+ func +"';" },
+			        { code: "var domain = '"+ chrome.extension.getURL('index.html') + "';"},
+		            { file :"assets/js/angular.js"},
+				    { file :"assets/js/angular-route.js"},
+		        	{ file :"app/communication.js"},    
+				    { file :"app/controllers.js"},
+				    { file :"app/directives.js"},
+				    { file :"app/services.js"},
+				    { file :"app/formlesscontrol.js"},
+				    { file :"assets/js/ui-bootstrap-tpls-0.14.3.js"},
+				    { file :"assets/js/xml2json.js"},
+				    { file :"assets/js/openpgp.js"},
+				    { file :"assets/js/FileSaver.js"},
+				    { file :"assets/js/beautify-html.js"},
+				    { file :"assets/js/beautify.js"},
+				    { file :"assets/js/beautify-css.js"},
+				    { file :"assets/js/angular-drag-and-drop-lists.js"},
+				    { file :"assets/js/image.load.js"},
+		       		{ file: "app/modal.function.js" }
+			]);
+		}
+
+    }); 
+    return;
 }
 
 function executeScripts(tabId, injectDetailsArray)
@@ -48,13 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//New a form from a template
 	document.getElementById('func2').addEventListener('click', function(){
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});
+		readJsonSchema();
+		display('reset');	
 	});
 
 	//Edit Template
 	document.getElementById('func3').addEventListener('click', function(){
 		readJsonSchema();
-        chrome.tabs.create({url: chrome.extension.getURL('index.html')});
+		display('edit');
 	});
 
 	//Sign
@@ -64,13 +90,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	//Verify
 	document.getElementById('func5').addEventListener('click', function(){
-		display("verify")
+		display("verify");
 	});
 	
 	//Fill
 	document.getElementById('func6').addEventListener('click', function(){
 		readJsonSchema();
-		chrome.tabs.create({url: chrome.extension.getURL('index.html')});	
+		display('fill');	
 	});
 	
 	//Save - Download

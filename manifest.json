@@ -12,19 +12,15 @@
   "permissions": [
     	"tabs", "<all_urls>"
   ],
-  "content_scripts": [
-    {
-      "matches":    ["*://*/*"],
-      "js": ["assets/js/angular.js"]
-    }
-  ],
-
   "web_accessible_resources": [
-    "assets/schema/schemaorg.json",
-    "assets/js/modal.function.js"
+    "assets/schema/schemaorg.json" 
   ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
 }
