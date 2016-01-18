@@ -34,7 +34,6 @@
 <body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr">
 
     <div ng-controller="FormCtr">
-
         <input id="tempFile" file1 type="file" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" />
 
         <div class="container-fluid nestedDemo" ng-if="schema.json != null">
@@ -63,7 +62,7 @@
 							type='text' 
 							ng-model="item.name" 
 							value="item.name"
-							uib-typeahead="object for object in schema.objects | filter:$viewValue | limitTo:8"/>
+							uib-typeahead="object for object in schema.objects | filter:$viewValue:comparator | limitTo:8"/>
 
 						[Subtype] <input class='input-transparent' type='text' ng-model="item.subtype"/>
 									

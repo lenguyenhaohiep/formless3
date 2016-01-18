@@ -65,7 +65,8 @@
 
         for (i = 0; i < signatures.length; i++) {
             signature = signatures[i];
-            signature.disabled = false;
+            //if (signature.disabled != true)
+            //    signature.disabled = false;
             signature.addEventListener('change', function() {
             	var object = this;
                 var files = this.files;
@@ -182,8 +183,12 @@
             var inputs = div.querySelectorAll(controls[k]);
 
             for (i=0; i<inputs.length; i++){
-                if (inputs[i].className.indexOf('input-transparent') == -1)
-                    inputs[i].disabled = bool;
+                if (inputs[i].className.indexOf('input-transparent') == -1){
+                    if (bool == true )
+                        inputs[i].setAttribute("disabled", bool);
+                    else
+                        inputs[i].removeAttribute("disabled");
+                }
             }
         }
     }
