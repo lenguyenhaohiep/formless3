@@ -185,16 +185,28 @@ if (check.length != 0) {
             });   
             break;
         case "edit":
+            if (checkSigned(document.body.outerHTML)) {
+                alert("Cannot modify a signed form");
+                break;
+            }
             chrome.runtime.sendMessage({job: 'edit', data: document.documentElement.outerHTML});
             window.open(domain,'_blank');
             break;
 
         case "reset":
+            if (checkSigned(document.body.outerHTML)) {
+                alert("Cannot modify a signed form");
+                break;
+            }
             chrome.runtime.sendMessage({job: 'reset', data: document.documentElement.outerHTML});
             window.open(domain,'_blank');
             break;
 
         case "fill":
+            if (checkSigned(document.body.outerHTML)) {
+                alert("Cannot modify a signed form");
+                break;
+            }
             chrome.runtime.sendMessage({job: 'fill', data: document.documentElement.outerHTML});
             window.open(domain,'_blank');
             break;
