@@ -13,9 +13,9 @@
                 var files = event.target.files;
                 var file = files[0];
                 scope.file = file;
+                scope.$apply();
                 if (scope.onFinish != null)
                     scope.onFinish();
-                scope.$apply();
             });
         }
     };
@@ -55,7 +55,7 @@
         restrict: 'EA',
         scope: {
             ngModel: '=',
-            confirmAction: '&'
+            onFinish: '&'
         },
         link: function(scope, el, attrs) {
             el.bind('change', function(event) {

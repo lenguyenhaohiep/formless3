@@ -50,6 +50,10 @@ body {
     word-wrap: break-word;
 }
 
+.glyphicon:hover {
+    cursor: pointer;
+}
+
 .ribbon-tab{
 	border: 1px solid #ddd;
 	border-top: none;

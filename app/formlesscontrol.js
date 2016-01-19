@@ -65,7 +65,7 @@ function updateFileEvent() {
 
     for (i = 0; i < signatures.length; i++) {
         signature = signatures[i];
-        signature.disabled = false;
+        //signature.disabled = false;
         signature.addEventListener('change', function() {
             var object = this;
             var files = this.files;
@@ -95,38 +95,6 @@ function updateFileEvent() {
     }
 }
 
-
-<<<<<<< HEAD
-    /*
-     * Add a trigger to upload file
-     */
-     function updateFileEvent() {
-        var signatures = document.getElementsByClassName('fileupload');
-
-        for (i = 0; i < signatures.length; i++) {
-            signature = signatures[i];
-            //if (signature.disabled != true)
-            //    signature.disabled = false;
-            signature.addEventListener('change', function() {
-            	var object = this;
-                var files = this.files;
-                if (files == null) return;
-                for (var i = 0; i < files.length; i++) {
-                    file = files[i]; 
-                    var name = file.name;
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        create_line_image(object, e.target.result, name);
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-=======
-document.addEventListener('DOMContentLoaded', function() {
->>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
-
-});
 
 function disable(tag) {
     if (tag.disable == true)
@@ -197,16 +165,6 @@ function disableFile(bool) {
 }
 
 
-<<<<<<< HEAD
-            for (i=0; i<inputs.length; i++){
-                if (inputs[i].className.indexOf('input-transparent') == -1){
-                    if (bool == true )
-                        inputs[i].setAttribute("disabled", bool);
-                    else
-                        inputs[i].removeAttribute("disabled");
-                }
-            }
-=======
 /*
  * Disable all form components
  */
@@ -221,10 +179,13 @@ function disableAll(id, bool, doc) {
     for (k = 0; k < controls.length; k++) {
         var inputs = div.querySelectorAll(controls[k]);
 
-        for (i = 0; i < inputs.length; i++) {
-            if (inputs[i].className.indexOf('input-transparent') == -1)
-                inputs[i].disabled = bool;
->>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
-        }
+            for (i=0; i<inputs.length; i++){
+                if (inputs[i].className.indexOf('input-transparent') == -1){
+                    if (bool == true )
+                        inputs[i].setAttribute("disabled", bool);
+                    else
+                        inputs[i].removeAttribute("disabled");
+                }
+            }
     }
 }

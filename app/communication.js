@@ -8,8 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     try{
         var scope = angular.element(document.getElementById("SchemaCtr")).scope();
         scope.$apply(function() {
-            if (localStorage.schemaorg)
+            if (localStorage.schemaorg != undefined && localStorage.schemaorg != ''){
                 scope.updateSchema(localStorage.schemaorg);
+            }
         });
     } catch(err){}
 
@@ -39,8 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-
+        var temp = localStorage.schemaorg;
         localStorage.clear();
+        if (temp != undefined)
+            localStorage.schemaorg = temp;
     } catch (err){
     }
 

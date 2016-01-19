@@ -1,26 +1,16 @@
 /**
  * The controller handles the module "Form Design"
  */
-<<<<<<< HEAD
  var mainApp = angular.module("MainApp", ["dndLists", "ngRoute", "ui.bootstrap"]);
  var secretEmptyKey = '[$empty$]'
 
  mainApp.controller("FormCtr", function($scope, sharedData, schema, sharedData, $timeout) {
-=======
-var mainApp = angular.module("MainApp", ["dndLists", "ngRoute", "ui.bootstrap"]);
-
-mainApp.controller("FormCtr", function($scope, sharedData, schema, sharedData) {
->>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
     $scope.models = sharedData.models;
     $scope.schema = schema;
     $scope.openedfile = null;
 
-<<<<<<< HEAD
-    $scope.matchProperty = function(prop, item){
-=======
 
     $scope.matchProperty = function(prop, item) {
->>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
         var check = schema.getProp(prop);
         if (check.indexOf("ov:") == -1)
             item.semantic.prefix = "";
@@ -80,15 +70,21 @@ mainApp.controller("FormCtr", function($scope, sharedData, schema, sharedData) {
      *   Remove an option at index for the current item
      */
     $scope.removeOption = function(item, index) {
-        item.field_options.splice(index, 1);
+        var r = confirm('Do you want to remove');
+        if (r == true) {
+            item.field_options.splice(index, 1);
+        }
     };
 
     /*
      *   Delete an item in the current model
      */
     $scope.removeItem = function(item) {
-        $scope.models.selected = null;
-        $scope.removeNode($scope.models.dropzones, item)
+        var r = confirm('Do you want to remove');
+        if (r == true) {
+            $scope.models.selected = null;
+            $scope.removeNode($scope.models.dropzones, item);
+        }
     };
 
     $scope.$watch('models.dropzones', function(model) {
@@ -184,25 +180,13 @@ mainApp.controller("FormCtr", function($scope, sharedData, schema, sharedData) {
         if ($scope.openedfile != null) {
             sharedData.load($scope.openedfile);
         }
-    })
-
+    });
 });
 
 
-mainApp.controller('SchemaCtr', function($scope, schema) {
+mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, schema) {
+
     $scope.schema = schema;
-
-    $scope.initialize = function() {
-        schema.initialize();
-    }
-
-    $scope.updateSchema = function(text) {
-        schema.parseFormText(text);
-    }
-});
-
-mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
-
     $scope.keys = {
         public_key: "",
         private_key: "",
@@ -216,6 +200,24 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
     $scope.rdfaData = [];
 
     $scope.rdfaCurrent = [];
+
+    $scope.schema = schema;
+
+    $scope.initialize = function() {
+        //schema.file = $scope.file;
+        if (schema.file == null)
+            return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            schema.initialize(e.target.result);
+            $scope.$apply();
+        }
+        reader.readAsText(schema.file);
+    }
+
+    $scope.updateSchema = function(text) {
+        schema.parseFormText(text);
+    }
 
     $scope.sign = function(text, private_key, passphrase) {
         try {
@@ -300,6 +302,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
     }
 
     $scope.fill = function() {
+        sharedData.clear();
         $scope.fillAction(sharedData.models.dropzones.templates);
     }
 
@@ -489,28 +492,19 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
         document.getElementById("tempFile").click();
     }
 
-<<<<<<< HEAD
-        $scope.getDoc = function(signed){
-            var body = document.getElementById("export").innerHTML;
-            var code = '<script type="text/javascript">var body=document.getElementsByTagName("body")[0];body.style.color="white";var main=document.getElementById("form");main.style.color="black";</script>';
-            var disableSignature = code;
-            var js="/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
-            var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body ng-app="MainApp" ng-controller="FunctionCtr">' + body + '</body>'+disableSignature+'</html>';
-            return html_beautify(html)
-=======
+
     $scope.getDoc = function(signed, html) {
         if (html == null)
             body = document.getElementById("export").innerHTML;
         else {
             disableAll('form', true, html);
             body = html.getElementById("form").outerHTML;
->>>>>>> 5751c56df2b9c32cc9ce0a0c764ddad6aa43ab41
         }
 
         var code = '<script type="text/javascript">var body=document.getElementsByTagName("body")[0];body.style.color="white";var main=document.getElementById("form");main.style.color="black";</script>';
-        var disableSignature = (signed != null) ? code : '';
-        var js = "/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.disabled=false; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
-        var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">' + js + '</script></head><body>' + body + '</body>' + disableSignature + '</html>';
+        var disableSignature = code;
+        var js="/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
+        var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body>' + body + '</body>'+disableSignature+'</html>';
         return html_beautify(html)
     }
 
@@ -557,6 +551,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa) {
                 item.selected = true;
             }
         });
+        if (sharedData.currentFunction != 'Open' && sharedData.currentFunction != 'New from Template'){
+            $scope.selectMenu(sharedData.currentFunction);
+        }
     });
 
     $scope.analyse = function() {

@@ -86,7 +86,13 @@
                                 ng-change="matchTypeOfProperty(item.subtype, item)"
                                 typeahead-on-select="matchTypeOfProperty($item, item)"/>
 
-                        [Type] <span>{{item.name}}</span>
+                        [Type] 
+                        <input 
+                            class='input-transparent' 
+                            type='text' 
+                            ng-model="item.name" 
+                            value="item.name"
+                            uib-typeahead="object for object in schema.objects | filter:$viewValue:comparator | limitTo:8"/>
                     </h3>
 
                     <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
@@ -260,11 +266,12 @@
                                     <div class='main'>
                                         <h5>Private Key</h5>
                                         <input file2 type="file" ng-model="keys.private_key" />
+                                        <br />
                                         <textarea ng-model='keys.private_key' rows='15' class='form-control' placeholder="Enter your private key"></textarea>
                                         <h5>Passphrase</h5>
                                         <input type='password' ng-model='keys.passphrase' class='form-control' placeholder='Enter your passphrase' />
                                         <br/>
-                                        <button class='btn' ng-click='sign()'>Click to sign this form</button>
+                                        <button class='btn' ng-click='sign()'>Sign</button>
                                     </div>
 
                                 </div>
@@ -279,9 +286,10 @@
                                     <div class='main'>
                                         <h5>Public Key</h5>
                                         <input file2 type="file" ng-model="keys.public_key" />
+                                        <br/>
                                         <textarea rows='15' ng-model='keys.public_key' class='form-control' placeholder="Enter the public key"></textarea>
                                         <br/>
-                                        <button class='btn' ng-click='verify()'>Click to verify this form</button>
+                                        <button class='btn' ng-click='verify()'>Verify</button>
                                     </div>
                                 </div>
                             </div>
@@ -294,12 +302,13 @@
                                     <h3>Fill</h3>
                                     <div class='main'>
                                         <h5>Forms</h5>
-                                        <input file3 type="file" ng-model="formsInput" multiple/>
+                                        <input file3 type="file" ng-model="formsInput" multiple on-finish=''/>
+                                        <br/>
                                         <span>{{formsInput.length}} Document(s) selected</span>
                                         <br/>
 
                                         <div ng-if="formsInput.length > 0"> 
-                                            <button class='btn' ng-click='analyse()'>Click to Analyse</button>
+                                            <button class='btn' ng-click='analyse()'>Analyse</button>
                                             <div ng-if="rdfaCurrent.length > 0">
                                             <h5>Mapping</h5>
                                                 <table class="table table-bordered">
@@ -308,13 +317,14 @@
                                                             <td>
                                                                 <label>{{obj.field}}</label>
                                                                 <select class='form-control' ng-change='fill()' ng-model='obj.data'>
+                                                                    <option></option>
                                                                     <option ng-repeat="option in rdfa" value="{{option}}">{{option}}</option>
                                                                 </select>
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                            <button class='btn' ng-click='fill()'>Click to fill this form</button>
+                                            <button class='btn' ng-click='fill()'>Fill</button>
                                             </div>
                                         </div>
                                     </div>
@@ -334,9 +344,8 @@
             </div>
         </div>
     </div>
-    </div>
-    <div id="SchemaCtr" ng-controller="SchemaCtr">
-        <div class="container" ng-if="schema.json == null">
+    <div id="SchemaCtr" ng-if="schema.json == null">
+        <div class="container">
             <h3>Please select an OWL file</h3> File can be found at : <b>{{schema.path}}</b>
             <input file1 type="file" on-finish='initialize()' data-file="schema.file" />
         </div>

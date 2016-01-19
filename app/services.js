@@ -1,3 +1,4 @@
+var PREFIX = "ov:";
 mainApp.service('sharedData', function($compile, $sce) {
     var sharedData = {};
     /**
@@ -19,7 +20,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         class: null,
         id: null,
         property: null,
-        prefix: "ov:",
+        prefix: PREFIX,
     };
 
     sharedData.signed = false;
@@ -321,6 +322,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 //clear
                 sharedData.signed = false;
                 sharedData.originDoc = "";
+                sharedData.currentFunction = "Edit view";
 
             }else{
                 //signed
@@ -328,6 +330,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.originDoc = html;
                 alert("This is a signed document, you can not neither edit nor modify this document !!!");
                 signed = true;
+                sharedData.currentFunction = "Verify";
             }
 
             //Parse the file and apply to models
@@ -378,12 +381,12 @@ mainApp.service('sharedData', function($compile, $sce) {
                     subProperty.subtype = div.getAttribute("property");
                     
                     if (subProperty.subtype)
-                        if (subProperty.subtype.indexOf("ov:") == -1){
+                        if (subProperty.subtype.indexOf(PREFIX) == -1){
                             subProperty.semantic.property = subProperty.subtype;
                             subProperty.semantic.prefix = '';
                         } else {
                             subProperty.semantic.property = subProperty.subtype.substring(3, subProperty.subtype.length);
-                            subProperty.semantic.prefix = 'ov:';
+                            subProperty.semantic.prefix = PREFIX;
                         } 
                         subProperty.semantic.class = div.getAttribute("temptype");
 
@@ -426,22 +429,22 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                         //get Labels of Header, Sections
                         if (i == 10 || i == 11) {
-                            item.label = control.innerText;
+                            item.label = control.textContent;
                         } else {
                             label = htmlDoc.getElementsByTagName("label")[0];
                             if (label)
-                                item.label = label.innerText;
+                                item.label = label.textContent;
                             item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
                             prop = control.getAttribute("property");
                             if (!prop)
                                 prop = control.getAttribute("tempproperty");
                             if (prop)
-                                if (prop.indexOf("ov:") == -1){
+                                if (prop.indexOf(PREFIX) == -1){
                                     item.semantic.property = prop;
                                     item.semantic.prefix = '';
                                 } else{
                                     item.semantic.property = prop.substring(3, prop.length);
-                                    item.semantic.prefix = 'ov:';
+                                    item.semantic.prefix = PREFIX;
                                 }
                             }
 
@@ -509,7 +512,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                             spans = htmlDoc.getElementsByTagName('span');
 
                             for (j=0; j<images.length; j++){
-                                image = {src: images[j].getAttribute('src'), name: spans[j+1].innerText};
+                                image = {src: images[j].getAttribute('src'), name: spans[j+1].textContent};
                                 item.value.push(image);
                             }
                             break;
@@ -542,28 +545,22 @@ mainApp.service('schema', function() {
     schema.tempFile = null;
     schema.load = false;
 
-    schema.initialize = function() {
-        if (schema.file == null)
+    schema.initialize = function(text) {
+        try{
+            schema.json = angular.fromJson(text);
+        }catch(err){
+            schema.file == null;
+            alert('wrong file');
             return;
-        var reader = new FileReader();
-        reader.onload = function() {
-            try{
-                schema.json = angular.fromJson(reader.result);
-            }catch(err){
-                schema.file == null;
-                alert('wrong file');
-                return;
-            }
-            if (schema.json['types']==null){
-                alert('wrong file');
-                return
-            }
-            schema.load = true;
-            angular.forEach(schema.json["types"], function(key, value) {
-                schema.objects.push(value);
-            });
         }
-        reader.readAsText(schema.file);
+        if (schema.json['types'] == null){
+            alert('wrong file');
+            return
+        }
+        schema.load = true;
+        angular.forEach(schema.json["types"], function(key, value) {
+            schema.objects.push(value);
+        });
     }
 
     schema.parseFormText = function(jsonText) {
@@ -581,14 +578,14 @@ mainApp.service('schema', function() {
 
     schema.getType = function(type) {
         if (schema.json["types"][type] == null)
-            return "ov:" + type;
+            return PREFIX + type;
         return type;
 
     }
 
     schema.getProp = function(prop) {
         if (schema.json["properties"][prop] == null)
-            return "ov:" + prop;
+            return PREFIX + prop;
         return prop;
 
     }
@@ -612,9 +609,7 @@ mainApp.service('rdfa', function(){
         var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
         if (html.indexOf(substring) != -1){
             html = openpgp.cleartext.readArmored(html).text;
-        }     
-
-
+        }
         rdfaInfo = {};
         parser = new DOMParser();
         doc = parser.parseFromString(html, 'text/html');
@@ -668,7 +663,6 @@ mainApp.service('rdfa', function(){
                             rdfaInfo[_typeof][_resource][_property] = [];
                             rdfaInfo[_typeof][_resource][_property].push(temp);
                             rdfaInfo[_typeof][_resource][_property].push(_content);
-
                         }
                     }
 
