@@ -28,6 +28,11 @@ function fixHtml(html) {
     s1 = '-----BEGIN PGP SIGNED MESSAGE-----';
     s2 = '\n-----BEGIN PGP SIGNED MESSAGE-----';
     html = html.replace(s1, s2);
+
+    s1 = 'option)" class';
+    s2 = 'option)" \nclass';
+    html = html.replace(s1, s2);    
+
     return html;
 }
 
@@ -141,6 +146,7 @@ if (check.length != 0) {
                 }
 
                 resetOriginal();
+                updateStateOfForm();
 
                 text = document.documentElement.outerHTML;
 
@@ -173,13 +179,14 @@ if (check.length != 0) {
             break;
         case "save":
             resetOriginal();
-
             text = document.documentElement.outerHTML;
 
             if (checkSigned(text)) {
                 text = fixHtml(document.body.innerHTML);
+            } else{
+                updateStateOfForm();
+                text = document.documentElement.outerHTML;
             }
-
             scope.$apply(function() {
                 scope.save(text);
             });   

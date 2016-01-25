@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (job != "" && job != undefined){
             if (data != '' && data != undefined){
-                var scope = angular.element(document.getElementById("SchemaCtr")).scope();
+                var scope = angular.element(document.getElementById("FunctionCtr")).scope();
                 switch (job){
                     case 'edit':
                         scope.selectMenu('Design view');

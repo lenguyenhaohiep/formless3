@@ -29,58 +29,6 @@ mainApp.service('sharedData', function($compile, $sce) {
     //Current Function
     sharedData.currentFunction = "Design view";
 
-    sharedData.changeFunction = function(name) {
-        sharedData.currentFunction = name;
-        
-        if (name == "Design view")
-            setTimeout(function(){ 
-                disableAll('formExport', true);
-            }, 0);
-
-        if (name != "Design view")
-            setTimeout(function(){ 
-                if (sharedData.originDoc != '')
-                    disableAll('export', true);
-                else
-                    disableAll('export', false);
-            }, 0);
-    }
-
-    //Clear all data
-    sharedData.empty = function(list){
-        var l;
-        if (list.templates[0] instanceof Array) {
-            l = list.templates[0];
-        } else
-        l = list.templates;
-
-
-        for (var i = 0; i < l.length; i++) {
-            item = l[i];
-            if (item.value instanceof Array)
-                item.value = [];
-            else
-                item.value = null;
-
-            if (item.field_options){
-                for (var j=0; j<item.field_options.length; j++){
-                    item.field_options[j].checked = false;
-                }
-            }
-            if (item.templates != null) {
-                sharedData.empty(item);
-            }
-        }
-    }
-
-    sharedData.clear = function(){
-        sharedData.empty(sharedData.models.dropzones);
-    }
-
-    sharedData.clearAll = function(){
-        sharedData.models.dropzones.templates = [];
-    }
-
     sharedData.commands = [{
         name: "Open",
         icon: "glyphicon-folder-open",
@@ -190,7 +138,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-record',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
-            component: "<input disabled type='radio' property='{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
+            component: "<input disabled type='radio' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
             field_options: [{
                 label: "Radio 1",
                 checked: false
@@ -208,7 +156,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-ok-circle',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
-            component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
+            component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
             field_options: [{
                 label: "Checkbox 1",
                 checked: false
@@ -247,7 +195,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: [],
-            component: "<input class= 'fileupload' fileimage type-mode=1 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}'><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
+            component: "<input disabled class= 'fileupload' fileimage type-mode=1 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}'><button ng-click='$parent.$parent.deleteImage(item,img)'>Remove</button></div><br ng-repeat-end />",
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -257,7 +205,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-paperclip',
             label: DEFAULT_LABEL,
             value: [],
-            component: "<input class= 'fileupload' fileimage type-mode=2 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)' disabled>Remove</button></div><br ng-repeat-end />",
+            component: "<input disabled class= 'fileupload' fileimage type-mode=2 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)'>Remove</button></div><br ng-repeat-end />",
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -280,7 +228,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         }, {
             type: "container",
             id: 1,
-            name: "Untitled Object",
+            name: "Person",
             subtype: '',
             icon: 'glyphicon-user',
             templates: [
@@ -289,7 +237,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         }, {
             type: "subProperty",
             id: 1,
-            name: "Untitled Object",
+            name: "Thing",
             subtype: '',
             icon: 'glyphicon-unchecked',
             semantic: DEFAULT_SEMANTIC,
@@ -313,6 +261,59 @@ mainApp.service('sharedData', function($compile, $sce) {
         reader.readAsText(file);
     }
 
+        sharedData.changeFunction = function(name) {
+        sharedData.currentFunction = name;
+        if (name == "Design view")
+            setTimeout(function(){ 
+                disableAll('formExport', true);
+            }, 100);
+
+        if (name != "Design view")
+            setTimeout(function(){ 
+                if (sharedData.originDoc == ""){
+                    disableAll('export', false);
+                }    
+                else{
+                    disableAll('export', true);
+                }
+            }, 100);
+    }
+
+    //Clear all data
+    sharedData.empty = function(list){
+        var l;
+        if (list.templates[0] instanceof Array) {
+            l = list.templates[0];
+        } else
+        l = list.templates;
+
+
+        for (var i = 0; i < l.length; i++) {
+            item = l[i];
+            if (item.value instanceof Array)
+                item.value = [];
+            else
+                item.value = null;
+
+            if (item.field_options){
+                for (var j=0; j<item.field_options.length; j++){
+                    item.field_options[j].checked = false;
+                }
+            }
+            if (item.templates != null) {
+                sharedData.empty(item);
+            }
+        }
+    }
+
+    sharedData.clear = function(){
+        sharedData.empty(sharedData.models.dropzones);
+    }
+
+    sharedData.clearAll = function(){
+        sharedData.models.dropzones.templates = [];
+    }
+
     sharedData.parseForm = function(html){
             parser = new DOMParser();
             var signed = false;
@@ -322,7 +323,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 //clear
                 sharedData.signed = false;
                 sharedData.originDoc = "";
-                sharedData.currentFunction = "Edit view";
+                //sharedData.currentFunction = "Edit view";
 
             }else{
                 //signed
@@ -342,6 +343,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             if (sharedData.currentFunction == "New from Template"){
                 sharedData.clear();
             }
+
+            sharedData.changeFunction(sharedData.currentFunction);
     }
 
     sharedData.htmlToTemplate = function(html, _class, _id) {
@@ -352,6 +355,8 @@ mainApp.service('sharedData', function($compile, $sce) {
 
         var li = result.iterateNext();
         //in case of a container
+
+        var count = 0;
 
         while (li) {
             htmlDoc = parser.parseFromString(li.innerHTML, "text/html");
@@ -420,7 +425,9 @@ mainApp.service('sharedData', function($compile, $sce) {
 
 
                         var item = angular.copy(sharedData.models.templates[i]);
-
+                        item.id = "_" + count;
+                        count = count + 1;
+                        
                         //get semantic info
                         if (_class != null && _id != null) {
                             item.semantic.class = _class;
@@ -436,8 +443,10 @@ mainApp.service('sharedData', function($compile, $sce) {
                                 item.label = label.textContent;
                             item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
                             prop = control.getAttribute("property");
-                            if (!prop)
+                            if (prop == null || prop == undefined || prop == "")
                                 prop = control.getAttribute("tempproperty");
+                            if (prop == null || prop == undefined || prop == "")
+                                prop = control.getAttribute("property2");
                             if (prop)
                                 if (prop.indexOf(PREFIX) == -1){
                                     item.semantic.property = prop;
@@ -620,8 +629,15 @@ mainApp.service('rdfa', function(){
             //parse objects
             _typeof = object.getAttribute('typeof');
             _resource = object.getAttribute('resource');
+
             if (_resource == null)
                 _resource = object.getAttribute('property');
+            if (!rdfaInfo[_typeof])
+                        rdfaInfo[_typeof]= {};
+
+            if (!rdfaInfo[_typeof][_resource]){
+                        rdfaInfo[_typeof][_resource] = {};
+                    }            
 
             //parse properties 
             doc = parser.parseFromString(object.innerHTML,'text/html');
@@ -646,12 +662,7 @@ mainApp.service('rdfa', function(){
                     }
                     else 
                         _content = property.getAttribute('content');
-                    if (!rdfaInfo[_typeof])
-                        rdfaInfo[_typeof]= {};
-
-                    if (!rdfaInfo[_typeof][_resource]){
-                        rdfaInfo[_typeof][_resource] = {};
-                    }
+        
                     
                     if (!rdfaInfo[_typeof][_resource][_property]){
                         rdfaInfo[_typeof][_resource][_property] = _content;

@@ -2,12 +2,10 @@
  * The controller handles the module "Form Design"
  */
  var mainApp = angular.module("MainApp", ["dndLists", "ngRoute", "ui.bootstrap"]);
- var secretEmptyKey = '[$empty$]'
 
  mainApp.controller("FormCtr", function($scope, sharedData, schema, sharedData, $timeout) {
     $scope.models = sharedData.models;
     $scope.schema = schema;
-    $scope.openedfile = null;
 
 
     $scope.matchProperty = function(prop, item) {
@@ -172,15 +170,6 @@
             }
         }
     }
-
-    /*
-     *   Deserialise a form from a html file give, it will parse the html file into an instance of shared data
-     */
-    $scope.$watch("openedfile", function() {
-        if ($scope.openedfile != null) {
-            sharedData.load($scope.openedfile);
-        }
-    });
 });
 
 
@@ -203,6 +192,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
     $scope.schema = schema;
 
+    $scope.openedfile = null;
+
     $scope.initialize = function() {
         //schema.file = $scope.file;
         if (schema.file == null)
@@ -213,6 +204,19 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             $scope.$apply();
         }
         reader.readAsText(schema.file);
+    }
+
+
+    $scope.loadfile = function(){
+        if ($scope.openedfile != null){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                //sharedData.currentFunction = "Edit view";
+                sharedData.parseForm(e.target.result);
+                $scope.$apply();
+            }
+            reader.readAsText($scope.openedfile);
+        }
     }
 
     $scope.updateSchema = function(text) {
@@ -227,12 +231,18 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             }
 
             if ($scope.keys.private_key != "" && $scope.keys.passphrase != "") {
+
                 if (text) {
                     parser = new DOMParser();
                     html = parser.parseFromString(text, "text/html");
                     message = $scope.getDoc(true, html);
 
                 } else {
+                //disable the forms
+                    setTimeout( function() {
+                        disableAll('export', true);
+                        updateStateOfForm();
+                    }, 0);
                     message = $scope.getDoc(true);
                 }
 
@@ -356,7 +366,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
                                 }
                                 if (val)
-
                                     switch (item.name) {
                                     case "Number":
                                         item.val = parseInt(val);
@@ -367,6 +376,11 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                                         break;
                                     case "Checkbox":
                                         item.value = [];
+                                        if (!(val instanceof Array)){
+                                            temp = [];
+                                            temp.push(val);
+                                            val = temp;
+                                        }
 
                                         for (kk = 0; kk < item.field_options.length; kk++) {
                                             item.field_options[kk].checked = false;
@@ -494,9 +508,13 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
 
     $scope.getDoc = function(signed, html) {
-        if (html == null)
+        if (html == null){
+            //for the app
+            disableAll('form', false);
             body = document.getElementById("export").innerHTML;
+        }
         else {
+            //for Chrome extension
             disableAll('form', true, html);
             body = html.getElementById("form").outerHTML;
         }
@@ -505,7 +523,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         var disableSignature = code;
         var js="/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
         var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body>' + body + '</body>'+disableSignature+'</html>';
-        return html_beautify(html)
+        return html_beautify(html);
     }
 
     $scope.save = function(text, signed) {
@@ -529,7 +547,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             filename += "_signed.html";
         }
 
-
         var enterFileName = prompt("Please enter file name", filename);
         if (enterFileName != null && enterFileName !== false) {
             var result = html;
@@ -545,22 +562,31 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     }
 
     $scope.$watch("sharedData.currentFunction", function() {
-        angular.forEach($scope.commands, function(item) {
-            item.selected = false;
-            if (item.name == sharedData.currentFunction) {
-                item.selected = true;
-            }
-        });
-        if (sharedData.currentFunction != 'Open' && sharedData.currentFunction != 'New from Template'){
-            $scope.selectMenu(sharedData.currentFunction);
-        }
+        setTimeout(function() {
+            angular.forEach($scope.commands, function(item) {
+                item.selected = false;
+                if (item.name == sharedData.currentFunction) {
+                    item.selected = true;
+                }
+            });
+        }, 0);
     });
+
+    $scope.clearDoc = function(){
+        $scope.formsInput = [];
+    }
 
     $scope.analyse = function() {
         if ($scope.formsInput.length <= 0)
             return;
+
+        //Objects for documents
         $scope.rdfa = [];
+
+        //Data from documents 
         $scope.rdfaData = [];
+
+        //
         $scope.rdfaCurrent = [];
 
         for (i = 0; i < $scope.formsInput.length; i++) {

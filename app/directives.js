@@ -60,7 +60,6 @@
         link: function(scope, el, attrs) {
             el.bind('change', function(event) {
                 var files = event.target.files;
-
                 for (i=0; i < files.length; i++){
                     var file = files[i];
 

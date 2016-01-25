@@ -235,3 +235,7 @@ input:invalid {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.fileupload {
+	min-height: 20px;
+}

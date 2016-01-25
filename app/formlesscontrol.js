@@ -1,3 +1,19 @@
+function autoIncreaseSize(){
+   var elmnt = document.getElementById("export");
+   var scrollHeight = elmnt.scrollHeight;
+   var divHeight = elmnt.offsetHeight;
+   var scrollerEndPoint = scrollHeight - divHeight;
+
+   var divScrollerTop =  elmnt.scrollTop;
+   if(divScrollerTop === scrollerEndPoint)
+   {
+       var elmnt2 = document.getElementById("form");
+       h = (elmnt2.offsetHeight + 200);
+       elmnt2.style.height = h + "px";
+   }
+}
+
+
 /*
  * Add an image after the button
  */
@@ -104,41 +120,34 @@ function disable(tag) {
 }
 
 function updateStateOfForm() {
+    var doc = document.getElementById('form');
 
-    var inputs = document.getElementById('export');
-
-    if (inputs == null)
+    if (doc == null)
         return;
 
-    inputs = inputs.querySelectorAll('input');
-    texts = ['text', 'email', 'number'];
-    choices = ['radio', 'checkbox'];
-    for (i = 0; i < inputs.length; i++) {
-        input = inputs[i];
-
-        if (input.type == "radio") {
-            radios = document.getElementsByName(input.name);
-            for (j = 0; j < radios.length; j++) {
-                if (radios[j].checked) {
-                    radios[j].setAttribute("checked", "checked");
+    type = ['input', 'textarea'];
+    for (k = 0; k < type.length; k++) {
+        inputs = doc.querySelectorAll(type[k]);
+        for (i = 0; i < inputs.length; i++) {
+            input = inputs[i];
+            if (input.type == "checkbox" || input.type == "radio") {
+                if (input.checked) {
+                    input.setAttribute("property", input.getAttribute('property2'));
+                    input.setAttribute("checked", "checked");
                 } else {
-                    radios[j].removeAttribute("checked");
+                    input.removeAttribute('property');
+                    input.removeAttribute("checked");
                 }
-                disable(radios[j]);
+                disable(input);
+            } else if (input.type == 'textarea'){
+                input.setAttribute('content', input.value);
+                input.innerHTML = input.value;
+            } 
+            else 
+            {
+                input.setAttribute('content', input.value);
+                input.setAttribute('value', input.value);
             }
-        }
-
-        if (input.type == "checkbox") {
-            if (input.checked) {
-                //input.setAttribute("property", input.getAttribute('_property'));
-                //input.removeAttribute('_property');
-                input.setAttribute("checked", "checked");
-            } else {
-                //input.setAttribute("_property", input.getAttribute('property'));
-                //input.removeAttribute('property');
-                input.removeAttribute("checked");
-            }
-            disable(input);
         }
     }
 

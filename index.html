@@ -30,10 +30,8 @@
 </head>
 
 <body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr">
-
+    <input id="tempFile" file1 type="file" on-finish="loadfile()" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" />
     <div ng-controller="FormCtr">
-        <input id="tempFile" file1 type="file" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" />
-
         <div class="container-fluid nestedDemo" ng-if="schema.json != null">
             <!-- Markup for lists inside the dropzone. It's inside a seperate template
 	     because it will be used recursively. The dnd-list directive enables
@@ -144,7 +142,6 @@
                                 <span href="#" ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
 						    </span>
                             </div>
-
                         </div>
                     </div>
 
@@ -154,10 +151,8 @@
                             <div id="formExport" class="dropzone box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
                                 <div ng-include="'list.html'"></div>
-                            </div>
-                            
-<!--                             <pre>{{modelAsJson}}</pre>
- -->                        </div>
+                            </div>                            
+                        </div>
 
 
                         <div class="col-md-3">
@@ -192,7 +187,18 @@
                                     <input type='number' ng-model="models.selected.id" class='form-control' />
                                 </div>
 
-                                <div ng-if="models.selected.semantic.class != null">
+                                <div ng-if="models.selected.type == 'subProperty'">
+                                    <strong>Property: </strong>
+                                    <input type='text' ng-model="models.selected.subtype" class='form-control' 
+                                    uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
+                                    ng-change="matchTypeOfProperty(models.selected.subtype, models.selected)"
+                                    typeahead-on-select="matchTypeOfProperty($item, models.selected)"/>
+                                    <br>
+                                    <strong>Type: </strong>
+                                    <input type='text' ng-model="models.selected.name" class='form-control' />
+                                </div>
+
+                                <div ng-if="models.selected.semantic.class != null && models.selected.type == 'item'">
                                     <strong>Object Type: </strong> {{models.selected.semantic.class}}
                                     <br>
                                     <strong>ID: </strong> {{models.selected.semantic.id}}
@@ -232,10 +238,9 @@
                     <!-- Template for a normal list item -->
                     <script type="text/ng-template" id="item2.html">
                         <div ng-if='item.noinput == null'>
-                            <div class='label-block'>
-                                <label>{{item.label}}</label>
-                                <span ng-if="item.required == 'yes' " class='required-field'>*</span>
-                            </div>
+                            <label class='label-view'>{{item.label}}</label>
+                            <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                            <br/>
                             <div class='control-block'>
                                 <html-render item="item" val='component'></html-render>
                             </div>
@@ -248,7 +253,6 @@
                     </script>
 
                     <div ng-if="sharedData.currentFunction != 'Design view'">
-
                         <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
                             <div id='form' class="box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
@@ -302,12 +306,13 @@
                                     <h3>Fill</h3>
                                     <div class='main'>
                                         <h5>Forms</h5>
-                                        <input file3 type="file" ng-model="formsInput" multiple on-finish=''/>
+                                        <input file3 type="file" ng-model="formsInput" on-finish='alert()' multiple />
                                         <br/>
                                         <span>{{formsInput.length}} Document(s) selected</span>
                                         <br/>
 
                                         <div ng-if="formsInput.length > 0"> 
+                                            <button class='btn' ng-click='clearDoc()'>Empty</button>
                                             <button class='btn' ng-click='analyse()'>Analyse</button>
                                             <div ng-if="rdfaCurrent.length > 0">
                                             <h5>Mapping</h5>
