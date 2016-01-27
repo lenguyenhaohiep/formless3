@@ -234,10 +234,21 @@ mainApp.service('sharedData', function($compile, $sce) {
             templates: [
             []
             ]
-        }, {
-            type: "subProperty",
+        }, 
+        {
+            type: "container",
             id: 1,
             name: "Thing",
+            subtype: '',
+            icon: 'glyphicon-star',
+            templates: [
+            []
+            ]
+        },
+        {
+            type: "subProperty",
+            id: 1,
+            name: "SubProperty",
             subtype: '',
             icon: 'glyphicon-unchecked',
             semantic: DEFAULT_SEMANTIC,

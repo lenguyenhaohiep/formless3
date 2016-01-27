@@ -574,6 +574,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
     $scope.clearDoc = function(){
         $scope.formsInput = [];
+        $scope.rdfaCurrent = [];
+        document.getElementById('fileSelection').value = '';
     }
 
     $scope.analyse = function() {
@@ -601,6 +603,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
         //Objects in the current form
         var currentObjs = rdfa.parse(document.getElementById('export').innerHTML);
+
+        var checked = {};
         //Get labels for objects
         for (obj in currentObjs) {
             for (type in currentObjs[obj]) {
@@ -610,5 +614,33 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 });
             }
         }
+        $scope.autoDectectObject();
+    }
+
+    $scope.autoDectectObject = function(){
+
+        var checked = [];
+        //Fill with complete match
+        //ex Person-Student1 = Person-Student2
+        for (i=0; i<$scope.rdfaCurrent.length; i++){
+            var str = $scope.rdfaCurrent[i].field;
+            for (j=0; j<$scope.rdfa.length; j++){
+                //dest
+                var str2 = $scope.rdfa[j];
+                str2 = str2.substring(2);
+                if (str2 == str && checked.indexOf(j)==-1){
+                    $scope.rdfaCurrent[i].data = $scope.rdfa[j];
+                    checked.push(j)
+                    break;
+                }
+            }
+        }
+
+        //Fill with incomplete match
+        //ex Person-Student1 == Person-Student2
+
+        //ex Person-Student1 == Person-1
+
+        //ex Person-1 == Person-Student-1
     }
 });
