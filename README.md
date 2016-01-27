@@ -10,4 +10,4 @@ Clone/download this repository and open index.html in any browser which the avai
 
 ## Chrome Extension
 Follow instruction here
-https://developer.chrome.com/extensions/getstarted#unpacked and load the folder as a chrome extension. It's notice that this extension supports some functionalities
+https://developer.chrome.com/extensions/getstarted#unpacked and load the folder as a chrome extension. It's notice that this extension supports some functionalites
