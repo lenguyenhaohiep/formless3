@@ -1,82 +1,65 @@
 /**
- * @file 
+ * @file Services
  * @author Hiep Le <lenguyenhaohiep@gmail.com>
  * @version 0.1
  */
 
  
 mainApp.service('sharedData', function($compile, $sce) {
-    var sharedData = {};
-    /**
-     *   Some default values
+    /*
+     * Properties
+     * {bool} signed Check if the form is signed
+     * {string} originDoc The text file when user open a file
+     * {string} currenFunction The current function
+     * {json[]} commands List of function of the app, each object include name, icon and indication if it is selected
      */
-     var DEFAULT_LABEL = "Untitled";
-     var NO_LABEL = "";
-     var REQ_DEFAULT = 'yes';
-     var PROPERTIES_DEFAULT = "<div class='option-item' ng-repeat='option in item.field_options'>\
-     <input type='checkbox' ng-checked='{{option.checked}}' ng-model='option.checked' ng-click='$parent.$parent.setSelect(item, option)'/>\
-     <input type='text' value='{{option.label}}' ng-model='option.label'/>\
-     <a class='mini-item item-add glyphicon-plus' ng-click='$parent.$parent.addOption(item, $index+1)'></a>\
-     <a class='mini-item item-remove glyphicon-minus' ng-click='$parent.$parent.removeOption(item, $index)'></a>\
-     </div>\
-     <button type='button' class='btn btn-primary btn-xs' ng-click='$parent.$parent.addOption(item, -1)'>Add option</button>";
-     var DEFAULT_LABEL_OPTION = "Option";
-     var DEFAULT_CHECK_OPTION = false;
-     var DEFAULT_SEMANTIC = {
-        class: null,
-        id: null,
-        property: null,
-        prefix: PREFIX,
-    };
+    var sharedData = {};
 
     sharedData.signed = false;
     sharedData.originDoc = "";
-
-    //Current Function
-    sharedData.currentFunction = "Design view";
-
+    sharedData.currentFunction = DESIGN;
     sharedData.commands = [{
-        name: "Open",
+        name: OPEN,
         icon: "glyphicon-folder-open",
         selected: false
     }, {
-        name: "New",
+        name: NEW,
         icon: "glyphicon-plus",
         selected: false
     }, {
-        name: "New from Template",
+        name: NEWTEMPLATE,
         icon: "glyphicon-list-alt",
         selected: false
     }, {
-        name: "Save",
+        name: SAVE,
         icon: "glyphicon-floppy-disk",
         selected: false
     }, {
-        name: "Design view",
+        name: DESIGN,
         icon: "glyphicon-wrench",
         selected: true
     }, {
-        name: "Edit view",
+        name: EDIT,
         icon: "glyphicon-edit",
         selected: false
     }, {
-        name: "Clear Data",
+        name: CLEAR,
         icon: "glyphicon-remove",
         selected: false
     }, {
-        name: "Clear All",
+        name: CLEARALL,
         icon: "glyphicon-trash",
         selected: false
     }, {
-        name: "Sign",
+        name: SIGN,
         icon: "glyphicon-pencil",
         selected: false
     }, {
-        name: "Verify",
+        name: VERIFY,
         icon: "glyphicon-ok",
         selected: false
     }, {
-        name: "Fill",
+        name: FILL,
         icon: "glyphicon-indent-left",
         selected: false
     }];
@@ -115,7 +98,6 @@ mainApp.service('sharedData', function($compile, $sce) {
             value: null,
             component: "<input disabled value='{{item.value}}' type='date' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
             semantic: DEFAULT_SEMANTIC
-
         }, {
             type: "item",
             id: 0,
@@ -136,7 +118,6 @@ mainApp.service('sharedData', function($compile, $sce) {
             value: null,
             component: "<textarea disabled value='{{item.value}}' rows='3' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' />{{item.value}}</textarea>",
             semantic: DEFAULT_SEMANTIC
-
         }, {
             type: "item",
             id: 0,
@@ -145,13 +126,12 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             component: "<input disabled type='radio' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
-            field_options: [{
-                label: "Radio 1",
-                checked: false
-            }, {
-                label: "Radio 2",
-                checked: false
-            }],
+            field_options: [{   label: "Radio 1",
+                                checked: false
+                            }, {
+                                label: "Radio 2",
+                                checked: false
+                            }],
             value: null,
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -163,13 +143,12 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
-            field_options: [{
-                label: "Checkbox 1",
-                checked: false
-            }, {
-                label: "Checkbox 2",
-                checked: false
-            }],
+            field_options: [{   label: "Checkbox 1",
+                                checked: false
+                            }, {
+                                label: "Checkbox 2",
+                                checked: false
+                            }],
             value: [],
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -183,12 +162,12 @@ mainApp.service('sharedData', function($compile, $sce) {
             label: DEFAULT_LABEL,
             component: "<select disabled class='form-control' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value.label}}' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>",
             field_options: [{
-                label: "Option 1",
-                checked: false
-            }, {
-                label: "Option 2",
-                checked: false
-            }],
+                                label: "Option 1",
+                                checked: false
+                            }, {
+                                label: "Option 2",
+                                checked: false
+                            }],
             value: null,
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -237,9 +216,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Person",
             subtype: '',
             icon: 'glyphicon-user',
-            templates: [
-            []
-            ]
+            templates: [ [] ]
         }, 
         {
             type: "container",
@@ -247,9 +224,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Thing",
             subtype: '',
             icon: 'glyphicon-star',
-            templates: [
-            []
-            ]
+            templates: [ [] ]
         },
         {
             type: "subProperty",
@@ -258,9 +233,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             subtype: '',
             icon: 'glyphicon-unchecked',
             semantic: DEFAULT_SEMANTIC,
-            templates: [
-            []
-            ]
+            templates: [ [] ]
         }
 
         ],
@@ -280,12 +253,12 @@ mainApp.service('sharedData', function($compile, $sce) {
 
         sharedData.changeFunction = function(name) {
         sharedData.currentFunction = name;
-        if (name == "Design view")
+        if (name == DESIGN)
             setTimeout(function(){ 
                 disableAll('formExport', true);
             }, 100);
 
-        if (name != "Design view")
+        if (name != DESIGN)
             setTimeout(function(){ 
                 if (sharedData.originDoc == ""){
                     disableAll('export', false);
@@ -346,9 +319,9 @@ mainApp.service('sharedData', function($compile, $sce) {
                 //signed
                 sharedData.signed = true;
                 sharedData.originDoc = html;
-                alert("This is a signed document, you can not neither edit nor modify this document !!!");
+                alert(ERROR3_MESSAGE);
                 signed = true;
-                sharedData.currentFunction = "Verify";
+                sharedData.currentFunction = VERIFY;
             }
 
             //Parse the file and apply to models
@@ -357,7 +330,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             sharedData.models.dropzones.templates = models;
             
             //In case of generating a new form from an existed from, we clear off all data
-            if (sharedData.currentFunction == "New from Template"){
+            if (sharedData.currentFunction == NEWTEMPLATE){
                 sharedData.clear();
             }
 

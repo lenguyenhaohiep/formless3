@@ -23,6 +23,8 @@ function display(func){
 			        { code : "var domain = '"+ chrome.extension.getURL('index.html') + "';"},
 		            { file :"assets/js/angular.js"},
 				    { file :"assets/js/angular-route.js"},
+		        	{ file :"app/defaultvalue.js"},    
+		        	{ file :"app/lang_en.js"},    
 		        	{ file :"app/communication.js"},    
 				    { file :"app/controllers.js"},
 				    { file :"app/directives.js"},

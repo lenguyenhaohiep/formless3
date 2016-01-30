@@ -7,11 +7,6 @@
 
  var mainApp = angular.module("MainApp", ["dndLists", "ngRoute", "ui.bootstrap"]);
 
-/*
- * Constants
- */
- var PREFIX = "ov:";
-
 
 /**
  * The controller handles the module "Form Design"
@@ -129,7 +124,7 @@
      * @param {int} the position of the option
      */
     $scope.removeOption = function(item, index) {
-        var r = confirm('Do you want to remove');
+        var r = confirm(REMOVE_CONFIRM);
         if (r == true) {
             item.field_options.splice(index, 1);
         }
@@ -141,7 +136,7 @@
      * @param {item} item The item to be deleted
      */
     $scope.removeItem = function(item) {
-        var r = confirm('Do you want to remove');
+        var r = confirm(REMOVE_CONFIRM);
         if (r == true) {
             $scope.models.selected = null;
             $scope.removeNode($scope.models.dropzones, item);
@@ -220,7 +215,7 @@
      * @param {string} img The Base64 value of an image
      */
     $scope.deleteImage = function(item, img) {
-        var r = confirm('Do you want to remove this file');
+        var r = confirm(REMOVE_CONFIRM);
         if (r == false)
             return;
 
@@ -354,14 +349,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 var signed = openpgp.signClearMessage(priv.keys, message);
 
                 signed.then(function(msg) {
-                    alert("Signed succefully!!!");
+                    alert(SIGN_MESSAGE);
                     $scope.save(msg);
                 });
             } else {
-                alert("Please enter private key and passphrase");
+                alert(KEY1_CONFIRM);
             }
         } catch (err) {
-            alert("Error! Please check private key, passphrase and try again");
+            alert(ERROR1_MESSAGE);
         }
     }
 
@@ -399,22 +394,22 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 verified.then(function(res) {
                     //verify successfully 
                     if (res.signatures[0].valid === true) {
-                        var msg_alert = "Verify succefully!!!";
-                        msg_alert += "\n Signed by the following public key";
+                        var msg_alert = VERIFY_MESSAGE;
+                        msg_alert += "\n " + SIGNATURE1;
                         msg_alert += "\n ---------------------------------------------";
-                        msg_alert += "\n User's info: " + publicKeys.keys[0].getUserIds();
-                        msg_alert += "\n Creation: " + publicKeys.keys[0].getPrimaryUser().selfCertificate.created;
-                        msg_alert += "\n Expiration: " + publicKeys.keys[0].getExpirationTime();
+                        msg_alert += "\n " + SIGNATURE2 + publicKeys.keys[0].getUserIds();
+                        msg_alert += "\n " + SIGNATURE3 + publicKeys.keys[0].getPrimaryUser().selfCertificate.created;
+                        msg_alert += "\n " + SIGNATURE4 + publicKeys.keys[0].getExpirationTime();
                         alert(msg_alert);
                     } else {
-                        alert("Verify unsuccefully!!!")
+                        alert(VERIFY_ERROR);
                     }
                 });
             } else {
-                alert("Please enter public key");
+                alert(KEY2_CONFIRM);
             }
         } catch (err) {
-            alert("This is not a signed form or the public key is invalid, Please try again !!!");
+            alert(ERROR4_MESSAGE);
         }
     }
 
@@ -425,7 +420,10 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     $scope.fill = function() {
         sharedData.clear();
         var list = sharedData.models.dropzones.templates;
+        $scope.fillAction(list);
+    }
 
+    $scope.fillAction = function(list){
         if (!(list instanceof Array)) {
             var temp = [];
             temp.push(list);
@@ -434,7 +432,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         for (i = 0; i < $scope.rdfaCurrent.length; i++) {
             var str = $scope.rdfaCurrent[i].field;
 
-            //source
+            //source label (name, subtype, id)
             var _name = str.split("-")[0];
             var _subtype = str.split("-")[1];
             var _id = parseInt(_subtype.substring(_subtype.length - 1, _subtype.length));
@@ -446,7 +444,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
             if ($scope.rdfaCurrent[i].data == null)
                 break;
-            //dest
+            //dest (#doc, name, subtype, id)
             var str2 = $scope.rdfaCurrent[i].data;
             var _nDoc = parseInt(str2.split("-")[0]) - 1;
             var _obj = str2.split("-")[1];
@@ -474,7 +472,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                                     val = $scope.rdfaData[_nDoc][_obj][_subObj][prop];
                                 } catch (err) {}
 
-                                if (val)
+                                if (val != null && val != undefined)
                                     switch (item.name) {
                                     case "Number":
                                         item.val = parseInt(val);
@@ -541,57 +539,57 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
         $scope.sharedData.changeFunction(name);
 
-        if (sharedData.currentFunction == "New") {
+        if (sharedData.currentFunction == NEW) {
             window.open(window.location.href, '_blank');
             return;
         }
 
-        if (sharedData.currentFunction == "Open" || sharedData.currentFunction == "New from Template") {
+        if (sharedData.currentFunction == OPEN || sharedData.currentFunction == NEWTEMPLATE) {
             $scope.openFile();
             return;
         }
 
-        if (sharedData.currentFunction == "Save") {
+        if (sharedData.currentFunction == SAVE) {
             setTimeout(function() {
-                $scope.sharedData.changeFunction("Edit view");
+                $scope.sharedData.changeFunction(EDIT);
                 updateStateOfForm();
                 $scope.save();
             }, 0);
             return;
         }
 
-        if (sharedData.originDoc != "" && sharedData.currentFunction != "Verify") {
-            alert("This is a signed document, modification is impossible");
-            sharedData.changeFunction("Verify");
+        if (sharedData.originDoc != "" && sharedData.currentFunction != VERIFY) {
+            alert(ERROR3_MESSAGE);
+            sharedData.changeFunction(VERIFY);
             return;
         }
 
-        if (sharedData.currentFunction == "Clear All") {
+        if (sharedData.currentFunction == CLEARALL) {
 
-            var r = confirm('Do you want to clear both structure and data to create a new form');
+            var r = confirm(CLEARALL_CONFIRM);
             if (r == true) {
                 sharedData.clearAll();
             }
-            $scope.sharedData.changeFunction("Design view");
+            $scope.sharedData.changeFunction(DESIGN);
         }
 
-        if (sharedData.currentFunction == "Sign") {
+        if (sharedData.currentFunction == SIGN) {
             setTimeout(function() {
                 disableAll('export', true);
             }, 0);
         }
 
 
-        if (sharedData.currentFunction == "Fill") {
+        if (sharedData.currentFunction == FILL) {
             updateStateOfForm();
         }
 
-        if (sharedData.currentFunction == "Clear Data") {
-            var r = confirm('Do you want to clear all data');
+        if (sharedData.currentFunction == CLEAR) {
+            var r = confirm(CLEAR_CONFIRM);
             if (r == true) {
                 sharedData.clear();
             }
-            $scope.sharedData.changeFunction("Edit view");
+            $scope.sharedData.changeFunction(EDIT);
         }
     }
 
@@ -621,8 +619,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             disableAll('form', true, html);
             body = html.getElementById("form").outerHTML;
         }
+        //html code for the form
         var disableSignature = '<script type="text/javascript">var body=document.getElementsByTagName("body")[0];body.style.color="white";var main=document.getElementById("form");main.style.color="black";</script>';
-        var js = "/* * Add an image after the button */function create_line_image(object, source, name){var multiple=object.getAttribute('multiple'); var parentNode=object.parentNode; if (multiple==null){var divs=parentNode.querySelectorAll('div'); for (i=0; i <divs.length; i++){parentNode.removeChild(divs[i]);}}var image=document.createElement('img'); image.setAttribute('ng-init', 'itemload()'); image.src=source; image.addEventListener('click', function(){window.open(this.src,'_blank');}); var span=document.createElement('span'); span.innerHTML=name; var button=document.createElement('button'); button.innerHTML='Remove'; button.addEventListener('click', function(){var r=confirm('Do you want to remove this file'); if (r==true){parent2=this.parentNode; parent1=parent2.parentNode; parent1.removeChild(parent2); reset(parent1);}}); var div=document.createElement('div'); div.className='image-line'; div.appendChild(span); div.appendChild(image); div.appendChild(button); parentNode.appendChild(div);}/* * Reset when there is no image */function reset(object){var divs=object.querySelectorAll('div'); if (divs.length==0){input=object.querySelector('input'); input.value='';}}/* * Add a trigger to upload file */function updateFileEvent(){var signatures=document.getElementsByClassName('fileupload'); for (i=0; i < signatures.length; i++){signature=signatures[i]; signature.addEventListener('change', function(){var object=this; var files=this.files; if (files==null) return; for (var i=0; i < files.length; i++){file=files[i]; var name=file.name; var reader=new FileReader(); reader.onload=function(e){create_line_image(object, e.target.result, name);}reader.readAsDataURL(file);}});}}document.addEventListener('DOMContentLoaded', function (){updateFileEvent();});";
+        var js = 'function updateButtonEvent(){var e=document.querySelectorAll("button");for(i=0;i<e.length;i++)e[i].addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))})}function create_line_image(e,t,n){var r=e.getAttribute("multiple"),a=e.parentNode;if(null==r){var l=a.querySelectorAll("div");for(i=0;i<l.length;i++)a.removeChild(l[i])}var o=document.createElement("img");o.setAttribute("ng-init","itemload()"),o.src=t,o.addEventListener("click",function(){window.open(this.src,"_blank")});var d=document.createElement("span");d.innerHTML=n;var u=document.createElement("button");u.innerHTML="Remove",u.addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))});var c=document.createElement("div");c.className="image-line",c.appendChild(d),c.appendChild(o),c.appendChild(u),a.appendChild(c)}function reset(e){var t=e.querySelectorAll("div");0==t.length&&(input=e.querySelector("input"),input.value="")}function updateFileEvent(){var e=document.getElementsByClassName("fileupload");for(i=0;i<e.length;i++)signature=e[i],signature.addEventListener("change",function(){var e=this,t=this.files;if(null!=t)for(var n=0;n<t.length;n++){file=t[n];var i=file.name,r=new FileReader;r.onload=function(t){create_line_image(e,t.target.result,i)},r.readAsDataURL(file)}})}document.addEventListener("DOMContentLoaded",function(){updateFileEvent(),updateButtonEvent()});';
         var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css">.form-final{padding: 20px;margin: 0 auto;width: 700px;}.form-final .required-field{color: red;}.form-final h3{font-size: 20px;font-weight:bold;text-align: center;}.form-final h5{font-size: 18px;font-weight: bold;}.form-final .form-control{width: 500px;}.form-final .label-block{border: none;height: 20px;display: inline-block;width: 100px;}.form-final .control-block{display: inline-block;}.form-final ul{list-style: none;padding-left: 0;}.form-final ul li{margin: 5px;}input:valid{color: black;}.label-field{font-weight: bold;}input:invalid ~ .input-validation::before{content: "Matched format required"; color: red;}input:invalid{color: red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{width:100px;display:inline-block;padding-left:10px}.image-line img{height:100px;padding:10px}</style><script type="text/javascript">'+js+'</script></head><body>' + body + '</body>'+disableSignature+'</html>';
         return html_beautify(html);
     }
@@ -657,7 +656,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             filename += "_signed.html";
         }
 
-        var enterFileName = prompt("Please enter file name", filename);
+        //get the filename of form
+        var enterFileName = prompt(ENTER_NAME, filename);
         if (enterFileName != null && enterFileName !== false) {
             var result = html;
             var aFileParts = [result];
@@ -666,7 +666,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             });
             saveAs(oMyBlob, enterFileName);
         } else if (enterFileName == ""){
-            alert("Please enter a file name");
+            alert(ENTER_NAME);
         }
     }
 
@@ -753,7 +753,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
                 if (checked.indexOf(j) == -1){
                     arr = str2.split('-');
+                    //Check the similarity between two label of object
                     val = checkSimilarity(str, arr[1]+'-'+arr[2]);
+                    //update the most similar
                     if (val > similarity){
                         similarity = val;
                         trace = j;
@@ -764,7 +766,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
             if (similarity != -1){
                 $scope.rdfaCurrent[i].data = $scope.rdfa[trace];
-                console.log($scope.rdfaCurrent[i]);
+                //mark as use
                 checked.push(trace);
             }
         }

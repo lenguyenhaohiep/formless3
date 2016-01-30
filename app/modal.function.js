@@ -140,7 +140,7 @@ if (check.length != 0) {
     switch (func) {
         case "sign":
             if (checkSigned(document.body.outerHTML)) {
-                alert("Cannot sign a signed form");
+                alert(ERROR3_MESSAGE);
                 break;
             }
             dialog.showModal();
@@ -148,7 +148,7 @@ if (check.length != 0) {
                 private_key = document.getElementById('private_key').value;
                 passphrase = document.getElementById('passphrase').value;
                 if (private_key == '' || passphrase == '') {
-                    alert("Please enter private key and passphrase");
+                    alert(KEY1_CONFIRM);
                     return;
                 }
 
@@ -164,14 +164,14 @@ if (check.length != 0) {
             break;
         case "verify":
             if (!checkSigned(document.body.innerHTML)) {
-                alert("Cannot verify unsigned form");
+                alert(ERROR2_MESSAGE);
                 break;
             }
             dialog.showModal();
             document.getElementById('verify').onclick = function() {
                 public_key = document.getElementById('public_key').value;
                 if (public_key == '') {
-                    alert("Please enter public key");
+                    alert(KEY2_CONFIRM);
                     return;
                 }
 
@@ -200,7 +200,7 @@ if (check.length != 0) {
             break;
         case "edit":
             if (checkSigned(document.body.outerHTML)) {
-                alert("Cannot modify a signed form");
+                alert(MODIFY_MESSAGE);
                 break;
             }
             chrome.runtime.sendMessage({job: 'edit', data: document.documentElement.outerHTML});
@@ -209,7 +209,7 @@ if (check.length != 0) {
 
         case "reset":
             if (checkSigned(document.body.outerHTML)) {
-                alert("Cannot modify a signed form");
+                alert(MODIFY_MESSAGE);
                 break;
             }
             chrome.runtime.sendMessage({job: 'reset', data: document.documentElement.outerHTML});
@@ -218,7 +218,7 @@ if (check.length != 0) {
 
         case "fill":
             if (checkSigned(document.body.outerHTML)) {
-                alert("Cannot modify a signed form");
+                alert(MODIFY_MESSAGE);
                 break;
             }
             chrome.runtime.sendMessage({job: 'fill', data: document.documentElement.outerHTML});
@@ -229,7 +229,6 @@ if (check.length != 0) {
             break;
     }
 
-
 } else {
-    alert("This is not a valid form");
+    alert(INVALID_MESSAGE);
 }
