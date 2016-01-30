@@ -1,5 +1,12 @@
+/**
+ * @file 
+ * @author Hiep Le <lenguyenhaohiep@gmail.com>
+ * @version 0.1
+ */
+
+
 /*
- * Directive for selecting file and assigning a file to model
+ * Directive for selecting file and assigning a file to model, excute the method on-finish after file loaded
  */
  mainApp.directive('file1', function() {
     return {
@@ -14,6 +21,8 @@
                 var file = files[0];
                 scope.file = file;
                 scope.$apply();
+
+                //apply methoad when file loaded
                 if (scope.onFinish != null)
                     scope.onFinish();
             });
@@ -22,7 +31,7 @@
 });
 
 /*
- * Directive for selecting file and assigning a file to model
+ * Directive for selecting only one file and assigning a file to model
  */
  mainApp.directive('file2', function() {
     return {
@@ -48,7 +57,7 @@
 
 
 /*
- * Directive for selecting file and assigning a file to model
+ * Directive for selecting multiple files and assigning to model
  */
  mainApp.directive('file3', function() {
     return {
@@ -75,7 +84,12 @@
     };
 });
 
-
+/*
+ * Directive for selecting images and assigning to model
+ * ng-model: model to be assgined
+ * type-mode: type of input file, it is equal to 1 means that we can have only one image file (case of signature)
+ * it is equal 2 means that we can have multiple files (case of attached )
+ */
  mainApp.directive('fileimage', function(){
     return{
         restrict: 'EA',
@@ -85,17 +99,21 @@
         },
         link: function(scope, el, attrs){
           el.bind('change', function(event) {
-            var files = event.target.files;
+            var files = event.target.files;files
+
+            //Just validate only the first file if type-mode == 1
             if (scope.typeMode==1){
                 files = [];
                 files.push (event.target.files[0]);
             }
             readers = [];
+
+            //Read files
             for (i=0; i < files.length; i++){
                 file = files[i];
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    if (scope.typeMode==1){
+                    if (scope.typeMode == 1){
                         scope.ngModel = [];
                     }
                     scope.ngModel.push({src: e.target.result, name: file.name});

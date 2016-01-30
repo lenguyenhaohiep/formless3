@@ -19,8 +19,8 @@ function display(func){
 		if (tabs.indexOf(id) == -1){
 			tabs.push(id);
 			executeScripts(id, [ 
-			        { code: "var func = '"+ func +"';" },
-			        { code: "var domain = '"+ chrome.extension.getURL('index.html') + "';"},
+			        { code : "var func = '"+ func +"';" },
+			        { code : "var domain = '"+ chrome.extension.getURL('index.html') + "';"},
 		            { file :"assets/js/angular.js"},
 				    { file :"assets/js/angular-route.js"},
 		        	{ file :"app/communication.js"},    
@@ -37,7 +37,7 @@ function display(func){
 				    { file :"assets/js/beautify-css.js"},
 				    { file :"assets/js/angular-drag-and-drop-lists.js"},
 				    { file :"assets/js/image.load.js"},
-		       		{ file: "app/modal.function.js" }
+		       		{ file : "app/modal.function.js" }
 			]);
 		}
 
@@ -87,12 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('func4').addEventListener('click', function(){ 
 		display("sign");
 	});
-	
-	//Verify
-	document.getElementById('func5').addEventListener('click', function(){
-		display("verify");
-	});
-	
+		
 	//Fill
 	document.getElementById('func6').addEventListener('click', function(){
 		readJsonSchema();

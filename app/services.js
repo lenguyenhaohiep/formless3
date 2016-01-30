@@ -1,4 +1,10 @@
-var PREFIX = "ov:";
+/**
+ * @file 
+ * @author Hiep Le <lenguyenhaohiep@gmail.com>
+ * @version 0.1
+ */
+
+ 
 mainApp.service('sharedData', function($compile, $sce) {
     var sharedData = {};
     /**

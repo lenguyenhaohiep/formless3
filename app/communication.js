@@ -1,10 +1,18 @@
 /**
- * Read the schema.org
+ * @file File working with Chrome Extension 
+ * @author Hiep Le <lenguyenhaohiep@gmail.com>
+ * @version 0.1
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+/**
+ * When working as the chrome without running index.html, the current tab will store data and request to localStorage 
+ * and then injtects this file to handle the request. The chrome extension also read the schemaorg.json file and store to localStorage
+ * so that if there is the schema in localStorage, it won't load again 
+ */
 
-    //read schema
+ document.addEventListener('DOMContentLoaded', function() {
+
+    //load and read schema and call the conresponding function 
     try{
         var scope = angular.element(document.getElementById("SchemaCtr")).scope();
         scope.$apply(function() {
@@ -16,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     try{
+        /*
+         * job is the request (edit, reset, fill) and data is the current tab html in the chrome browser
+         * Only support some functions (edit, reset, fill)
+         */
         var job = localStorage.job;
         var data = localStorage.data;
 
@@ -40,6 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+
+         /*
+         * after finish the request, we detroy job and data because localStorage is available in the same domain
+         * if not, every tab in the same do main will access the same job and data
+         */       
         var temp = localStorage.schemaorg;
         localStorage.clear();
         if (temp != undefined)

@@ -1,3 +1,10 @@
+/**
+ * @file 
+ * @author Hiep Le <lenguyenhaohiep@gmail.com>
+ * @version 0.1
+ */
+
+
 /*
  * This method is used to fix the html to the right format because when we signed a form
  * we sign a whole html page, so the signature is outside <html> tag, but when it is display
