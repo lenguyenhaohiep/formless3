@@ -632,8 +632,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {bool} signed Check if this is a signed text
      */
     $scope.save = function(text, signed) {
-        var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
-
         var d = new Date();
         filename = "form-" + d.toISOString().substr(0, 10);
 
@@ -650,7 +648,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         }
 
         //suffix for the download file
-        if (html.indexOf(substring) == -1) {
+        if (html.indexOf(CHECK_SIGNED_STRING) == -1) {
             filename += ".html";
         } else {
             filename += "_signed.html";

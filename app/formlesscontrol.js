@@ -18,25 +18,25 @@ function checkSimilarity(s1, s2){
 }
 
 function autoIncreaseSize(){
- var elmnt = document.getElementById("export");
- var scrollHeight = elmnt.scrollHeight;
- var divHeight = elmnt.offsetHeight;
- var scrollerEndPoint = scrollHeight - divHeight;
+    var elmnt = document.getElementById("export");
+    var scrollHeight = elmnt.scrollHeight;
+    var divHeight = elmnt.offsetHeight;
+    var scrollerEndPoint = scrollHeight - divHeight;
 
- var divScrollerTop =  elmnt.scrollTop;
- if(divScrollerTop === scrollerEndPoint)
- {
-     var elmnt2 = document.getElementById("form");
-     h = (elmnt2.offsetHeight + 200);
-     elmnt2.style.height = h + "px";
- }
+    var divScrollerTop =  elmnt.scrollTop;
+
+    if(divScrollerTop === scrollerEndPoint){
+        var elmnt2 = document.getElementById("form");
+        h = (elmnt2.offsetHeight + 200);
+        elmnt2.style.height = h + "px";
+    }
 }
 
 
 /*
  * Add an image after the button
  */
- function create_line_image(object, source, name) {
+function create_line_image(object, source, name) {
     var multiple = object.getAttribute('multiple');
     var parentNode = object.parentNode;
 
@@ -83,7 +83,7 @@ function autoIncreaseSize(){
 /*
  * Reset when there is no image
  */
- function reset(object) {
+function reset(object) {
     var divs = object.querySelectorAll('div');
     if (divs.length == 0) {
         input = object.querySelector('input');
@@ -95,9 +95,8 @@ function autoIncreaseSize(){
 /*
  * Add a trigger to upload file
  */
- function updateFileEvent() {
+function updateFileEvent() {
     var signatures = document.getElementsByClassName('fileupload');
-
     for (i = 0; i < signatures.length; i++) {
         signature = signatures[i];
         //signature.disabled = false;
@@ -129,7 +128,6 @@ function autoIncreaseSize(){
         }
     }
 }
-
 
 function disable(tag) {
     if (tag.disable == true)
@@ -185,7 +183,7 @@ function updateStateOfForm() {
  * diable/enable upload file
  */
 
- function disableFile(bool) {
+function disableFile(bool) {
     var signatures = document.getElementsByClassName('fileupload');
     for (i = 0; i < signatures.length; i++) {
         signatures[i].disabled = bool;
@@ -196,8 +194,7 @@ function updateStateOfForm() {
 /*
  * Disable all form components
  */
-
- function disableAll(id, bool, doc) {
+function disableAll(id, bool, doc) {
     if (doc == null)
         div = document.getElementById(id);
     else

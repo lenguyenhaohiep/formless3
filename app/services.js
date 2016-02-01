@@ -4,10 +4,13 @@
  * @version 0.1
  */
 
- 
+/* 
+ *  SharedData Service with form models
+ */ 
 mainApp.service('sharedData', function($compile, $sce) {
     /*
      * Properties
+     *
      * {bool} signed Check if the form is signed
      * {string} originDoc The text file when user open a file
      * {string} currenFunction The current function
@@ -64,7 +67,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         selected: false
     }];
 
-    //Open Template
+    //Template
     sharedData.models = {
         vocab: null,
         selected: null,
@@ -76,7 +79,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
-            component: "<input disabled value='{{item.value}}' type='text' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' /><div class='input-validation'></div>",
+            component: COMPONENT_TEXT,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -86,7 +89,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
-            component: "<input disabled value='{{item.value}}' type='number' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            component: COMPONENT_NUMBER,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -96,7 +99,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
-            component: "<input disabled value='{{item.value}}' type='date' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            component: COMPONENT_DATE,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -106,7 +109,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
-            component: "<input disabled value='{{item.value}}' type='email' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value'/><div class='input-validation'></div>",
+            component: COMPONENT_EMAIL,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -116,7 +119,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
-            component: "<textarea disabled value='{{item.value}}' rows='3' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value}}' class='form-control' ng-model='item.value' />{{item.value}}</textarea>",
+            component: COMPONENT_TEXTAREA,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -125,13 +128,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-record',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
-            component: "<input disabled type='radio' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-repeat-start='option in item.field_options' data='{{option.label}}' ng-model='option.checked' ng-value='true' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)' /><span class='opt'>{{option.label}}</span><br ng-repeat-end/>",
-            field_options: [{   label: "Radio 1",
-                                checked: false
-                            }, {
-                                label: "Radio 2",
-                                checked: false
-                            }],
+            component: COMPONENT_RADIO,
+            field_options: DEFAULT_OPTIONS,
             value: null,
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -142,13 +140,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-ok-circle',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
-            component: "<input disabled type='checkbox' property='{{item.semantic.prefix}}{{item.semantic.property}}' property2='{{item.semantic.prefix}}{{item.semantic.property}}' name='{{item.name}}{{item.id}}' ng-model='option.checked' ng-repeat-start='option in item.field_options' value='{{option.label}}' content='{{option.label}}' ng-click='$parent.$parent.setSelect(item, option)'/><span class='opt'>{{option.label}}</span><br ng-repeat-end />",
-            field_options: [{   label: "Checkbox 1",
-                                checked: false
-                            }, {
-                                label: "Checkbox 2",
-                                checked: false
-                            }],
+            component: COMPONENT_CHECKBOX,
+            field_options: DEFAULT_OPTIONS,
             value: [],
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -160,14 +153,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-collapse-down',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
-            component: "<select disabled class='form-control' property='{{item.semantic.prefix}}{{item.semantic.property}}' content='{{item.value.label}}' ng-model='item.value' ng-options='option.label for option in item.field_options'></select>",
-            field_options: [{
-                                label: "Option 1",
-                                checked: false
-                            }, {
-                                label: "Option 2",
-                                checked: false
-                            }],
+            component: COMPONENT_SELECT,
+            field_options: DEFAULT_OPTIONS,
             value: null,
             properties: PROPERTIES_DEFAULT,
             semantic: DEFAULT_SEMANTIC
@@ -180,7 +167,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: [],
-            component: "<input disabled class= 'fileupload' fileimage type-mode=1 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}'><button ng-click='$parent.$parent.deleteImage(item,img)'>Remove</button></div><br ng-repeat-end />",
+            component: COMPONENT_SIGNATURE,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -190,7 +177,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             icon: 'glyphicon-paperclip',
             label: DEFAULT_LABEL,
             value: [],
-            component: "<input disabled class= 'fileupload' fileimage type-mode=2 ng-model='item.value' tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)'>Remove</button></div><br ng-repeat-end />",
+            component: COMPONENT_ATTACH,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -199,7 +186,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Header",
             icon: 'glyphicon-header',
             label: "Header of the form",
-            component: "<h3><input type='text' class='form-control'  ng-model='item.label' /></h3>",
+            component: COMPONENT_HEADER,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -208,7 +195,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Section",
             icon: 'glyphicon-minus',
             label: "Section",
-            component: "<h3><input type='text' class='form-control' ng-model='item.label' /></h3>",
+            component: COMPONENT_SECTION,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "container",
@@ -242,7 +229,11 @@ mainApp.service('sharedData', function($compile, $sce) {
         }
     };
 
-
+    /*
+     * Load a file, read its content and then call parse function
+     *
+     * @param {file} file The form 
+     */
     sharedData.load = function(file) {
         var reader = new FileReader();
         reader.onload = function() {
@@ -251,26 +242,39 @@ mainApp.service('sharedData', function($compile, $sce) {
         reader.readAsText(file);
     }
 
-        sharedData.changeFunction = function(name) {
+    /*
+     * Change the current function
+     *
+     * @param {string} name The name of function 
+     */
+    sharedData.changeFunction = function(name) {
         sharedData.currentFunction = name;
         if (name == DESIGN)
+            //Disable form controls in design mode
             setTimeout(function(){ 
                 disableAll('formExport', true);
             }, 100);
 
         if (name != DESIGN)
+            //enable forms controls 
             setTimeout(function(){ 
+                //if form is signed, we also disable forms
                 if (sharedData.originDoc == ""){
                     disableAll('export', false);
-                }    
+                }   
+                //form is editable
                 else{
                     disableAll('export', true);
                 }
             }, 100);
     }
 
-    //Clear all data
-    sharedData.empty = function(list){
+    /*
+     * Empty data of form
+     *
+     * @param {array} list The list of forms, same structure as sharedData.models.templates 
+     */    
+     sharedData.empty = function(list){
         var l;
         if (list.templates[0] instanceof Array) {
             l = list.templates[0];
@@ -285,6 +289,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             else
                 item.value = null;
 
+            //in case of checkbox, radio, select
             if (item.field_options){
                 for (var j=0; j<item.field_options.length; j++){
                     item.field_options[j].checked = false;
@@ -296,27 +301,36 @@ mainApp.service('sharedData', function($compile, $sce) {
         }
     }
 
+    /*
+     * Clear all data of the form
+     */
     sharedData.clear = function(){
         sharedData.empty(sharedData.models.dropzones);
     }
 
+    /*
+     * Clear all data and structure of the form
+     */
     sharedData.clearAll = function(){
         sharedData.models.dropzones.templates = [];
     }
 
+    /*
+     * Parse a from from html, this function will call htmlToTemplate to get the final result
+     *
+     * @param {String} html The html form
+     */
     sharedData.parseForm = function(html){
             parser = new DOMParser();
             var signed = false;
 
-            var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
-            if (html.indexOf(substring) == -1){
-                //clear
+            if (html.indexOf(CHECK_SIGNED_STRING) == -1){
+                //clear form
                 sharedData.signed = false;
                 sharedData.originDoc = "";
-                //sharedData.currentFunction = "Edit view";
 
             }else{
-                //signed
+                //signed form
                 sharedData.signed = true;
                 sharedData.originDoc = html;
                 alert(ERROR3_MESSAGE);
@@ -334,9 +348,20 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.clear();
             }
 
+            //update the current function and apply the change in view
             sharedData.changeFunction(sharedData.currentFunction);
     }
 
+    /*
+     * Parse in detail form controls from full/ partial HTML with class and id given
+     * if class and id are null, this means we parse full HTML, else, we parse partial HTML which corresponds to an object
+     * The control found in the html will belong to the object with class and id given
+     *
+     * @param {String} html The html form/ control
+     * @param {string} _class the class of object which has the corresponding html
+     * @param {int} _id The id of object which has the corresponding HTML
+     * @return {array} List of objects/controls found
+     */
     sharedData.htmlToTemplate = function(html, _class, _id) {
         var res = [];
         var xPath = "/html/body/div/div/ul/li";
@@ -363,19 +388,26 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                 //container or subProperty
                 if (div.getAttribute("resource") != null){
+
+                    //if it is a container => an object => find name, subtype, id
                     container.name = div.getAttribute("typeof");
                     var temp = div.getAttribute("resource");
                     container.subtype = temp.substring(0, temp.length - 1);
                     container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
+                    //parse controls belongs to this object
                     container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
+                    //add to list
                     res.push(container);
                 } else{
+                    //if it is a container => an object => find name, subtype, id
+
                     var subProperty = angular.copy(sharedData.models.templates[13]);
                     subProperty.name = div.getAttribute("typeof");
                     subProperty.subtype = div.getAttribute("property");
                     
                     if (subProperty.subtype)
+                        //update semantic information
                         if (subProperty.subtype.indexOf(PREFIX) == -1){
                             subProperty.semantic.property = subProperty.subtype;
                             subProperty.semantic.prefix = '';
@@ -384,36 +416,38 @@ mainApp.service('sharedData', function($compile, $sce) {
                             subProperty.semantic.prefix = PREFIX;
                         } 
                         subProperty.semantic.class = div.getAttribute("temptype");
-
+                        
+                        //parse controls belongs to this subtype
                         subProperty.templates[0] = sharedData.htmlToTemplate(htmlDoc, subProperty.name, subProperty.id);
+                        //add to list
                         res.push(subProperty);
                     }
                 } else {
-                //in case of a document
-                xpaths = ["//html-render/input[@type='text']",
-                "//html-render/input[@type='number']",
-                "//html-render/input[@type='date']",
-                "//html-render/input[@type='email']",
-                "//html-render/textarea",
-                "//html-render/input[@type='radio']",
-                "//html-render/input[@type='checkbox']",
-                "//html-render/select",
-                "//html-render/input[@type='file']",
-                "//html-render/input[@type='file']",
-                "//h3",
-                "//h5",
-                ];
+                //parse control in detail with xpath for each type of HTML control
+                xpaths = [  "//html-render/input[@type='text']",
+                            "//html-render/input[@type='number']",
+                            "//html-render/input[@type='date']",
+                            "//html-render/input[@type='email']",
+                            "//html-render/textarea",
+                            "//html-render/input[@type='radio']",
+                            "//html-render/input[@type='checkbox']",
+                            "//html-render/select",
+                            "//html-render/input[@type='file']",
+                            "//html-render/input[@type='file']",
+                            "//h3",
+                            "//h5",
+                            ];
 
                 for (i = 0; i < xpaths.length; i++) {
                     control = htmlDoc.evaluate(xpaths[i], htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null).iterateNext();
                     if (control) {
 
-                        //Distinguish type vs type multiple 
+                        //Distinguish type vs type multiple in case of input[file]
                         if ((i==8 && control.multiple) || (i==9 && !control.multiple)){
                             continue;
                         }
 
-
+                        //Create by cloning a template of a control from sharedData.models.templates
                         var item = angular.copy(sharedData.models.templates[i]);
                         item.id = "_" + count;
                         count = count + 1;
@@ -428,16 +462,24 @@ mainApp.service('sharedData', function($compile, $sce) {
                         if (i == 10 || i == 11) {
                             item.label = control.textContent;
                         } else {
+                            //get label of the control
                             label = htmlDoc.getElementsByTagName("label")[0];
                             if (label)
                                 item.label = label.textContent;
+
+                            //check if field is required
                             item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
                             prop = control.getAttribute("property");
+
+                            //in case of file where property in the images, not in input, we use tempproperty
                             if (prop == null || prop == undefined || prop == "")
                                 prop = control.getAttribute("tempproperty");
+
+                            //in case of radio, checkbox, property2 is kept instead of property in case of unchecked
                             if (prop == null || prop == undefined || prop == "")
                                 prop = control.getAttribute("property2");
                             if (prop)
+                                //find the prefix of property
                                 if (prop.indexOf(PREFIX) == -1){
                                     item.semantic.property = prop;
                                     item.semantic.prefix = '';
@@ -447,103 +489,115 @@ mainApp.service('sharedData', function($compile, $sce) {
                                 }
                             }
 
-                        //get options
+                        //get value
                         switch (i) {
                             case 1:
-                            item.value = parseInt(control.getAttribute("content"));
-                            break;
+                                item.value = parseInt(control.getAttribute("content"));
+                                break;
                             case 2:
-                            var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
-                            item.value = d;
-                            break;
+                                var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
+                                item.value = d;
+                                break;
                             case 0:
                             case 3:
                             case 4:
-                            item.value = control.getAttribute('content');
-                            break;
+                                item.value = control.getAttribute('content');
+                                break;
                             //radio // checkbox
                             case 5:
                             // checkbox
                             case 6:
-                            inputs = htmlDoc.getElementsByTagName('input');
-                            item.field_options = [];
-                            for (j = 0; j < inputs.length; j++) {
-                                var option = {
-                                    label: inputs[j].getAttribute("value"),
-                                    checked: (inputs[j].getAttribute("checked")=="checked") ? true : false
-                                };
-                                if  (i==5)
-                                    option.label = inputs[j].getAttribute("data");
+                                // find options of the control to find value
+                                inputs = htmlDoc.getElementsByTagName('input');
+                                item.field_options = [];
+                                for (j = 0; j < inputs.length; j++) {
+                                    var option = {
+                                        label: inputs[j].getAttribute("value"),
+                                        checked: (inputs[j].getAttribute("checked")=="checked") ? true : false
+                                    };
 
-                                item.field_options.push(option)
+                                    //checkbox
+                                    if  (i==5)
+                                        option.label = inputs[j].getAttribute("data");
 
-                                if (inputs[j].getAttribute("checked") == "checked"){
-                                    if (i==5)
-                                            //radio has only one value
-                                        item.value = option;
-                                        else 
-                                            //checkbox has more than one
-                                        item.value.push (option);
+                                    item.field_options.push(option)
+
+                                    if (inputs[j].getAttribute("checked") == "checked"){
+                                        if (i==5)
+                                                //radio has only one value
+                                            item.value = option;
+                                            else 
+                                                //checkbox has more than one
+                                            item.value.push (option);
+                                        }
                                     }
-                                }
                                 break;
 
                             // Select
                             case 7:
-                            inputs = htmlDoc.getElementsByTagName('option');
-                            item.field_options = [];
-                            for (j = 0; j < inputs.length; j++) {
-                                var option = {
-                                    label: inputs[j].innerText,
-                                    checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
-                                };
-                                item.field_options.push(option)
+                                inputs = htmlDoc.getElementsByTagName('option');
+                                item.field_options = [];
+                                for (j = 0; j < inputs.length; j++) {
+                                    var option = {
+                                        label: inputs[j].innerText,
+                                        checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
+                                    };
+                                    item.field_options.push(option)
 
-                                if (inputs[j].getAttribute("selected") == "selected"){
-                                    item.value = option;
+                                    if (inputs[j].getAttribute("selected") == "selected"){
+                                        item.value = option;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
                             // File and Multiple File
                             case 8:
                             case 9:
-                            images = htmlDoc.getElementsByTagName('img');
-                            spans = htmlDoc.getElementsByTagName('span');
+                                images = htmlDoc.getElementsByTagName('img');
+                                spans = htmlDoc.getElementsByTagName('span');
 
-                            for (j=0; j<images.length; j++){
-                                image = {src: images[j].getAttribute('src'), name: spans[j+1].textContent};
-                                item.value.push(image);
-                            }
-                            break;
+                                for (j=0; j<images.length; j++){
+                                    image = {src: images[j].getAttribute('src'), name: spans[j+1].textContent};
+                                    item.value.push(image);
+                                }
+                                break;
                             default:
-                            break;
+                                break;
                         }
                         res.push(item);
                     }
                 }
             }
-
             li = result.iterateNext();
         }
-
         return res;
     }
-
     return sharedData;
-
 });
 
-
+/* 
+ *  Schema Service to parse schema.json to array, to find property and class in the schema
+ */
 mainApp.service('schema', function() {
     var schema = {};
+
+    /*
+     * PROPERTIES 
+     *
+     * {file} file The schema file opened by user
+     * {json} json The json parse from schema
+     * {string[]} objects List of objects in schema
+     * {string} path The path of schema
+     */
     schema.file = null;
     schema.json = null;
     schema.objects = [];
     schema.path = 'assets/schema/schemaorg.json';
-    schema.test = [];
-    schema.tempFile = null;
-    schema.load = false;
 
+    /*
+     * Read schema from a file and push objects into schema.objects
+     *
+     * @param {string} text The text of schema
+     */
     schema.initialize = function(text) {
         try{
             schema.json = angular.fromJson(text);
@@ -556,12 +610,16 @@ mainApp.service('schema', function() {
             alert('wrong file');
             return
         }
-        schema.load = true;
         angular.forEach(schema.json["types"], function(key, value) {
             schema.objects.push(value);
         });
     }
 
+    /*
+     * Read schema from a text and push objects into schema.objects
+     *
+     * @param {string} jsonText The json text of schema
+     */
     schema.parseFormText = function(jsonText) {
         schema.json = angular.fromJson(jsonText);
         angular.forEach(schema.json["types"], function(key, value) {
@@ -569,12 +627,24 @@ mainApp.service('schema', function() {
         });
     }
 
+    /*
+     * Find the list of properties from a given class name
+     *
+     * @param {string} _class The class name
+     * @return {string[]} Array of properties corresponding to a class, return [] if there is no property
+     */
     schema.findProperties = function(_class) {
         if (schema.json["types"][_class] == null)
             return [];
         return schema.json["types"][_class]["properties"];
     }
 
+    /*
+     * Find the type/classname of an object
+     *
+     * @param {string} type The type/classname
+     * @return {string} The type, if it doesn't belong to schema.org, it will contain prefix, else, nothing changes
+     */
     schema.getType = function(type) {
         if (schema.json["types"][type] == null)
             return PREFIX + type;
@@ -582,6 +652,12 @@ mainApp.service('schema', function() {
 
     }
 
+    /*
+     * Find the property of an object
+     *
+     * @param {string} type The property
+     * @return {string} The property, if it doesn't belong to schema.org, it will contain prefix, else, nothing changes
+     */
     schema.getProp = function(prop) {
         if (schema.json["properties"][prop] == null)
             return PREFIX + prop;
@@ -589,6 +665,12 @@ mainApp.service('schema', function() {
 
     }
 
+    /*
+     * Find the type/classname from a property
+     *
+     * @param {string} prop The property
+     * @return {string} The type, if the property doesn't belong to schema.org, it will return ''
+     */
     schema.getPropType = function(prop){
         if (schema.json["properties"][prop] == null)
             return '';
@@ -599,14 +681,21 @@ mainApp.service('schema', function() {
 });
 
 
+/* 
+ *  Rdfa Service to parse objects, data from an html file
+ */
 mainApp.service('rdfa', function(){
     var rdfa = {};
-    rdfa.data = [];
+    /*
+     * Parse RDFa from an html text file
+     *
+     * @param {string} html The form
+     * @return {json} data parsed from the html form
+     */    
     rdfa.parse = function (html){
 
         // in case of signed message
-        var substring = "-----BEGIN PGP SIGNED MESSAGE-----";
-        if (html.indexOf(substring) != -1){
+        if (html.indexOf(CHECK_SIGNED_STRING) != -1){
             html = openpgp.cleartext.readArmored(html).text;
         }
         rdfaInfo = {};
@@ -623,11 +712,11 @@ mainApp.service('rdfa', function(){
             if (_resource == null)
                 _resource = object.getAttribute('property');
             if (!rdfaInfo[_typeof])
-                        rdfaInfo[_typeof]= {};
+                rdfaInfo[_typeof]= {};
 
             if (!rdfaInfo[_typeof][_resource]){
-                        rdfaInfo[_typeof][_resource] = {};
-                    }            
+                rdfaInfo[_typeof][_resource] = {};
+            }            
 
             //parse properties 
             doc = parser.parseFromString(object.innerHTML,'text/html');
@@ -636,6 +725,8 @@ mainApp.service('rdfa', function(){
             property = properties.iterateNext();
             
             while (property){
+                //check whether the control is a checkbox or radio
+                //if radio or checkbox is not checked, we dont parse them
                 check = true;
                 if (property.type == 'radio' || property.type == 'checkbox'){
                     if (!property.checked){
@@ -645,6 +736,8 @@ mainApp.service('rdfa', function(){
 
                 if (check){
                     _property = property.getAttribute('property');
+
+                    //parse the images
                     if (property.tagName == 'IMG'){
                         _src = property.getAttribute('src');
                         _name = property.getAttribute('title');
@@ -660,7 +753,8 @@ mainApp.service('rdfa', function(){
                         if (rdfaInfo[_typeof][_resource][_property] instanceof Array){  
                             rdfaInfo[_typeof][_resource][_property].push(_content);                        
                         }else {
-                            temp = rdfaInfo[_typeof][_resource][_property];
+                            // if the value is a list
+                            var temp = rdfaInfo[_typeof][_resource][_property];
                             rdfaInfo[_typeof][_resource][_property] = [];
                             rdfaInfo[_typeof][_resource][_property].push(temp);
                             rdfaInfo[_typeof][_resource][_property].push(_content);
@@ -668,10 +762,8 @@ mainApp.service('rdfa', function(){
                     }
 
                 }
-                
                 property = properties.iterateNext();
             }
-
             object = objects.iterateNext();
         }
         return rdfaInfo;
