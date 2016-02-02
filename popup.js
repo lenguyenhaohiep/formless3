@@ -31,6 +31,7 @@ function display(func){
 				    { file :"app/services.js"},
 				    { file :"app/formlesscontrol.js"},
 				    { file :"assets/js/ui-bootstrap-tpls-0.14.3.js"},
+				    { file :"assets/js/typeahead-focus.js"},
 				    { file :"assets/js/xml2json.js"},
 				    { file :"assets/js/openpgp.js"},
 				    { file :"assets/js/FileSaver.js"},

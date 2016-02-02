@@ -4,6 +4,13 @@
  * @version 0.1
  */
 
+/*
+ * Find the similarity between 2 strings
+ * 
+ * @param {string} s1 String1
+ * @param {String} s2 String2
+ * @return 
+ */
 function checkSimilarity(s1, s2){
     count = 0;
     minLength = s1.length > s2.length ? s2.length : s1.length;
@@ -15,6 +22,24 @@ function checkSimilarity(s1, s2){
     }
 
     return count;
+}
+
+/*
+ * Sort an array in descending order
+ * 
+ * @param {array} list The list
+ * @return 
+ */
+function bubbleSort(list){
+    for (i=0; i<list.length-1; i++){
+        for (j=i+1; j<list.length; j++){
+            if (list[i].field.length < list[j].field.length){
+                var temp = list[i];
+                list[i]=list[j];
+                list[j]=temp;
+            }
+        }
+    }
 }
 
 function autoIncreaseSize(){
@@ -174,7 +199,8 @@ function updateStateOfForm() {
         for (j = 0; j < select.options.length; j++) {
             select.options[j].removeAttribute("selected");
         }
-        select.options[select.selectedIndex].setAttribute("selected", "selected");
+        if (select.selectedIndex != -1)
+            select.options[select.selectedIndex].setAttribute("selected", "selected");
         disable(select);
     }
 }

@@ -42,6 +42,7 @@
                     case 'reset':
                         scope.selectMenu('Edit view');
                         scope.sharedData.parseForm(data);
+                        scope.sharedData.clear();
                         break;
                     case 'fill':
                         scope.selectMenu('Fill');

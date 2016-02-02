@@ -15,6 +15,7 @@
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/angular-route.js"></script>
     <script src="assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
+    <script src="assets/js/typeahead-focus.js"></script>
     <script src="assets/js/openpgp.js"></script>
     <script src="assets/js/FileSaver.js"></script>
     <script src="assets/js/beautify-html.js"></script>
@@ -31,7 +32,7 @@
 </head>
 
 <body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr">
-    <input id="tempFile" file1 type="file" on-finish="loadfile()" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" />
+    <input id="tempFile" file1 type="file" on-finish="loadfile()" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" accept=".html"/>
     <div ng-controller="FormCtr">
         <div class="container-fluid nestedDemo" ng-if="schema.json != null">
             <!-- Markup for lists inside the dropzone. It's inside a seperate template
@@ -41,8 +42,16 @@
 	     assigned to it. If an element was dragged away, you have to remove
 	     it from the original list yourself using the dnd-moved attribute -->
             <script type="text/ng-template" id="list.html">
-                <ul dnd-list="list">
-                    <li ng-repeat="item in list" dnd-draggable="item" dnd-effect-allowed="move" dnd-moved="list.splice($index, 1)" dnd-selected="selectItem(item)" ng-class="{selected: models.selected === item}" ng-include="item.type + '.html'" flitem="models" class="row-form">
+                <ul dnd-list="list" dnd-inserted = "updateSemanticDrop(event, index, item, external, type, 'containerType')">
+                    <li ng-repeat="item in list" el
+                        dnd-draggable="item" 
+                        dnd-effect-allowed="move" 
+                        dnd-moved="list.splice($index, 1)" 
+                        dnd-selected="selectItem(item)" 
+                        ng-class="{selected: models.selected === item}" 
+                        ng-include="item.type + '.html'" 
+                        flitem="models" 
+                        class="row-form" />
 
                     </li>
                 </ul>
@@ -59,9 +68,9 @@
 							type='text' 
 							ng-model="item.name" 
 							value="item.name"
-							uib-typeahead="object for object in schema.objects | filter:$viewValue:comparator | limitTo:8"/>
+							uib-typeahead="object for object in schema.objects | filter:$viewValue" typeahead-min-length="0" />
 
-						[Subtype] <input class='input-transparent' type='text' ng-model="item.subtype"/>
+						[Instance] <input class='input-transparent' type='text' ng-model="item.subtype"/>
 									
 						[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
 					</h3>
@@ -81,9 +90,10 @@
                             type='text' 
                             ng-model="item.subtype" 
                             value="item.subtype"
-                            uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
+                            uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue"
                                 ng-change="matchTypeOfProperty(item.subtype, item)"
-                                typeahead-on-select="matchTypeOfProperty($item, item)"/>
+                                typeahead-on-select="matchTypeOfProperty($item, item)"
+                                typeahead-min-length="0"/>
 
                         [Type] 
                         <input 
@@ -91,7 +101,7 @@
                             type='text' 
                             ng-model="item.name" 
                             value="item.name"
-                            uib-typeahead="object for object in schema.objects | filter:$viewValue:comparator | limitTo:8"/>
+                            uib-typeahead="object for object in schema.objects | filter:$viewValue" typeahead-min-length="0"/>
                     </h3>
 
                     <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
@@ -111,7 +121,7 @@
                             [Property]
                             <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
                                 ng-change="matchProperty(item.semantic.property, item)"
-                                typeahead-on-select="matchProperty($item, item)"/>
+                                typeahead-on-select="matchProperty($item, item)" typeahead-min-length="0"/>
                         </div>
                         <span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
                     </div>
@@ -179,7 +189,7 @@
 
                                 <div ng-if="models.selected.type == 'container'">
                                     <strong>Object Type: </strong>
-                                    <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue" />
+                                    <input type='text' ng-model="models.selected.name" class='form-control' uib-typeahead="object for object in schema.objects | filter:$viewValue" typeahead-min-length="0"/>
                                     <br>
                                     <strong>SubType: </strong>
                                     <input type='text' ng-model="models.selected.subtype" class='form-control' />
@@ -193,7 +203,8 @@
                                     <input type='text' ng-model="models.selected.subtype" class='form-control' 
                                     uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
                                     ng-change="matchTypeOfProperty(models.selected.subtype, models.selected)"
-                                    typeahead-on-select="matchTypeOfProperty($item, models.selected)"/>
+                                    typeahead-on-select="matchTypeOfProperty($item, models.selected)"
+                                    typeahead-min-length="0" />
                                     <br>
                                     <strong>Type: </strong>
                                     <input type='text' ng-model="models.selected.name" class='form-control' />
@@ -202,10 +213,10 @@
                                 <div ng-if="models.selected.semantic.class != null && models.selected.type == 'item'">
                                     <strong>Object Type: </strong> {{models.selected.semantic.class}}
                                     <br>
-                                    <strong>ID: </strong> {{models.selected.semantic.id}}
+                                    <strong>Object ID: </strong> {{models.selected.semantic.id}}
                                     <br>
-                                    <strong>Property: </strong>
-                                    <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" />
+                                    <strong>Object Property: </strong>
+                                    <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" typeahead-min-length="0"/>
                                 </div>
                             </div>
                         </div>
@@ -225,13 +236,13 @@
                     <!-- This template is responsible for rendering a container element. It uses
 			     the above list template to render each container column -->
                     <script type="text/ng-template" id="container2.html">
-                        <div resource="{{item.subtype}}{{item.id}}" typeof="{{schema.getType(item.name)}}">
+                        <div resource="{{item.subtype}}{{item.id}}" oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
                     </script>
 
                     <script type="text/ng-template" id="subProperty2.html">
-                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" temptype={{item.semantic.class}}>
+                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" oid='{{item.id}}' temptype={{item.semantic.class}}>
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
                     </script>

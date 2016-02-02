@@ -249,6 +249,8 @@ mainApp.service('sharedData', function($compile, $sce) {
      */
     sharedData.changeFunction = function(name) {
         sharedData.currentFunction = name;
+        if (name == SAVE)
+            return;
         if (name == DESIGN)
             //Disable form controls in design mode
             setTimeout(function(){ 
@@ -259,7 +261,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             //enable forms controls 
             setTimeout(function(){ 
                 //if form is signed, we also disable forms
-                if (sharedData.originDoc == ""){
+                if (sharedData.originDoc == "" && sharedData.signed == false){
                     disableAll('export', false);
                 }   
                 //form is editable
@@ -392,8 +394,9 @@ mainApp.service('sharedData', function($compile, $sce) {
                     //if it is a container => an object => find name, subtype, id
                     container.name = div.getAttribute("typeof");
                     var temp = div.getAttribute("resource");
-                    container.subtype = temp.substring(0, temp.length - 1);
-                    container.id = parseInt(temp.substring(temp.length - 1, temp.length));
+                    container.id = parseInt(div.getAttribute('oid'));
+                    container.subtype = temp.substring(0, temp.length - div.getAttribute('oid').length);
+                    //container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
                     //parse controls belongs to this object
                     container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
@@ -402,9 +405,10 @@ mainApp.service('sharedData', function($compile, $sce) {
                 } else{
                     //if it is a container => an object => find name, subtype, id
 
-                    var subProperty = angular.copy(sharedData.models.templates[13]);
+                    var subProperty = angular.copy(sharedData.models.templates[14]);
                     subProperty.name = div.getAttribute("typeof");
                     subProperty.subtype = div.getAttribute("property");
+                    subProperty.id = parseInt(div.getAttribute('oid'));
                     
                     if (subProperty.subtype)
                         //update semantic information
@@ -677,6 +681,19 @@ mainApp.service('schema', function() {
         return schema.json["properties"][prop]["ranges"][0];
     }
 
+    /*
+     * Find lable of a given property
+     *
+     * @param {string} prop The given property
+     * @return {string} The label corresponding to the property
+     */
+    schema.getLabel = function(prop){
+        if (schema.json["properties"][prop] == null)
+            return '';
+        return schema.json["properties"][prop]["label"];    
+    }
+
+
     return schema;
 });
 
@@ -708,14 +725,22 @@ mainApp.service('rdfa', function(){
             //parse objects
             _typeof = object.getAttribute('typeof');
             _resource = object.getAttribute('resource');
+            _id = object.getAttribute('oid');
 
-            if (_resource == null)
+            if (_resource == null){
                 _resource = object.getAttribute('property');
+            } else {
+                _resource = _resource.substring(0, _resource.length - _id.length);
+            }
             if (!rdfaInfo[_typeof])
                 rdfaInfo[_typeof]= {};
 
             if (!rdfaInfo[_typeof][_resource]){
                 rdfaInfo[_typeof][_resource] = {};
+            }
+
+            if (!rdfaInfo[_typeof][_resource][_id]){
+                rdfaInfo[_typeof][_resource][_id] = {};
             }            
 
             //parse properties 
@@ -747,17 +772,17 @@ mainApp.service('rdfa', function(){
                         _content = property.getAttribute('content');
         
                     
-                    if (!rdfaInfo[_typeof][_resource][_property]){
-                        rdfaInfo[_typeof][_resource][_property] = _content;
+                    if (!rdfaInfo[_typeof][_resource][_id][_property]){
+                        rdfaInfo[_typeof][_resource][_id][_property] = _content;
                     } else {            
-                        if (rdfaInfo[_typeof][_resource][_property] instanceof Array){  
-                            rdfaInfo[_typeof][_resource][_property].push(_content);                        
+                        if (rdfaInfo[_typeof][_resource][_id][_property] instanceof Array){  
+                            rdfaInfo[_typeof][_resource][_id][_property].push(_content);                        
                         }else {
                             // if the value is a list
-                            var temp = rdfaInfo[_typeof][_resource][_property];
-                            rdfaInfo[_typeof][_resource][_property] = [];
-                            rdfaInfo[_typeof][_resource][_property].push(temp);
-                            rdfaInfo[_typeof][_resource][_property].push(_content);
+                            var temp = rdfaInfo[_typeof][_id][_resource][_property];
+                            rdfaInfo[_typeof][_resource][_id][_property] = [];
+                            rdfaInfo[_typeof][_resource][_id][_property].push(temp);
+                            rdfaInfo[_typeof][_resource][_id][_property].push(_content);
                         }
                     }
 
