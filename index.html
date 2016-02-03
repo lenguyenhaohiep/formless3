@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="assets/css/formless3.css" />
     <link rel="stylesheet" href="assets/css/standalone.css" />
 
+    <script src="app/schemaorg.js"></script>
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/angular-route.js"></script>
     <script src="assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
@@ -31,7 +32,7 @@
     <script src="app/formlesscontrol.js"></script>
 </head>
 
-<body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr">
+<body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr" data-ng-init="init()">
     <input id="tempFile" file1 type="file" on-finish="loadfile()" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" accept=".html"/>
     <div ng-controller="FormCtr">
         <div class="container-fluid nestedDemo" ng-if="schema.json != null">

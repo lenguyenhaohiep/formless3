@@ -284,6 +284,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Operations
      */
+    $scope.init = function(){
+        schema.init(SCHEMA);
+    }
 
     /* 
      * Read the schema.org when the applications start

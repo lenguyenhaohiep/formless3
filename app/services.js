@@ -597,6 +597,13 @@ mainApp.service('schema', function() {
     schema.objects = [];
     schema.path = 'assets/schema/schemaorg.json';
 
+    schema.init = function(json){
+        schema.json = json;
+        angular.forEach(schema.json["types"], function(key, value) {
+            schema.objects.push(value);
+        });     
+    }
+
     /*
      * Read schema from a file and push objects into schema.objects
      *
