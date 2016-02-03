@@ -725,13 +725,17 @@ mainApp.service('rdfa', function(){
             //parse objects
             _typeof = object.getAttribute('typeof');
             _resource = object.getAttribute('resource');
-            _id = object.getAttribute('oid');
+            _id = object.getAttribute('oid') || 1;
 
             if (_resource == null){
                 _resource = object.getAttribute('property');
             } else {
                 _resource = _resource.substring(0, _resource.length - _id.length);
             }
+
+            if (_resource == null)
+                _resource = 1;
+
             if (!rdfaInfo[_typeof])
                 rdfaInfo[_typeof]= {};
 
@@ -768,8 +772,10 @@ mainApp.service('rdfa', function(){
                         _name = property.getAttribute('title');
                         _content = {src: _src, name: _name};
                     }
-                    else 
-                        _content = property.getAttribute('content');
+                    else
+                        //get from attribute content, textNode or href 
+                        _content = property.getAttribute('content') || property.textContent || property.getAttribute("href");
+                    
         
                     
                     if (!rdfaInfo[_typeof][_resource][_id][_property]){
@@ -779,7 +785,7 @@ mainApp.service('rdfa', function(){
                             rdfaInfo[_typeof][_resource][_id][_property].push(_content);                        
                         }else {
                             // if the value is a list
-                            var temp = rdfaInfo[_typeof][_id][_resource][_property];
+                            var temp = rdfaInfo[_typeof][_resource][_id][_property];
                             rdfaInfo[_typeof][_resource][_id][_property] = [];
                             rdfaInfo[_typeof][_resource][_id][_property].push(temp);
                             rdfaInfo[_typeof][_resource][_id][_property].push(_content);

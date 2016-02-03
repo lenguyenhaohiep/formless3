@@ -758,6 +758,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         }
         bubbleSort($scope.rdfaCurrent);
         $scope.autoDectectObject();
+        $scope.fill();
     }
 
     /*
