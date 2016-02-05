@@ -205,8 +205,8 @@
 
         angular.forEach(l, function(item) {
             if (item == node) {
-                node.semantic.class = list.name;
-                node.semantic.id = list.id;
+                node.semantic.class = list.name || null;
+                node.semantic.id = list.id || null;
                 return list;
             }
             if (item.templates != null) {
@@ -280,6 +280,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     $scope.openedfile = null;
     $scope.commands = sharedData.commands;
     $scope.sharedData = sharedData;
+    $scope.restrictMode = false;
+    $scope.codeLock = '';
 
     /*
      * Operations
@@ -306,7 +308,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * Read the form opened by
      */
     $scope.loadfile = function(){
+        sharedData.currentFunction = EDIT;
         if ($scope.openedfile != null){
+            sharedData.hashCode = '';
             var reader = new FileReader();
             reader.onload = function(e) {
                 sharedData.parseForm(e.target.result);
@@ -345,7 +349,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 if (text) {
                     var parser = new DOMParser();
                     var html = parser.parseFromString(text, "text/html");
-                    message = $scope.getDoc(true, html);
+                    message = $scope.getDoc(true, html, null);
                 } 
                 // if sign a current form
                 else {
@@ -355,7 +359,16 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                     //    updateStateOfForm();
                     //}, 0);
                     updateStateOfForm();
-                    message = $scope.getDoc(true);
+                    //message = $scope.getDoc(true);
+                    //get the bogy
+                    bodyNode = document.getElementById("export").cloneNode(true);
+                    cleanHTML(bodyNode);
+                    var body = bodyNode.innerHTML;
+                    var s1 = "html-render";
+                    var s2 = "div"
+                    while (body.indexOf(s1) != -1)
+                        body = body.replace(s1, s2);
+                    message = html_beautify(body);
                 }
 
                 var privkey = $scope.keys.private_key;
@@ -373,8 +386,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 signed.then(function(msg) {
                     alert(SIGN_MESSAGE);
                     sharedData.signed = true;
-                    sharedData.originDoc = msg;
-                    $scope.save(msg);
+                    sharedData.originDoc = $scope.getDoc(true, null, msg);
+                    $scope.save(sharedData.originDoc);
                 });
             } else {
                 alert(KEY1_CONFIRM);
@@ -433,6 +446,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 alert(KEY2_CONFIRM);
             }
         } catch (err) {
+            alert(err);
             alert(ERROR4_MESSAGE);
         }
     }
@@ -461,9 +475,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var _subtype = str.split("-")[1];
             var _id = parseInt(str.split("-")[2]);
 
-            console.log('->',_name, _subtype, _id);
-
-
             if ($scope.rdfaCurrent[i].data == null)
                 break;
             //dest (#doc, name, subtype, id)
@@ -478,7 +489,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
                 if (node.type == 'container' || node.type == 'subProperty') {
                     if (node.name == _name && node.subtype == _subtype && node.id == _id) {
-                        console.log('-->',_name, _subtype, _id);
                         for (k = 0; k < node.templates[0].length; k++) {
                             var item = node.templates[0][k];
 
@@ -537,6 +547,11 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                                         item.value.push(val);
                                         break;
                                     case "Attached File(s)":
+                                        if (!(val instanceof Array)){
+                                            var temp = val;
+                                            val = [];
+                                            val.push(temp);
+                                        }    
                                         item.value = [];
                                         for (jj = 0; jj < val.length; jj++) {
                                             item.value.push(val[jj]);
@@ -574,11 +589,11 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         }
 
         if (sharedData.currentFunction == SAVE) {
+            $scope.sharedData.changeFunction(EDIT);
+            updateStateOfForm();
             setTimeout(function() {
-                $scope.sharedData.changeFunction(EDIT);
-                updateStateOfForm();
                 $scope.save();
-            }, 0);
+            }, 100);
             return;
         }
 
@@ -631,25 +646,50 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {string} text The test to be signed
      * @return the html text of the form
      */
-    $scope.getDoc = function(signed, html) {
-        var body = '';
-        if (html == null){
-            //for the app
-            //disableAll('form', false);
-            body = document.getElementById("export").innerHTML;
-        }
-        else {
-            //for Chrome extension
-            disableAll('form', signed, html);
-            body = html.getElementById("form").outerHTML;
+    $scope.getDoc = function(signed, html, body) {
+        var containSignature = (body != null);
+        if (body == null){
+            if (html == null){
+                //for the app
+                //disableAll('form', false);
+                var node = document.getElementById("export").cloneNode(true); 
+                cleanHTML(node);
+                //alert(node.innerHTML);
+                //body = document.getElementById("export").innerHTML;
+                body = node.innerHTML;
+            }
+            else {
+                //for Chrome extension
+                disableAll('form', signed, html);
+                body = html.getElementById("form").outerHTML;
+            }
         }
         //html code for the form
-        var disableSignature = '<script type="text/javascript">var body=document.getElementsByTagName("body")[0];body.style.color="#b7bcc8";var main=document.getElementById("form");main.style.color="black";</script>';
-        var js = 'function updateButtonEvent(){var e=document.querySelectorAll("button");for(i=0;i<e.length;i++)"save"!=e[i].id&&e[i].addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))})}function create_line_image(e,t,n){var r=e.getAttribute("multiple"),a=e.parentNode;if(null==r){var o=a.querySelectorAll("div");for(i=0;i<o.length;i++)a.removeChild(o[i])}var l=document.createElement("img");l.setAttribute("ng-init","itemload()"),l.src=t,l.addEventListener("click",function(){window.open(this.src,"_blank")});var u=document.createElement("span");u.innerHTML=n;var d=document.createElement("button");d.innerHTML="Remove",d.addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))});var p=document.createElement("div");p.className="image-line",p.appendChild(u),p.appendChild(l),p.appendChild(d),a.appendChild(p)}function reset(e){var t=e.querySelectorAll("div");0==t.length&&(input=e.querySelector("input"),input.value="")}function updateFileEvent(){var e=document.getElementsByClassName("fileupload");for(i=0;i<e.length;i++)signature=e[i],signature.addEventListener("change",function(){var e=this,t=this.files;if(null!=t)for(var n=0;n<t.length;n++){file=t[n];var i=file.name,r=new FileReader;r.onload=function(t){create_line_image(e,t.target.result,i)},r.readAsDataURL(file)}})}function updateImageEvent(){var e=document.getElementsByTagName("img");for(i=0;i<e.length;i++)e[i].addEventListener("click",function(){window.open(this.src,"_blank")})}function save(){updateStateOfForm();var e=new Date,t="form-"+e.toISOString().substr(0,10)+".html",n=window.prompt("Please enter the file name",t);if(null!=n&&n!==!1){var i=document.getElementById("save");i.href="data:Application/octet-stream,"+encodeURIComponent(document.documentElement.outerHTML),i.download=t}}function disable(e){1==e.disable?e.setAttribute("disable","true"):e.removeAttribute("disable")}function updateStateOfForm(){var e=document.getElementById("form");if(null!=e){for(type=["input","textarea"],k=0;k<type.length;k++)for(inputs=e.querySelectorAll(type[k]),i=0;i<inputs.length;i++)input=inputs[i],"checkbox"==input.type||"radio"==input.type?(input.checked?(input.setAttribute("property",input.getAttribute("property2")),input.setAttribute("checked","checked")):(input.removeAttribute("property"),input.removeAttribute("checked")),disable(input)):"textarea"==input.type?(input.setAttribute("content",input.value),input.innerHTML=input.value):(input.setAttribute("content",input.value),input.setAttribute("value",input.value));var t=document.getElementsByTagName("select");for(i=0;i<t.length;i++){for(select=t[i],j=0;j<select.options.length;j++)select.options[j].removeAttribute("selected");-1!=select.selectedIndex&&select.options[select.selectedIndex].setAttribute("selected","selected"),disable(select)}}}document.addEventListener("DOMContentLoaded",function(){updateFileEvent(),updateButtonEvent(),updateImageEvent()});';
-        var css = '#save,.form-final{background-color:#fff}.form-final h3,.form-final h5{text-align:center;font-weight:700}.form-final h3,.form-final h5,.label-field{font-weight:700}.form-final .required-field,input:invalid{color:red}.form-final{border:2px solid #8e919a}#save{border-radius:5px;color:#000;padding:5px 10px}#save:hover{cursor:pointer}body{background-color:#b7bcc8;font-family:Arial;font-size:14px}label{display:inline-block;margin:5px 0}.form-final{margin:0 auto;padding:20px;width:700px}.form-final h3{font-size:20px}.form-final h5{font-size:16px}.form-final .form-control{width:100%}.form-final .label-block{border:none;display:inline-block;height:20px;width:100px}.form-final .control-block{display:inline-block;width:100%}.form-final ul{list-style:none;padding-left:0}input:valid{color:#000}input:invalid~.input-validation::before{color:red;content:"Matched format required"}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{display:inline-block;padding-left:10px;width:100px}.image-line img{height:100px;padding:10px}';
+ 
+        var js = 'function updateButtonEvent(){var e=document.querySelectorAll("button");for(i=0;i<e.length;i++)"save"!=e[i].id&&e[i].addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))})}function create_line_image(e,t,n){var r=e.getAttribute("multiple"),a=e.parentNode;if(null==r){var o=a.querySelectorAll("div");for(i=0;i<o.length;i++)a.removeChild(o[i])}var u=document.createElement("img");u.setAttribute("property",e.getAttribute("data-tempproperty")),u.setAttribute("alt",""),u.src=t,u.addEventListener("click",function(){window.open(this.src,"_blank")});var l=document.createElement("span");l.innerHTML=n;var p=document.createElement("button");p.innerHTML="Remove",p.addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))});var d=document.createElement("div");d.className="image-line",d.appendChild(l),d.appendChild(u),d.appendChild(p),a.appendChild(d)}function reset(e){var t=e.querySelectorAll("div");0==t.length&&(input=e.querySelector("input"),input.value="")}function updateFileEvent(){var e=document.getElementsByClassName("fileupload");for(i=0;i<e.length;i++)signature=e[i],signature.addEventListener("change",function(){var e=this,t=this.files;if(null!=t)for(var n=0;n<t.length;n++){file=t[n];var i=file.name,r=new FileReader;r.onload=function(t){create_line_image(e,t.target.result,i)},r.readAsDataURL(file)}})}function updateImageEvent(){var e=document.getElementsByTagName("img");for(i=0;i<e.length;i++)e[i].addEventListener("click",function(){window.open(this.src,"_blank")})}function save(){updateStateOfForm();var e=new Date,t="form-"+e.toISOString().substr(0,10)+".html",n=window.prompt("Please enter the file name",t);if(null!=n&&n!==!1){var i=document.getElementById("save");i.href="data:Application/octet-stream,"+encodeURIComponent(document.documentElement.outerHTML),i.download=t}}function disable(e){1==e.disable?e.setAttribute("disable","true"):e.removeAttribute("disable")}function updateStateOfForm(){var e=document.getElementById("form");if(null!=e){for(type=["input","textarea"],k=0;k<type.length;k++)for(inputs=e.querySelectorAll(type[k]),i=0;i<inputs.length;i++)input=inputs[i],"checkbox"==input.type||"radio"==input.type?(input.checked?(input.setAttribute("property",input.getAttribute("data-property2")),input.setAttribute("checked","checked")):(input.removeAttribute("property"),input.removeAttribute("checked")),disable(input)):"textarea"==input.type?(input.setAttribute("content",input.value),input.innerHTML=input.value):"file"!=input.type&&(input.setAttribute("content",input.value),input.setAttribute("value",input.value));var t=document.getElementsByTagName("select");for(i=0;i<t.length;i++){for(select=t[i],j=0;j<select.options.length;j++)select.options[j].removeAttribute("selected");-1!=select.selectedIndex&&select.options[select.selectedIndex].setAttribute("selected","selected"),disable(select)}}}document.addEventListener("DOMContentLoaded",function(){updateFileEvent(),updateButtonEvent(),updateImageEvent()});';
+        var css = '#save,.form-final{background-color:#fff}.form-final h3,.form-final h5{text-align:center;font-weight:700}.form-final h3,.form-final h5,.label-field{font-weight:700}.form-final .required-field,input:invalid{color:red}#form,#save,input:valid{color:#000}.form-final{border:2px solid #8e919a}#save{border-radius:5px;padding:5px 10px}#save:hover{cursor:pointer}body{background-color:#b7bcc8;font-family:Arial;font-size:14px;color:#b7bcc8}label{display:inline-block;margin:5px 0}.form-final{margin:0 auto;padding:20px;width:700px}.form-final h3{font-size:20px}.form-final h5{font-size:16px}.form-final .form-control{width:100%}.form-final .label-block{border:none;display:inline-block;height:20px;width:100px}.form-final .control-block{display:inline-block;width:100%}.form-final ul{list-style:none;padding-left:0}input:invalid~.input-validation::before{color:red;content:"Matched format required"}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{display:inline-block;padding-left:10px;width:100px}.image-line img{height:100px;padding:10px}';
         var saveButton = (signed == false || signed == undefined) ? '<a id="save" onclick="save()" style="color:blue">Save</a>' : '';
-        var html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css"> '+css+' </style><script type="text/javascript">'+js+'</script></head><body>' +saveButton+ body + '</body>'+disableSignature+'</html>';
-        return html_beautify(html);
+        var hashValue = '<input type="hidden" id="hashValue" value="' + sharedData.hashCode + '">\n';
+        var lockCode = '<input type="hidden" id="lockCode" value="' + sharedData.lockCode + '">\n';
+        var html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Form generated by Formless Plugin</title><style type="text/css"> '+css+' </style><script type="text/javascript">'+js+'</script></head><body>\n' + hashValue + lockCode + saveButton + '\n</body></html>';
+        
+        if (containSignature == false){
+            s1 = '\n</body>';
+            s2 = '\n' + body + '</body>';
+            html = html.replace(s1, s2);
+
+            s1 = "html-render";
+            s2 = "div"
+            while (html.indexOf(s1) != -1)
+                html = html.replace(s1, s2);
+            return html_beautify(html);
+        } else {
+            html = html_beautify(html);
+            s1 = '</body>';
+            s2 = body+'\n</body>';
+            html = html.replace(s1, s2);
+            return html;
+        } 
     }
 
     /*
@@ -667,7 +707,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 html = sharedData.originDoc;
             else
                 // unsigned form
-                html = $scope.getDoc();
+                html = $scope.getDoc(null, null, null);
         } else {
             //Chrome extension
             html = text;
@@ -706,6 +746,12 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 }
             });
         }, 0);
+    });
+
+    $scope.$watch("sharedData.lockCode", function() {
+        //alert(sharedData.lockCode);
+        if (sharedData.lockCode != '')
+            $scope.restrictMode = true;    
     });
 
     /*
@@ -798,6 +844,29 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 checked.push(trace);
             }
         }
+    }
+
+    $scope.lock = function(){
+        var lockCode = '';
+        var p = prompt(ENTER_PASSWORD1,lockCode);
+        if (p != null && p != false){
+            sharedData.hashCode = sharedData.getHashCode();
+            sharedData.lockCode = hashFunction(lockCode);
+            $scope.restrictMode = true;
+        }
+
+    }
+
+    $scope.unlock = function(){
+        var lockCode = '';
+        var p = prompt(ENTER_PASSWORD2,lockCode);
+        if (p != null && p != false){
+            if (sharedData.lockCode == hashFunction(lockCode)){
+                $scope.restrictMode = false;
+                sharedData.lockCode = '';
+            }
+        }  
+
     }
 });
 

@@ -49,6 +49,7 @@
                         dnd-effect-allowed="move" 
                         dnd-moved="list.splice($index, 1)" 
                         dnd-selected="selectItem(item)" 
+                        dnd-disable-if="restrictMode==true"
                         ng-class="{selected: models.selected === item}" 
                         ng-include="item.type + '.html'" 
                         flitem="models" 
@@ -150,10 +151,18 @@
                             </div>
 
                             <div class="menubar" ng-if="sharedData.currentFunction=='Design view'">
-                                <h5>Fields</h5>
-                                <span href="#" ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
-						    </span>
+                                <div ng-if="restrictMode == false">
+                                    <h5>Fields</h5>
+                                    <span href="#" ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+    						        </span>
+                                    <br/>
+                                    <button ng-click='lock()'>Lock</button>
+                                </div>
+                                <div ng-if="restrictMode == true">
+                                    <button ng-click='unlock()'>Unlock</button>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -167,7 +176,7 @@
                         </div>
 
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" ng-if="restrictMode == false">
 
                             <div class="box box-grey box-padding rightbar">
                                 <h3>Properties</h3>
@@ -237,13 +246,13 @@
                     <!-- This template is responsible for rendering a container element. It uses
 			     the above list template to render each container column -->
                     <script type="text/ng-template" id="container2.html">
-                        <div resource="{{item.subtype}}{{item.id}}" oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
+                        <div resource="{{item.subtype}}{{item.id}}" data-oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
                     </script>
 
                     <script type="text/ng-template" id="subProperty2.html">
-                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" oid='{{item.id}}' temptype={{item.semantic.class}}>
+                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid='{{item.id}}' data-temptype='{{item.semantic.class}}' data-sid='{{item.semantic.id}}'>
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
                     </script>
@@ -260,8 +269,8 @@
                         </div>
 
                         <div ng-if='item.noinput != null'>
-                            <h3 ng-if='item.name == "Header"'>{{item.label}}</h3>
-                            <h5 ng-if='item.name == "Section"'>{{item.label}}</h5>
+                            <h3 data-oid='{{item.id}}' ng-if='item.name == "Header"'>{{item.label}}</h3>
+                            <h5 data-oid='{{item.id}}' ng-if='item.name == "Section"'>{{item.label}}</h5>
                         </div>
                     </script>
 

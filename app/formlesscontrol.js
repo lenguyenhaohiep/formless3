@@ -1,8 +1,43 @@
+
+function hashFunction(str){
+    console.log(str);
+    var hash = 0;
+    if (str.length == 0) return hash;
+    for (i = 0; i < str.length; i++) {
+        char = str.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
 /**
  * @file 
  * @author Hiep Le <lenguyenhaohiep@gmail.com>
  * @version 0.1
  */
+
+function cleanHTML(dom){
+    var invalidAttrs = ['ng-repeat', 'ng-include','ng-if','ng-model','ng-repeat-start','ng-repeat-end','ng-click','ng-value','ng-model','ng-options','dnd-list','item','fileimage','type-mode', 'val', 'data'];
+    if (dom.attributes == undefined) return;
+
+    var atts = [];
+    for (var i = 0; i < dom.attributes.length; i++){
+        atts.push(dom.attributes[i]);
+    }
+
+    for (var i = 0; i < atts.length ; i++){
+        var att = atts[i].nodeName;
+        for (var j=0; j < invalidAttrs.length; j++){
+            if (att == invalidAttrs[j]){
+                dom.removeAttribute(att);
+                break;
+            }
+        }
+    }
+    for (var k=0; k < dom.childNodes.length; k++)
+        cleanHTML(dom.childNodes[k]);
+}
 
 /*
  * Find the similarity between 2 strings
@@ -73,8 +108,8 @@ function create_line_image(object, source, name) {
     }
 
     var image = document.createElement('img');
-    image.setAttribute("property", object.getAttribute("tempproperty"));
-    image.setAttribute('ng-init', 'itemload()');
+    image.setAttribute("property", object.getAttribute("data-tempproperty"));
+    image.setAttribute('alt', '');
     image.src = source;
     image.addEventListener('click', function() {
         window.open(this.src, '_blank');
@@ -174,7 +209,7 @@ function updateStateOfForm() {
             input = inputs[i];
             if (input.type == "checkbox" || input.type == "radio") {
                 if (input.checked) {
-                    input.setAttribute("property", input.getAttribute('property2'));
+                    input.setAttribute("property", input.getAttribute('data-property2'));
                     input.setAttribute("checked", "checked");
                 } else {
                     input.removeAttribute('property');
@@ -187,8 +222,10 @@ function updateStateOfForm() {
             } 
             else 
             {
-                input.setAttribute('content', input.value);
-                input.setAttribute('value', input.value);
+                if (input.type != 'file'){
+                    input.setAttribute('content', input.value);
+                    input.setAttribute('value', input.value);
+                }
             }
         }
     }
@@ -233,7 +270,7 @@ function disableAll(id, bool, doc) {
         for (i=0; i<inputs.length; i++){
             if (inputs[i].className.indexOf('input-transparent') == -1){
                 if (bool == true )
-                    inputs[i].setAttribute("disabled", bool);
+                    inputs[i].setAttribute("disabled", '');
                 else
                     inputs[i].removeAttribute("disabled");
             }

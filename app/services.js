@@ -67,6 +67,9 @@ mainApp.service('sharedData', function($compile, $sce) {
         selected: false
     }];
 
+    sharedData.hashCode = '';
+    sharedData.lockCode = '';
+
     //Template
     sharedData.models = {
         vocab: null,
@@ -271,6 +274,14 @@ mainApp.service('sharedData', function($compile, $sce) {
             }, 100);
     }
 
+    sharedData.getHashCode = function(){
+        var copyTemplate = angular.copy(sharedData.models.dropzones);
+        sharedData.empty(copyTemplate);
+        var hashCode = hashFunction(JSON.stringify(copyTemplate));
+
+        return hashCode;
+    }
+
     /*
      * Empty data of form
      *
@@ -352,6 +363,11 @@ mainApp.service('sharedData', function($compile, $sce) {
 
             //update the current function and apply the change in view
             sharedData.changeFunction(sharedData.currentFunction);
+            //check modification structure
+            if (sharedData.signed != true ){
+                if (sharedData.getHashCode() != sharedData.hashCode)
+                    alert(ERROR_MODIFICATION);
+            }
     }
 
     /*
@@ -364,12 +380,18 @@ mainApp.service('sharedData', function($compile, $sce) {
      * @param {int} _id The id of object which has the corresponding HTML
      * @return {array} List of objects/controls found
      */
-    sharedData.htmlToTemplate = function(html, _class, _id) {
+     sharedData.htmlToTemplate = function(html, _class, _id) {
         var res = [];
         var xPath = "/html/body/div/div/ul/li";
+        var xPath2 = "/html/body/div/div/ul";
         var parser = new DOMParser();
         var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
+
+        if (sharedData.hashCode == ''){
+            sharedData.hashCode = html.querySelector('#hashValue') != undefined ? html.querySelector('#hashValue').value : '';
+            sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
+        }
         var li = result.iterateNext();
         //in case of a container
 
@@ -379,7 +401,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             htmlDoc = parser.parseFromString(li.innerHTML, "text/html");
             //res.templates.push(sharedData.htmlToTemplate(htmlDoc));
             //check item or container
-            check = htmlDoc.evaluate(xPath, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+            var check = htmlDoc.evaluate(xPath2, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+
             if (check.iterateNext()) {
                 if (res.templates == null)
                     res.templates = [];
@@ -394,33 +417,34 @@ mainApp.service('sharedData', function($compile, $sce) {
                     //if it is a container => an object => find name, subtype, id
                     container.name = div.getAttribute("typeof");
                     var temp = div.getAttribute("resource");
-                    container.id = parseInt(div.getAttribute('oid'));
-                    container.subtype = temp.substring(0, temp.length - div.getAttribute('oid').length);
+                    container.id = parseInt(div.getAttribute('data-oid'));
+                    container.subtype = temp.substring(0, temp.length - div.getAttribute('data-oid').length);
                     //container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
                     //parse controls belongs to this object
                     container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
                     //add to list
                     res.push(container);
-                } else{
+                } else {
                     //if it is a container => an object => find name, subtype, id
 
                     var subProperty = angular.copy(sharedData.models.templates[14]);
                     subProperty.name = div.getAttribute("typeof");
                     subProperty.subtype = div.getAttribute("property");
-                    subProperty.id = parseInt(div.getAttribute('oid'));
+                    subProperty.id = parseInt(div.getAttribute('data-oid'));
                     
                     if (subProperty.subtype)
                         //update semantic information
-                        if (subProperty.subtype.indexOf(PREFIX) == -1){
-                            subProperty.semantic.property = subProperty.subtype;
-                            subProperty.semantic.prefix = '';
-                        } else {
-                            subProperty.semantic.property = subProperty.subtype.substring(3, subProperty.subtype.length);
-                            subProperty.semantic.prefix = PREFIX;
-                        } 
-                        subProperty.semantic.class = div.getAttribute("temptype");
-                        
+                    if (subProperty.subtype.indexOf(PREFIX) == -1){
+                        subProperty.semantic.property = subProperty.subtype;
+                        subProperty.semantic.prefix = '';
+                    } else {
+                        subProperty.semantic.property = subProperty.subtype.substring(3, subProperty.subtype.length);
+                        subProperty.semantic.prefix = PREFIX;
+                    } 
+                    subProperty.semantic.class = div.getAttribute("data-temptype") != "" ? div.getAttribute("data-temptype") : null;
+                    subProperty.semantic.id = div.getAttribute("data-sid") != "" ? parseInt(div.getAttribute("data-sid")) : null;
+
                         //parse controls belongs to this subtype
                         subProperty.templates[0] = sharedData.htmlToTemplate(htmlDoc, subProperty.name, subProperty.id);
                         //add to list
@@ -428,19 +452,19 @@ mainApp.service('sharedData', function($compile, $sce) {
                     }
                 } else {
                 //parse control in detail with xpath for each type of HTML control
-                xpaths = [  "//html-render/input[@type='text']",
-                            "//html-render/input[@type='number']",
-                            "//html-render/input[@type='date']",
-                            "//html-render/input[@type='email']",
-                            "//html-render/textarea",
-                            "//html-render/input[@type='radio']",
-                            "//html-render/input[@type='checkbox']",
-                            "//html-render/select",
-                            "//html-render/input[@type='file']",
-                            "//html-render/input[@type='file']",
-                            "//h3",
-                            "//h5",
-                            ];
+                xpaths = [  "//div/input[@type='text']",
+                "//div/input[@type='number']",
+                "//div/input[@type='date']",
+                "//div/input[@type='email']",
+                "//div/textarea",
+                "//div/input[@type='radio']",
+                "//div/input[@type='checkbox']",
+                "//div/select",
+                "//div/input[@type='file']",
+                "//div/input[@type='file']",
+                "//h3",
+                "//h5",
+                ];
 
                 for (i = 0; i < xpaths.length; i++) {
                     control = htmlDoc.evaluate(xpaths[i], htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null).iterateNext();
@@ -453,12 +477,12 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                         //Create by cloning a template of a control from sharedData.models.templates
                         var item = angular.copy(sharedData.models.templates[i]);
-                        item.id = "_" + count;
+                        item.id = parseInt(control.getAttribute('data-oid'));
                         count = count + 1;
                         
                         //get semantic info
                         if (_class != null && _id != null) {
-                            item.semantic.class = _class;
+                            item.semantic.class = (_class != '') ? _class : null;
                             item.semantic.id = parseInt(_id);
                         }
 
@@ -477,36 +501,39 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                             //in case of file where property in the images, not in input, we use tempproperty
                             if (prop == null || prop == undefined || prop == "")
-                                prop = control.getAttribute("tempproperty");
+                                prop = control.getAttribute("data-tempproperty");
 
-                            //in case of radio, checkbox, property2 is kept instead of property in case of unchecked
+                            //in case of radio, checkbox, data-property2 is kept instead of property in case of unchecked
                             if (prop == null || prop == undefined || prop == "")
-                                prop = control.getAttribute("property2");
+                                prop = control.getAttribute("data-property2");
                             if (prop)
                                 //find the prefix of property
-                                if (prop.indexOf(PREFIX) == -1){
-                                    item.semantic.property = prop;
-                                    item.semantic.prefix = '';
-                                } else{
-                                    item.semantic.property = prop.substring(3, prop.length);
-                                    item.semantic.prefix = PREFIX;
-                                }
+                            if (prop.indexOf(PREFIX) == -1){
+                                item.semantic.property = prop;
+                                item.semantic.prefix = '';
+                            } else{
+                                item.semantic.property = prop.substring(3, prop.length);
+                                item.semantic.prefix = PREFIX;
                             }
+
+                            if (item.semantic.property == "")
+                                item.semantic.property = null;
+                        }
 
                         //get value
                         switch (i) {
                             case 1:
-                                item.value = parseInt(control.getAttribute("content"));
-                                break;
+                            item.value = parseInt(control.getAttribute("content"));
+                            break;
                             case 2:
-                                var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
-                                item.value = d;
-                                break;
+                            var d = new Date (control.getAttribute("content").replace("\"",'').replace("\"",''));
+                            item.value = d;
+                            break;
                             case 0:
                             case 3:
                             case 4:
-                                item.value = control.getAttribute('content');
-                                break;
+                            item.value = control.getAttribute('content');
+                            break;
                             //radio // checkbox
                             case 5:
                             // checkbox
@@ -522,7 +549,7 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                                     //checkbox
                                     if  (i==5)
-                                        option.label = inputs[j].getAttribute("data");
+                                        option.label = inputs[j].getAttribute("data-label");
 
                                     item.field_options.push(option)
 
@@ -535,37 +562,38 @@ mainApp.service('sharedData', function($compile, $sce) {
                                             item.value.push (option);
                                         }
                                     }
-                                break;
+                                    break;
 
                             // Select
                             case 7:
-                                inputs = htmlDoc.getElementsByTagName('option');
-                                item.field_options = [];
-                                for (j = 0; j < inputs.length; j++) {
-                                    var option = {
-                                        label: inputs[j].innerText,
-                                        checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
-                                    };
-                                    item.field_options.push(option)
+                            inputs = htmlDoc.getElementsByTagName('option');
+                            item.field_options = [];
+                            for (j = 0; j < inputs.length; j++) {
+                                var option = {
+                                    label: inputs[j].innerText,
+                                    checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
+                                };
+                                if (inputs[j].hasAttribute('value'))
+                                item.field_options.push(option)
 
-                                    if (inputs[j].getAttribute("selected") == "selected"){
-                                        item.value = option;
-                                    }
+                                if (inputs[j].getAttribute("selected") == "selected"){
+                                    item.value = option;
                                 }
-                                break;
+                            }
+                            break;
                             // File and Multiple File
                             case 8:
                             case 9:
-                                images = htmlDoc.getElementsByTagName('img');
-                                spans = htmlDoc.getElementsByTagName('span');
+                            images = htmlDoc.getElementsByTagName('img');
+                            spans = htmlDoc.getElementsByTagName('span');
 
-                                for (j=0; j<images.length; j++){
-                                    image = {src: images[j].getAttribute('src'), name: spans[j+1].textContent};
-                                    item.value.push(image);
-                                }
-                                break;
+                            for (j=0; j<images.length; j++){
+                                image = {src: images[j].getAttribute('src'), name: spans[j+1].textContent};
+                                item.value.push(image);
+                            }
+                            break;
                             default:
-                                break;
+                            break;
                         }
                         res.push(item);
                     }
@@ -657,10 +685,9 @@ mainApp.service('schema', function() {
      * @return {string} The type, if it doesn't belong to schema.org, it will contain prefix, else, nothing changes
      */
     schema.getType = function(type) {
-        if (schema.json["types"][type] == null)
-            return PREFIX + type;
         return type;
-
+        if (schema.json["types"][type] == null)
+            return "Thing";
     }
 
     /*
@@ -732,7 +759,7 @@ mainApp.service('rdfa', function(){
             //parse objects
             _typeof = object.getAttribute('typeof');
             _resource = object.getAttribute('resource');
-            _id = object.getAttribute('oid') || 1;
+            _id = object.getAttribute('data-oid') || 1;
 
             if (_resource == null){
                 _resource = object.getAttribute('property');
