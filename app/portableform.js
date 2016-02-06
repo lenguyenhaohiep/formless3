@@ -13,7 +13,21 @@ function importData(){
 }
 
 
-
+/*
+ * We want to use code from AngularJS, so we have to create a temporature controller 
+ * Because this the form after generated, it no longer works properly with the code in the view 
+ * But we need to use some method in the controller
+ * @return Scope of FunctionCtr
+ */
+function getController() {
+    var div = document.createElement('div');
+    div.setAttribute('ng-app', 'MainApp');
+    div.setAttribute('id', 'FunctionCtr');
+    div.setAttribute('ng-controller', 'FunctionCtr');
+    angular.bootstrap(div, ['MainApp']);
+    var scope = angular.element(div).scope();
+    return scope;
+}
 
 /*
  * Remove appended html of a dialog if existed 
@@ -175,3 +189,5 @@ function display(func){
 	    }
 	}
 }
+
+
