@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Untitled Form</title>
+    <style type="text/css">
+        .form-final h3,
+        .form-final h5,
+        .label-field,
+        a {
+            font-weight: 700
+        }
+        
+        .form-final,
+        a {
+            box-shadow: 0 0 20px #d1d1d1;
+            border: 1px solid #d1d1d1
+        }
+        
+        #a,
+        .form-final,
+        a {
+            background-color: #fff
+        }
+        
+        .form-final h3,
+        .form-final h5 {
+            text-align: center;
+            font-weight: 700
+        }
+        
+        .form-final .required-field,
+        input:invalid {
+            color: red
+        }
+        
+        #form,
+        a,
+        input:valid {
+            color: #000
+        }
+        
+        a {
+            font-size: 12px;
+            border-radius: 5px;
+            padding: 5px 10px
+        }
+        
+        a:hover {
+            cursor: pointer
+        }
+        
+        body {
+            background-color: #eee;
+            font-family: Arial;
+            font-size: 14px;
+            color: #eee
+        }
+        
+        label {
+            display: inline-block;
+            margin: 5px 0
+        }
+        
+        .form-final {
+            margin: 0 auto;
+            padding: 20px;
+            width: 700px
+        }
+        
+        .form-final h3 {
+            font-size: 20px
+        }
+        
+        .form-final h5 {
+            font-size: 16px
+        }
+        
+        .form-final .form-control {
+            width: 100%
+        }
+        
+        .form-final .label-block {
+            border: none;
+            display: inline-block;
+            height: 20px;
+            width: 100px
+        }
+        
+        .form-final .control-block {
+            display: inline-block;
+            width: 100%
+        }
+        
+        .form-final ul {
+            list-style: none;
+            padding-left: 0
+        }
+        
+        input:invalid~.input-validation::before {
+            color: red;
+            content: "Matched format required"
+        }
+        
+        .image-line:hover {
+            background: #f5f5f5
+        }
+        
+        .image-line {
+            height: 100px
+        }
+        
+        .image-line span {
+            display: inline-block;
+            padding-left: 10px;
+            width: 100px
+        }
+        
+        .image-line img {
+            height: 100px;
+            padding: 10px
+        }
+    </style>
+    <script type="text/javascript">
+        function updateButtonEvent() {
+            var e = document.querySelectorAll("button");
+            for (i = 0; i < e.length; i++) "save" != e[i].id && e[i].addEventListener("click", function() {
+                var e = confirm("Do you want to remove this file");
+                1 == e && (parent2 = this.parentNode, parent1 = parent2.parentNode, parent1.removeChild(parent2), reset(parent1))
+            })
+        }
+
+        function create_line_image(e, t, n) {
+            var r = e.getAttribute("multiple"),
+                a = e.parentNode;
+            if (null == r) {
+                var o = a.querySelectorAll("div");
+                for (i = 0; i < o.length; i++) a.removeChild(o[i])
+            }
+            var u = document.createElement("img");
+            u.setAttribute("property", e.getAttribute("data-tempproperty")), u.setAttribute("alt", ""), u.src = t, u.addEventListener("click", function() {
+                window.open(this.src, "_blank")
+            });
+            var l = document.createElement("span");
+            l.innerHTML = n;
+            var d = document.createElement("button");
+            d.innerHTML = "Remove", d.addEventListener("click", function() {
+                var e = confirm("Do you want to remove this file");
+                1 == e && (parent2 = this.parentNode, parent1 = parent2.parentNode, parent1.removeChild(parent2), reset(parent1))
+            });
+            var c = document.createElement("div");
+            c.className = "image-line", c.appendChild(l), c.appendChild(u), c.appendChild(d), a.appendChild(c)
+        }
+
+        function reset(e) {
+            var t = e.querySelectorAll("div");
+            0 == t.length && (input = e.querySelector("input"), input.value = "")
+        }
+
+        function updateFileEvent() {
+            var e = document.getElementsByClassName("fileupload");
+            for (i = 0; i < e.length; i++) signature = e[i], signature.addEventListener("change", function() {
+                var e = this,
+                    t = this.files;
+                if (null != t)
+                    for (var n = 0; n < t.length; n++) {
+                        file = t[n];
+                        var i = file.name,
+                            r = new FileReader;
+                        r.onload = function(t) {
+                            create_line_image(e, t.target.result, i)
+                        }, r.readAsDataURL(file)
+                    }
+            })
+        }
+
+        function updateImageEvent() {
+            var e = document.getElementsByTagName("img");
+            for (i = 0; i < e.length; i++) e[i].addEventListener("click", function() {
+                window.open(this.src, "_blank")
+            })
+        }
+
+        function save() {
+            updateStateOfForm();
+            var e = document.title + ".html",
+                t = window.prompt("Please enter the file name", e);
+            if (null != t && t !== !1) {
+                var n = document.getElementById("save");
+                n.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), n.download = e
+            }
+        }
+
+        function disable(e) {
+            1 == e.disable ? e.setAttribute("disable", "true") : e.removeAttribute("disable")
+        }
+
+        function updateStateOfForm() {
+            var e = document.getElementById("form");
+            if (null != e) {
+                for (type = ["input", "textarea"], k = 0; k < type.length; k++)
+                    for (inputs = e.querySelectorAll(type[k]), i = 0; i < inputs.length; i++) input = inputs[i], "checkbox" == input.type || "radio" == input.type ? (input.checked ? (input.setAttribute("property", input.getAttribute("data-property2")), input.setAttribute("checked", "checked")) : (input.removeAttribute("property"), input.removeAttribute("checked")), disable(input)) : "textarea" == input.type ? (input.setAttribute("content", input.value), input.innerHTML = input.value) : "file" != input.type && (input.setAttribute("content", input.value), input.setAttribute("value", input.value));
+                var t = document.getElementsByTagName("select");
+                for (i = 0; i < t.length; i++) {
+                    for (select = t[i], j = 0; j < select.options.length; j++) select.options[j].removeAttribute("selected"); - 1 != select.selectedIndex && select.options[select.selectedIndex].setAttribute("selected", "selected"), disable(select)
+                }
+            }
+        }
+
+        function updateFunction() {
+            var e = document.getElementById("b-sign"),
+                t = document.getElementById("b-import"),
+                n = document.getElementById("b-verify");
+            (void 0 == window.openpgp || 0 == scriptFunctionLoaded) && (disableFunction(e, !0), disableFunction(t, !0), disableFunction(n, !0))
+        }
+
+        function run(e) {
+            switch (e) {
+                case "import":
+                    importData();
+                    break;
+                case "sign":
+                    sign();
+                    break;
+                case "verify":
+                    verify()
+            }
+        }
+
+        function disableFunction(e, t) {
+            if (void 0 != e) {
+                e.disabled = t;
+                var n = function() {
+                    alert("This feature is not supported in offline mode")
+                };
+                e.onclick = n
+            }
+        }
+        var scriptFunctionLoaded = !1;
+        document.addEventListener("DOMContentLoaded", function() {
+            updateFileEvent(), updateButtonEvent(), updateImageEvent(), updateFunction()
+        });
+    </script>
+    <script src="assets/js/openpgp.js"></script>
+    <script src="app/portableform.js"></script>
+    <script src="assets/js/angular.js"></script>
+    <script src="assets/js/angular-route.js"></script>
+    <script src="app/lang_en.js"></script>
+    <script src="app/defaultvalue.js"></script>
+    <script src="app/controllers.js"></script>
+    <script src="app/services.js"></script>
+    <script src="app/formlesscontrol.js"></script>
+    <script src="assets/js/beautify-html.js"></script>
+    <script src="assets/js/beautify.js"></script>
+    <script src="assets/js/beautify-css.js"></script>
+    <script src="assets/js/FileSaver.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="hashValue" value="555478321">
+    <input type="hidden" id="lockCode" value="">
+    <a id="b-verify" onclick="run('verify')">Verify</a>
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+<div id="form" class="box box-grey centerarea">
+        <!-- The dropzone also uses the list template -->
+        <!-- ngInclude: 'list2.html' -->
+        <div class="form-final ng-scope" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+            <ul class="ng-scope">
+                <!-- ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <!-- ngIf: item.noinput == null -->
+
+                    <!-- ngIf: item.noinput != null -->
+                    <div class="ng-scope">
+                        <!-- ngIf: item.name == "Header" -->
+                        <h3 data-oid="0" class="ng-binding ng-scope">PROJET PRIM</h3>
+                        <!-- end ngIf: item.name == "Header" -->
+                        <!-- ngIf: item.name == "Section" -->
+                    </div>
+                    <!-- end ngIf: item.noinput != null -->
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <!-- ngIf: item.noinput == null -->
+
+                    <!-- ngIf: item.noinput != null -->
+                    <div class="ng-scope">
+                        <!-- ngIf: item.name == "Header" -->
+                        <!-- ngIf: item.name == "Section" -->
+                        <h5 data-oid="0" class="ng-binding ng-scope">Choix et validation du sujet</h5>
+                        <!-- end ngIf: item.name == "Section" -->
+                    </div>
+                    <!-- end ngIf: item.noinput != null -->
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <!-- ngIf: item.noinput == null -->
+                    <div class="ng-scope">
+                        <label class="label-view ng-binding">Untitled</label>
+                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                        <!-- end ngIf: item.required == 'yes' -->
+                        <br>
+                        <div class="control-block">
+                            <div class="ng-isolate-scope">
+                                <input data-oid="0" type="text" value="" property="ov:" content="" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                <div class="input-validation ng-scope"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end ngIf: item.noinput == null -->
+
+                    <!-- ngIf: item.noinput != null -->
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <div resource="Project1" data-oid="1" typeof="Thing" class="ng-scope">
+                        <!-- ngRepeat: list in item.templates -->
+                        <!-- ngInclude: 'list2.html' -->
+                        <div class="ng-scope">
+                            <ul class="ng-scope">
+                                <!-- ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Année</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="0" type="number" value="1" property="ov:annee" content="1" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                            </ul>
+                        </div>
+                        <!-- end ngRepeat: list in item.templates -->
+                    </div>
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <div resource="Student2" data-oid="2" typeof="Person" class="ng-scope">
+                        <!-- ngRepeat: list in item.templates -->
+                        <!-- ngInclude: 'list2.html' -->
+                        <div class="ng-scope">
+                            <ul class="ng-scope">
+                                <!-- ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Nom</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="0" type="text" value="LE" property="familyName" content="LE" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Prénom</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="1" type="text" value="Nguyen Hao Hiep" property="givenName" content="Nguyen Hao Hiep" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Cursus</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <select data-oid="0" class="form-control ng-pristine ng-untouched ng-valid ng-scope" property="ov:cursus" content="24 mois (ASTM)" disabled="">
+                                                    <option value="object:256"></option>
+                                                    <option label="36 mois (CC &amp; ASTL)" value="object:257">36 mois (CC &amp; ASTL)</option>
+                                                    <option label="24 mois (ASTM)" value="object:258" selected="selected">24 mois (ASTM)</option>
+                                                    <option label="18 mois / DD étranger" value="object:259">18 mois / DD étranger</option>
+                                                    <option label="18 mois / Polytechnicien" value="object:260">18 mois / Polytechnicien</option>
+                                                    <option label="Auditeur libre étranger" value="object:261">Auditeur libre étranger</option>
+                                                    <option label="Auditeur libre français" value="object:262">Auditeur libre français</option>
+                                                    <option label="Mastères spécialisés BGD et IDL" value="object:263">Mastères spécialisés BGD et IDL</option>
+                                                    <option label="Mastères spécialisés CAR, RM et CDCS (ex SSIR)" value="object:264">Mastères spécialisés CAR, RM et CDCS (ex SSIR)</option>
+                                                    <option label="Mastère spécialisé SIRF" value="object:265">Mastère spécialisé SIRF</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                            </ul>
+                        </div>
+                        <!-- end ngRepeat: list in item.templates -->
+                    </div>
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <div resource="Project1" data-oid="1" typeof="Thing" class="ng-scope">
+                        <!-- ngRepeat: list in item.templates -->
+                        <!-- ngInclude: 'list2.html' -->
+                        <div class="ng-scope">
+                            <ul class="ng-scope">
+                                <!-- ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Projet en équipe</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <!-- ngRepeat: option in item.field_options -->
+                                                <input data-oid="0" type="radio" data-property2="ov:projetEquipe" name="Radio0" data-label="Oui" content="Oui" class="ng-pristine ng-untouched ng-valid ng-scope" value="true" disabled=""><span class="opt ng-binding ng-scope">Oui</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                                <input data-oid="0" type="radio" property="ov:projetEquipe" data-property2="ov:projetEquipe" name="Radio0" data-label="Non" content="Non" class="ng-pristine ng-untouched ng-valid ng-scope" value="true" checked="checked" disabled=""><span class="opt ng-binding ng-scope">Non</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Projet en entreprise</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <!-- ngRepeat: option in item.field_options -->
+                                                <input data-oid="1" type="radio" data-property2="ov:ProjetEnt" name="Radio1" data-label="Oui" content="Oui" class="ng-pristine ng-untouched ng-valid ng-scope" value="true" disabled=""><span class="opt ng-binding ng-scope">Oui</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                                <input data-oid="1" type="radio" property="ov:ProjetEnt" data-property2="ov:ProjetEnt" name="Radio1" data-label="Non" content="Non" class="ng-pristine ng-untouched ng-valid ng-scope" value="true" checked="checked" disabled=""><span class="opt ng-binding ng-scope">Non</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Semestre</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <!-- ngRepeat: option in item.field_options -->
+                                                <input data-oid="0" type="checkbox" property="null" data-property2="null" name="Checkbox0" value="S1" content="S1" class="ng-pristine ng-untouched ng-valid ng-scope" checked="checked" disabled=""><span class="opt ng-binding ng-scope">S1</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                                <input data-oid="0" type="checkbox" data-property2="null" name="Checkbox0" value="S2" content="S2" class="ng-pristine ng-untouched ng-valid ng-scope" disabled=""><span class="opt ng-binding ng-scope">S2</span>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: option in item.field_options -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Préciser l’Option du projet</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <textarea data-oid="0" rows="3" property="option" content="PRIM" class="form-control ng-pristine ng-untouched ng-valid ng-binding ng-scope" disabled="">PRIM</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Intitulé</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="3" type="text" value="Formless" property="name" content="Formless" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Détail du sujet</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="4" type="text" value="Formules sans papier" property="description" content="Formules sans papier" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">U.E. prérequise(s) pour ce sujet</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="5" type="text" value="Web" property="ov:UE" content="Web" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                            </ul>
+                        </div>
+                        <!-- end ngRepeat: list in item.templates -->
+                    </div>
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <!-- ngIf: item.noinput == null -->
+
+                    <!-- ngIf: item.noinput != null -->
+                    <div class="ng-scope">
+                        <!-- ngIf: item.name == "Header" -->
+                        <!-- ngIf: item.name == "Section" -->
+                        <h5 data-oid="1" class="ng-binding ng-scope">Validation par l’enseignant-chercheur encadrant</h5>
+                        <!-- end ngIf: item.name == "Section" -->
+                    </div>
+                    <!-- end ngIf: item.noinput != null -->
+                </li>
+                <!-- end ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <div resource="Teacher3" data-oid="3" typeof="Person" class="ng-scope">
+                        <!-- ngRepeat: list in item.templates -->
+                        <!-- ngInclude: 'list2.html' -->
+                        <div class="ng-scope">
+                            <ul class="ng-scope">
+                                <!-- ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Nom</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="2" type="text" value="Fabian Suchanek" property="familyName" content="Fabian Suchanek" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">date</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="0" type="date" value="2016-02-12" property="ov:date" content="2016-02-12" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Signature</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="0" class="fileupload ng-pristine ng-untouched ng-valid ng-scope ng-isolate-scope" data-tempproperty="ov:signature" type="file" multiple="" accept="image/*" disabled="">
+                                                <!-- ngRepeat: img in item.value -->
+                                                <div class="image-line ng-scope"><span class="ng-binding">Diagram.png</span><img alt="" property="ov:signature" src="data:image/png;base64,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C8cDvYSVUuNpBcnHtGnTzIUXXmheeeUVs/nmm5szzzyT80OK7oJffvmlWWutteZ5fs899zTnnHOO2WmnnYqW+/DDD5tOnTqZt956y5Wz3OnDDz80u+22m/ntt9/MhAkTzDLLVOZ4Fb0s5W555RczBPImHyNGjDB9+/Y1Sy+9tDniiCPMwQcfbBZccEE3Bn777bdm8ODB7nOhCbl777133WPIv/fee409xr1QUZHe/8gjj5iOHTumzcMeTmp69OgRaf72jCqz1VZbmfXWWy8n1h988IH55ZdfzJZbbmnq1asXWrk0nlaIfPz5559m5513dsTj7LPPNpzyh3L97LPPzIorrlhUA3vysemmm5oDDzzQzJkzx5x//vlO1osvvmh22GGHouS+99575qmnnjKHHHKIWW211YqSUcpDF198sbnqqqvcINK2bdtQX4BCyqWXpRC0dG8CEciLfLzwwgtu7Gvfvr1p3LixQdlCRM477zxz3HHHOfIxfPhwM/d9yxvGZ5991uy+++6mSZMm5o477nDPn3rqqearr74yjz/+uNlnn33ylhX1jWDw9NNPuzJeeumlrszHH3+80wG77LKLm2xFmSAfm222mZvsDhs2LCvR69atm3nyyScdjksuuWRoxdJ4WiHy8cUXX5i1117b3HXXXaZ79+7m/fffN5tssol7SWDugwYNMmeccYZZYYUVzP777+865rLLLpu1tJ58eJnc/PXXX5utt97adWZk/v333+aGG24wp59+uoGkXHDBBXWzAsp01llnmccee8xgMeEennvzzTfNQw89ZI4++mhnWcGkyX1vv/22OfHEE83MmTPNjBkz3OABifrpp5/MBhtsYI488khXJ8jDFltsMV/ZKRtysKwwC7BH1s/30kHOtt9+e/csFpxzzz3XvShXX321sxqRrr/+eocPZtZbbrnFsXQsNOSPtebKK690LP9///ufueeee0znzp0dxsyyKDt/83nZ574sW4X29sVD0JvxKGZVlnLLqixVdIV6I5+DNb0yY7zBMsF7+tprr7kxkPGA9/Sggw5y488666xjbrzxRrPmmmtmLTUTre22285ZRt944426SdL3339vWrZsaZZaainz0UcfufGJ8WGjjTYyJ5xwgpvNQ3y8xRkle9JJJ5kffvjBjVuQIdw2/fr1C3Vc85Wh3IxVjJf33XdfHeFicppu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Ua0tk8BypXTGbhaC3vZa3F7L2Wu6vTrZ65lqJx+jR482Dz30kLn11lvNtttuawYNGmTWWWcdkY8S3C6QgJNPPtnstttukb4ZdsWVscFw5sMPPzR2Ob/55ptvTIMGDcwyy+TlDZynbEX0g92tgCH2Yt+iH+3129x3gL1w5nZ7WX4j7QASXjYERD7KBrUyyoXA3M54mb2vs72WtleDuc/8bf9OstcFXsZ//vOfdrvvvnu7Z5991nz22Wfm119/NWeddZa57rrrzHbbbWcOOugg88MPP5jnn3/ebLrpprhpzAMPPGBOOeUUY/cVMb179zZnn322WXTRRc0NN9zgZrrIuuuuu8yll17qZNnVN+63K6+80iy44ILm22+/rftMWTPJu+KKK8zyyy/vZs2bbLKJeffdd53iPP/888266zrDjTnqqKPescHT79t/X8qBS2P7+5n2apILv2r+3btdsrXD5ZdfbuwyerPRRhu5qvB5r732Mo8++qi5+OKLzRprrGHef/99s/jii5vrr7/eWSSWXnpp88gjj5g99tijrn0233xzc/DBBxsC00899VRj9wMyQ4YMMffee6/p3JmuZcwrr7xCgLP55JNPTKdOncy1117rZPH/008/bbp168YeNI44nnPOOa79H3vsMdOhw7/x0P379zdHHnmk+z/kfnCxFbmSvRac254/27+/2GuQvc6R27mae7nKVggCIh+FoKV7I0VgbmdEIa9vrz/thdWD9Lu9sHw87QtgB/+WVrlsjBKCUDz33HOOSEA8UFg33XSTUzYQCAjFwIEDnTIbM2aMsUGtZp999nHf25UXziWCEmLTs5kzZ5oDDjjAjBs3zrz99tvuufvuu89QtmeeecY8/PDD5o477sgob5tttnGz82uuucYRHpQfz+28886OGG2xxRZm6tSpzqRv0yP2+jUHqEvZ3yFie0YKfsTCPfm4++6707bDlltu6axE/L7++uubP//8s85q9MUXX5hjjjnGPPnkk4687bnnno5QQuYgI7vssov573//667tt9/e3Hzzze6e/fff33z//ffuOf52797dtet3333n2v3ll182dum+ueCCCwh2NieddJIjOcjhO8gm7Wj3FDI33nij61P0M56nnX/88UczfPjwtPUpoR+0tk0B6V5sbpNg/VjYXp/Yq6XIR8QdVeLLhoDIR9mgVka5EAh0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inL11Vd335966qlmzz33ND/++KMjJnfddZezXkAiUMC77767ue6668z6669vnn32WXP33Xe7Z1C2M2bMMOedd55Za6213Mx/yJAhTvHzedq0aY7wPPjgg+751157zUyZMsWRj7///tvccMMN5vTTTzebbrqpI0Lt2rWbr1633HKLs0JstNFGbsaONaJv376mefPm5oUXXnBWFPDA2nDvvfeaDz/80Hz66afOqnPxxRc7AnLRRReZhRde2OWL8sVatPzyy5srrrjCXHrppWbrrbc2PXv2NIcffrir//bbb+/KwXfXXHON+e2335wsCFzHjh3NOeecYzbZZJN5yppKPrBSge3GG29sjjrqKGeNOemkk8wPP/zgZEFQJk6c6HA8+OCDnVzamPLQDvxdbLHF6vIA53TlnTNnjrNiUQfwPuOMM5z16ZJLLnF1xDoGzldeeaU55phjTIMGDczll18u8lHQG1RVN8vyUVXNEV1hRD5EPqLrXQVYPmbNmmW22GILp0QhECgRlBjf5UqefPjZLkpvp512cmQC5Y3i+uSTT5yYffbZx1x44YXObdKkSRNz/PHHm5tvvtkp4LFjx7p71lhjDafAUeqvvvqq2W677czjjz/uSI13u0Aodt11V4MS3n///c1LL73kiAcEijzPPvts5wpCWX755ZfmscceM6NGjXIkKJhQ0rfeeqvBVUTZ7r//ftOsWTPnNoAIkZ9PEKbbbrutzu2CsuZZ6rbSSiuZXXbZxUyePNl89NFHjmhAiqgryp46UgcsQzvvvLMT2bVrV6fwqQfEDaJ0zz33OALx8ccfm5VXXrkub08+qA94rL322u565513XDnbt2/vysozEBrIFhjQfliuwGn69OmmcePGaS1SEJR05aVsyKCOkERI2e233+6I43333edIB/nQHosvvrh55ZVXXLvK8pHrrana30U+qrZpwi2YyIfIR7g9al5peVs+mPliTSChkLEIoMy/+OIL891337kZLglCgXIJJu92wXoAeXn33XfdzyipI444wlksvv/+ezfrxxriycr7779vVlxxRcNfZvpYRHBJoEixLqCAr732WqdMUWajR492M3hIQMOGDV15PUmZOnWqy4fyYTlZb731nDLGIoIyx0KAVWfQoEHzuGQoy8CBAx3xoWzM4k8++WRnRYFEkR9lwKqAKydItMCGPHEF8XfZ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QyA57418jPeulquXLl06ShaPko1YGzYHpjtmzJhl3gUzyTe/E2JAtD7acB6WtclaH2UdGbWrmQgk572Rj/NmzZrV29fXN7aZL1fd3YOAn0tLZs+ePc/3+IgO6LXWRwcMYpm6oPVRptFQW1qFQDzvA/nwWS333HrrrVvvvPPOrWqD3tPhCPzud79zr3rVqxb7LJht2r2rWh/tPoLla7/WR/nGRC1qPgLxvA/kw6fFPOGVxHBltTQf/G55A9HOXmn7LO3VbZ8qpfXRLbO2df3U+mgd1npTeRCI5725XZ7ypTwtVEs6AoGnPS1Mr044RVfroyNmZLk6ofVRrvFQa1qDgM17kY/W4N2Vb5Fw7cphV6dzIqD1kRMo3dZRCIh8dNRwlrMzEq7lHBe1qhwIaH2UYxzUitYiIPLRWry78m0Srl057Op0TgS0PnICpds6CgGRj44aznJ2RsK1nOOiVpUDAa2PcoyDWtFaBEQ+Wot3V75NwrUrh12dzomA1kdOoHRbRyEg8tFRw1nOzki4lnNc1KpyIKD1UY5xUCtai0Bh8vGf//zHnXXWWe5zn/uce/nLX+78SWVu1113rdrqT3ziE+70008fvG/jjTd2H//4x91HP/pRt9FGG1V9vt4bvv3tb7t3vOMd7o477gjtblShX/fee6+bO3eue/rTnz5Y7SOPPOJ+9atfuec973lum222cfb+X//61+4lL3lJo14/WM83v/lNt99++7lf/OIX7hWveEXD60+rkD596EMfcr/97W/dM5/5zMx3Sri2ZDj0kjZFoFPXxwMPPOC+8IUvuBtuuCHIJGT9TjvtVHWU0nTFcccd5z7ykY+49ddfv+rzeW+oJjOzZHve+ovc9+9//9vttttu7oMf/KA79NBD13mUtlx++eVB1oJnUVlv9SOv3//+9xdpWq57Fy9e7LjQbZV0QVxZYfJhE+Pkk092/qNh7g9/+IP729/+5rbccsuKjfzwhz/szj77bHf00Uc7/1VQ9/Of/9xdddVVbu+99w6K2R/glKuTtd505ZVXune9610NV870C9DpQ0w++A3SQZ+ZUPb+ZpEPiM61117r3vOe97itt966VpgKPTdv3jw3ffp0d9ddd4l8FEJONwuB/yPQieTDHyroxo8f7/7617+6j33sY27OnDlu1apVQV+w8axUTFd88pOfdJtssonzp267q6++2n3qU59y8+DZ9QAAG/xJREFUn/nMZxo2darJzCzZ3rAGRBVBDtgUz5gxwx122GHrvOLII48MOgRZi24pKuutfuQ1dTW6mH4D01122SVX9YXIh/88unvWs57lzj333KB0HnroobC7f8ELXuA233zzqhPqG9/4hrvnnns48TLcC4E5/vjjnSnk2267LSjPv/zlL26PPfZwn//8590LX/hC9/3vf9/5r+y6U045xW2xxRYOAkQ7mJwLFy50sGL+myNbly1b5l70ohe5adOmuZe+9KXuhBNOcK985SsHlb9ZBvxJrsF6479lE9oCQ4ck8EE9rBannXZaaJ8/GjxMhve+973hb8uXLw/v+vrXvx7aB4n65z//uRb5YKBh6eeff35oJ22nTsjPiSee6BYsWOAWLVrkZs6cGX6jgC1thazw27HHHhvanyx/+tOfwvshbhMnTgzWo7e85S3u9ttvd+D7gQ98wO2www7Ofxww3Ielh0X06KOPhjaA94UXXpiJE++75pprwiKwNjFZIYcIlP7+fvfZz37WHXHEEW7TTTd1p556qshHrqWmm4RAOgKdSD7+9a9/BYs4cpCdNuThbW97W5AV1awfyKtYV5jiZDPH71hQkH3oH4jJl7/85bCpTNMdWAm++tWvhmdQ7iYDkZFYGq644opBmVlJtj/55JNB9iFvX/aylwUi9Pa3v32dAUU3rly50r34xS8OVmEwQOZvt9127sc//nHQGXgAeL/9P3qNvtG+Aw88MHgC0A3gBtni/w0T8EMHxLIeXUadX/ziF4POQHbvueeebmBehTYmycePfvSjUAdE4fDDD0+V+ffdd1/A7YADDgg6iQNI0Yngzr8jR44MdXMf4wGxRG/Tju233z7oPfBCP4IFunb06NGDmBUiH3T8+c9/fgAe9sURqYAEQahWYvDMLPOd73wnDCDKDvLCoKKsIQHnnHOOe/zxx91vfvMbh/nuNa95jZs/f34Y1M022yyQEAYBJcykQ5mfdNJJQbFSx/ve976gGLkPUHjWLB8MMv/Nzp13MVm+9rWvBasMihWwIReABdC05bvf/W6w0rz5zW92DFxvb6/76U9/GoB997vfvZbbhYGmvywKWD6DzGI0onHMMceEdvLs3XffHaxGLASIGYNFW1D8v//979eyKJnpjP5DCMAeMxy7C4ibmeLA0drJb7SXd02aNCng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" title="Diagram.png">
+                                                    <button disabled="">Remove</button>
+                                                </div>
+                                                <br class="ng-scope">
+                                                <!-- end ngRepeat: img in item.value -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                            </ul>
+                        </div>
+                        <!-- end ngRepeat: list in item.templates -->
+                    </div>
+                </li>
+                <!-- end ngRepeat: item in list -->
+            </ul>
+        </div>
+    </div>
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v1.3.0
+Comment: http://openpgpjs.org
+
+wsFcBAEBCAAQBQJWtilECRCv9OLUjFbvlwAAjgIQAN+6ufvC5ultoN37XOGM
+eQAwCgdW8lwNEpDu0vwqeBBypjZE2AzxBwI6299IHfjvSIEZzBoDWnWGIms7
+DyGrrDYEwQM+M5vMgf+vDeYUYB8AhuowvljE5rscxz0DgcIBYbPOLzYEUVtR
+GgZYLzaqbUqJA/LSTeRIOgQQ4CuFftw8HEAOEW8t9jBprgxRv2gq3g3kUtIE
+HT0V8O8HSEDtJU993Yxlna5aOGwnmccsy93FaYZG5GzBtpEnF+jS7v+7oSoU
+/VNDUZLcTajsQI3yn3GZ5IDNQj0D0/bkQZ1+MIBIj0H4IZ9t0LPmPpIUH+y9
+AyRJztlJlRjIGWKNoMcU4Gouuo0k1xJEbqHaB+n0bT2hPoUj3je2SJSY4HFM
+LIZeROSVgJhn8FZKXD9UUbeYYEDpOH2u5KoXfdpWOS9fbTjavSSF++UapCiK
+FidKuhRPAoxzuboow0/SWMPWS3ELehLJM+PctewhbdnRD/3GsQiK7wQKKb9u
+41YyZcvgPrnbcYjcaGqsDI5ENmXFhcVkXAUm1a7SPNU0xxwj81Bh+zz1Uwzi
+6QGdn67G1N3u++b5UiS9TM1At6TBPDHF9xR52qQBOtZp6X0UC9CtbzLLcxg2
+J5TWWIPeiHsyuOaTuBEgP8fHKpJvwtxRqVsOHllY9y82hjiQslEzgRYxqCeF
++O2K
+=y9Tu
+-----END PGP SIGNATURE-----
+
+</body>
+
+</html>

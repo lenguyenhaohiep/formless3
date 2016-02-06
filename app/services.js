@@ -587,7 +587,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                             item.field_options = [];
                             for (j = 0; j < inputs.length; j++) {
                                 var option = {
-                                    label: inputs[j].innerText,
+                                    label: inputs[j].textContent,
                                     checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
                                 };
                                 if (inputs[j].hasAttribute('value'))
@@ -826,8 +826,6 @@ mainApp.service('rdfa', function(){
                     else
                         //get from attribute content, textNode or href 
                         _content = property.getAttribute('content') || property.textContent || property.getAttribute("href");
-                    
-        
                     
                     if (!rdfaInfo[_typeof][_resource][_id][_property]){
                         rdfaInfo[_typeof][_resource][_id][_property] = _content;

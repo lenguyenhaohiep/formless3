@@ -1,6 +1,5 @@
 
 function hashFunction(str){
-    console.log(str);
     var hash = 0;
     if (str.length == 0) return hash;
     for (i = 0; i < str.length; i++) {
@@ -196,8 +195,10 @@ function disable(tag) {
         tag.removeAttribute('disable');
 }
 
-function updateStateOfForm() {
-    var doc = document.getElementById('form');
+function updateStateOfForm(id) {
+    if (id == null)
+        id = 'form';
+    var doc = document.getElementById(id);
 
     if (doc == null)
         return;
@@ -262,6 +263,9 @@ function disableAll(id, bool, doc) {
         div = document.getElementById(id);
     else
         div = doc.getElementById(id);
+
+    if (div == null || div == undefined)
+        return;
 
     var controls = ['input', 'button', 'select', 'textarea'];
     for (k = 0; k < controls.length; k++) {
