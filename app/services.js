@@ -349,7 +349,7 @@ mainApp.service('sharedData', function($compile, $sce) {
      *
      * @param {String} html The html form
      */
-    sharedData.parseForm = function(html){
+    sharedData.parseForm = function(html, check){
             parser = new DOMParser();
             var signed = false;
 
@@ -379,6 +379,9 @@ mainApp.service('sharedData', function($compile, $sce) {
 
             //update the current function and apply the change in view
             sharedData.changeFunction(sharedData.currentFunction);
+            
+            if (check != null && check != undefined && check == false)
+                return;
             //check modification structure
             if (sharedData.signed != true ){
                 if (sharedData.getHashCode() != sharedData.hashCode)
