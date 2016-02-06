@@ -173,4 +173,5 @@ function display(func){
 	        default:
 	            break;
 	    }
+	}
 }
