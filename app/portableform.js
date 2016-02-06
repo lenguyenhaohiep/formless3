@@ -8,6 +8,6 @@ function verify() {
 	alert('verify');
 }
 
-function import(){
+function importData(){
 
 }
