@@ -134,7 +134,6 @@ function display(func){
 	                scope.$apply(function() {
 	                	scope.sign(text, private_key, passphrase);
 		                setTimeout(function() {
-		                	alert(scope.sharedData.originDoc);
 		               		if (scope.sharedData.originDoc != '')
 		                    	disableAll('form', true, null);
 		                	});
