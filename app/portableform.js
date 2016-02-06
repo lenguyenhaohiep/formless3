@@ -1,3 +1,5 @@
+scriptFunctionLoaded = true;
+
 function sign () {
 	alert('sign');
 }
@@ -7,5 +9,5 @@ function verify() {
 }
 
 function import(){
-	
+
 }
