@@ -15,53 +15,68 @@ mainApp.service('sharedData', function($compile, $sce) {
      * {string} originDoc The text file when user open a file
      * {string} currenFunction The current function
      * {json[]} commands List of function of the app, each object include name, icon and indication if it is selected
+     * {string} hashCode hash value of the structure
+     * {string} lockCode hash value of the code for locking structure
+     * {string} title The title of the current form
+     * {json} models Structure of the form
      */
     var sharedData = {};
 
     sharedData.signed = false;
     sharedData.originDoc = "";
-    sharedData.currentFunction = DESIGN;
+    sharedData.currentFunction = 5;
     sharedData.commands = [{
+        id: 1,
         name: OPEN,
         icon: "glyphicon-folder-open",
         selected: false
     }, {
+        id: 2,
         name: NEW,
         icon: "glyphicon-plus",
         selected: false
     }, {
+        id: 3,
         name: NEWTEMPLATE,
         icon: "glyphicon-list-alt",
         selected: false
     }, {
+        id: 4,
         name: SAVE,
         icon: "glyphicon-floppy-disk",
         selected: false
     }, {
+        id: 5,
         name: DESIGN,
         icon: "glyphicon-wrench",
         selected: true
     }, {
+        id: 6,
         name: EDIT,
         icon: "glyphicon-edit",
         selected: false
     }, {
+        id: 7,
         name: CLEAR,
         icon: "glyphicon-remove",
         selected: false
     }, {
+        id: 8,
         name: CLEARALL,
         icon: "glyphicon-trash",
         selected: false
     }, {
+        id: 9,
         name: SIGN,
         icon: "glyphicon-pencil",
         selected: false
     }, {
+        id: 10,
         name: VERIFY,
         icon: "glyphicon-ok",
         selected: false
     }, {
+        id: 11,
         name: FILL,
         icon: "glyphicon-indent-left",
         selected: false
@@ -69,6 +84,7 @@ mainApp.service('sharedData', function($compile, $sce) {
 
     sharedData.hashCode = '';
     sharedData.lockCode = '';
+    sharedData.title = 'Untitled Form'
 
     //Template
     sharedData.models = {
@@ -250,17 +266,17 @@ mainApp.service('sharedData', function($compile, $sce) {
      *
      * @param {string} name The name of function 
      */
-    sharedData.changeFunction = function(name) {
-        sharedData.currentFunction = name;
-        if (name == SAVE)
+    sharedData.changeFunction = function(id) {
+        sharedData.currentFunction = id;
+        if (id == 4)
             return;
-        if (name == DESIGN)
+        if (id == 5)
             //Disable form controls in design mode
             setTimeout(function(){ 
                 disableAll('formExport', true);
             }, 100);
 
-        if (name != DESIGN)
+        if (id != 5)
             //enable forms controls 
             setTimeout(function(){ 
                 //if form is signed, we also disable forms
@@ -348,7 +364,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.originDoc = html;
                 alert(ERROR3_MESSAGE);
                 signed = true;
-                sharedData.currentFunction = VERIFY;
+                sharedData.currentFunction = 10;
             }
 
             //Parse the file and apply to models
@@ -357,7 +373,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             sharedData.models.dropzones.templates = models;
             
             //In case of generating a new form from an existed from, we clear off all data
-            if (sharedData.currentFunction == NEWTEMPLATE){
+            if (sharedData.currentFunction == 3){
                 sharedData.clear();
             }
 
@@ -391,6 +407,7 @@ mainApp.service('sharedData', function($compile, $sce) {
         if (sharedData.hashCode == ''){
             sharedData.hashCode = html.querySelector('#hashValue') != undefined ? html.querySelector('#hashValue').value : '';
             sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
+            sharedData.title = html.title;
         }
         var li = result.iterateNext();
         //in case of a container

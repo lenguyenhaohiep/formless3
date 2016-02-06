@@ -258,7 +258,7 @@ function disableFile(bool) {
  * Disable all form components
  */
 function disableAll(id, bool, doc) {
-    if (doc == null)
+    if (doc == null || doc == undefined)
         div = document.getElementById(id);
     else
         div = doc.getElementById(id);

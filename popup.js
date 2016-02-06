@@ -91,6 +91,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		display("sign");
 	});
 		
+	//Verify
+	document.getElementById('func4').addEventListener('click', function(){ 
+		display("verify");
+	});
+
 	//Fill
 	document.getElementById('func6').addEventListener('click', function(){
 		readJsonSchema();
