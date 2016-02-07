@@ -6,7 +6,7 @@
 
 var mainApp;
 
-if (typeof(scriptFunctionLoaded) != undefined){
+if (typeof(scriptFunctionLoaded) != 'undefined'){
     mainApp = angular.module("MainApp", ["dndLists", "ngRoute"]); 
 }   
 else{ 
