@@ -285,7 +285,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             //Disable form controls in design mode
             setTimeout(function(){ 
                 disableAll('formExport', true);
-            }, 100);
+            }, 00);
 
         //if (id != 5)
             //enable forms controls 
@@ -298,7 +298,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 else{
                     disableAll('export', true);
                 }
-            }, 100);
+            }, 00);
     }
 
     sharedData.getHashCode = function(){
