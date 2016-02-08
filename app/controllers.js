@@ -497,7 +497,12 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 var node = list[j];
 
                 if (node.type == 'container' || node.type == 'subProperty') {
-                    if (node.name == _name && node.subtype == _subtype) {
+                    var tempSub = node.subtype;
+
+                    while (tempSub.indexOf(" ") != -1)
+                        tempSub = tempSub.replace(" ","_");
+
+                    if (node.name == _name && tempSub == _subtype) {
                         for (k = 0; k < node.templates[0].length; k++) {
                             var item = node.templates[0][k];
 

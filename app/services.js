@@ -807,7 +807,7 @@ mainApp.service('rdfa', function(){
                 _resource = 1;
 
             while (_resource.indexOf(" ") != -1)
-                _resource = _resource.replace(" ","-");
+                _resource = _resource.replace(" ","_");
 
             if (!rdfaInfo[_typeof])
                 rdfaInfo[_typeof]= {};
