@@ -287,7 +287,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 disableAll('formExport', true);
             }, 100);
 
-        if (id != 5)
+        //if (id != 5)
             //enable forms controls 
             setTimeout(function(){ 
                 //if form is signed, we also disable forms
@@ -375,6 +375,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.originDoc = html;
                 alert(ERROR3_MESSAGE);
                 signed = true;
+                sharedData.changeFunction(sharedData.currentFunction);
                 //sharedData.currentFunction = 10;
             }
 

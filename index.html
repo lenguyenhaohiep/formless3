@@ -160,7 +160,7 @@
                             </div>
 
                             <div class="menubar">
-                                <div ng-if="restrictMode == false">
+                                <div ng-if="sharedData.signed == false">
                                     <h5>Sections</h5>
                                     <span href="#" ng-repeat="item in models.templates" ng-show="item.type == 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
                                     </span>
@@ -239,7 +239,7 @@
 
                     <!--Design view -->
                     <!--<div ng-if="sharedData.currentFunction == 5">-->
-                        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-3 template-zone">
+                        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-3 template-zone" ng-if="sharedData.signed==false">
                             <div id="formExport" class="dropzone box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
                                 <div id="drop-zone" ng-include="'list.html'"></div>
