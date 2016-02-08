@@ -70,6 +70,8 @@
 							ng-model="item.name" 
 							value="item.name"
 							uib-typeahead="object for object in schema.objects | filter:$viewValue" typeahead-min-length="0" />
+
+                        <br/>
 						<label>Instance</label> 
                         <input class='input-transparent' type='text' ng-model="item.subtype"/>	
                         <!--
@@ -117,16 +119,16 @@
             <script type="text/ng-template" id="item.html">
                 <div ng-if='item.noinput == null' class="item row-form">
                     <!--<div class='label-block'>-->
-                        <label>Label</label>
-                        <input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label" />
-                        <span ng-if="item.required == 'yes' " class='required-field'>*</span>
-
                         <div ng-if="item.semantic.class != null">
                         <label>Property</label>
                             <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
                                 ng-change="matchProperty(item.semantic.property, item)"
                                 typeahead-on-select="matchProperty($item, item)" typeahead-min-length="0"/>
                         </div>
+
+                        <label>Label</label>
+                        <input class='input-transparent' type='text' ng-model="item.label" value="item.label" />
+                        <span ng-if="item.required == 'yes' " class='required-field'>*</span>
                         <!--
                         <span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
                         -->
@@ -273,6 +275,7 @@
                     <!-- This template is responsible for rendering a container element. It uses
 			     the above list template to render each container column -->
                     <script type="text/ng-template" id="container2.html">
+                        <h5 style="text-align: left">{{item.subtype}}</h5>
                         <div resource="{{item.subtype}}{{item.id}}" data-oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
                             <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
                         </div>
