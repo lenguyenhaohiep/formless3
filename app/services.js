@@ -426,7 +426,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
             sharedData.title = html.title;
         }*/
-        
+
         var li = result.iterateNext();
         //in case of a container
 
@@ -814,7 +814,8 @@ mainApp.service('rdfa', function(){
 
             if (!rdfaInfo[_typeof][_resource][_id]){
                 rdfaInfo[_typeof][_resource][_id] = {};
-            }            
+            }           
+            _id = 1; 
 
             //parse properties 
             doc = parser.parseFromString(object.innerHTML,'text/html');
