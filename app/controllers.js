@@ -479,17 +479,17 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var str = $scope.rdfaCurrent[i].field;
 
             //source label (name, subtype, id)
-            var _name = str.split("-")[0];
-            var _subtype = str.split("-")[1];
+            var _name = str.split("@")[0];
+            var _subtype = str.split("@")[1];
             //var _id = parseInt(str.split("-")[2]);
 
             if ($scope.rdfaCurrent[i].data == null)
                 break;
             //dest (#doc, name, subtype, id)
             var str2 = $scope.rdfaCurrent[i].data;
-            var _nDoc = parseInt(str2.split("-")[0]) - 1;
-            var _obj = str2.split("-")[1];
-            var _subObj = str2.split("-")[2];
+            var _nDoc = parseInt(str2.split("@")[0]) - 1;
+            var _obj = str2.split("@")[1];
+            var _subObj = str2.split("@")[2];
             //var _sid = parseInt(str2.split("-")[3]);
             var _sid = 1;
 
@@ -806,7 +806,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                     for (type in objs[obj]) {
                         for (id in objs[obj][type])
                         //Detect objets label 
-                        $scope.rdfa.push([i + 1, obj, type].join('-'));
+                        $scope.rdfa.push([i + 1, obj, type].join('@'));
                     }
                 }
                 //Extract data
@@ -827,7 +827,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 for (type in currentObjs[obj]) {
                     for (id in currentObjs[obj][type])
                     $scope.rdfaCurrent.push({
-                        field: [obj, type].join('-'),
+                        field: [obj, type].join('@'),
                         data: null
                     });
                 }
@@ -884,9 +884,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 var str2 = $scope.rdfa[j];
 
                 if (checked.indexOf(j) == -1){
-                    arr = str2.split('-');
+                    arr = str2.split('@');
                     //Check the similarity between two label of object
-                    val = checkSimilarity(str, arr[1]+'-'+arr[2]);
+                    val = checkSimilarity(str, arr[1]+'@'+arr[2]);
                     //update the most similar
                     if (val > similarity){
                         similarity = val;
