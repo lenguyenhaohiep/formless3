@@ -491,6 +491,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var _obj = str2.split("-")[1];
             var _subObj = str2.split("-")[2];
             //var _sid = parseInt(str2.split("-")[3]);
+            var _sid = 1;
 
             for (var j = 0; j < list.length; j++) {
                 var node = list[j];
