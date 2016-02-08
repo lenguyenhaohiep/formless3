@@ -1,9 +1,9 @@
-body {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 12px;
-}
 
+body {
+    font-size: 12px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
 #form-title {
     border: medium none;
     display: block;
@@ -11,246 +11,227 @@ body {
     font-weight: bold;
     height: 25px;
     margin-bottom: 5px;
-    width: 30%;
     text-align: center;
+    width: 30%;
 }
 #form-title:hover {
     border: 1px solid #ccc;
 }
-
-
 .nestedDemo .dropzone .container-element .column {
-	width: 100%;
+    width: 100%;
 }
-
-.row-form{
-    min-height: 80px;
+.row-form {
 }
-
-.list-field{
-	padding-left: 0;
-	overflow: scroll;
-	width: auto;
-	white-space: nowrap;
-	overflow-y: hidden;
+.list-field {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-left: 0;
+    white-space: nowrap;
+    width: auto;
 }
-.list-field-item{
-	text-align: center;
-	height: 60px;
-	min-width: 100px;
-	background-color: #f9f9f9;
-	border: 1px solid #fff;
-	padding: 10px;
-	font-size: 12px;
-	display: inline-block;
-	margin: 10px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
+.list-field-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 12px;
+    height: 60px;
+    margin: 10px;
+    min-width: 100px;
+    padding: 10px;
+    text-align: center;
 }
-
-.list-field-item:hover{
-	color: white;
-	background-color: #245580;
+.list-field-item:hover {
+    background-color: #245580;
+    color: white;
 }
-
 .glyphicon {
-    margin-top: 0px;
-    margin-bottom: 5px;
     font-size: 15px;
+    margin-bottom: 5px;
+    margin-top: 0;
 }
-
 .glyphicon-text {
     display: block;
     text-align: center;
     word-wrap: break-word;
 }
-
 .glyphicon:hover {
     cursor: pointer;
 }
-
-.ribbon-tab{
-	border: 1px solid #ddd;
-	border-top: none;
-	border-radius: 0px 0px 4px 4px;
+.ribbon-tab {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color #ddd #ddd;
+    border-image: none;
+    border-radius: 0 0 4px 4px;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
 }
-
 .ribbon {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
-
-.container{
-	margin-top: -60px;
+.container {
+    margin-top: -60px;
 }
-
 .label-block {
+    border-right: 1px solid #ccc;
     display: inline-block;
     float: left;
-    min-width: 150px;
     margin-right: 10px;
+    min-width: 150px;
     padding-right: 10px;
-    border-right: 1px solid #ccc;
 }
-
-.item-block{
-	display: inline-block;
-	width: 50%;
+.item-block {
+    display: inline-block;
+    width: 50%;
 }
-
 .required-field {
     color: red;
 }
-
 .template-zone {
-	height: 96vh;
+    height: 96vh;
     overflow-x: hidden;
 }
-
-.leftbar{
-	height: 96vh;
+.leftbar {
+    height: 40vh;
 }
-
-.rightbar{
-	height: 96vh;
+.rightbar {
+    height: 96vh;
 }
-
-.centerarea{
-	min-height: 100vh;	
+.propbar {
+    min-height: 45vh;
 }
-
-.trashcan{
-	position: fixed;
-	bottom: 0;
+.centerarea {
+    min-height: 100vh;
 }
-
-.mini-item, .mini-item:focus, .mini-item:hover{
-    padding: 3px 6px;
-    color: white;
+.trashcan {
+    bottom: 0;
+    position: fixed;
+}
+.mini-item, .mini-item:focus, .mini-item:hover {
     border-radius: 3px;
-    text-decoration: none;	
+    color: white;
+    padding: 3px 6px;
+    text-decoration: none;
 }
-.mini-item:hover{
-	cursor: pointer;
+.mini-item:hover {
+    cursor: pointer;
 }
-
 .item-add {
     background-color: #245580;
-
 }
-
 .item-remove {
     background-color: #d43f3a;
 }
-
-.item-fix{
-	position: absolute;
-	right: 15px;
-	top: 15px;
-	line-height: 1.1;
-	display: none;
+.item-fix {
+    display: none;
+    line-height: 1.1;
+    position: absolute;
+    right: 15px;
+    top: 15px;
 }
-
 .option-item {
-    margin-top: 10px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
-
-.menubar span{
-	padding: 5px;
-	margin: 5px;
-	color: black;
-	text-decoration: none;
+.menubar span {
+    color: black;
+    margin: 5px;
+    padding: 5px;
+    text-decoration: none;
 }
-.menubar span:hover{
-	color: #428bca;
-	text-decoration: none;
+.menubar span:hover {
+    color: #428bca;
+    text-decoration: none;
 }
-
-.menubar span.menuselected{
-	color: #428bca;
+.menubar span.menuselected {
+    color: #428bca;
 }
-
-.label-semantic{
-	font-size: 10px;
+.label-semantic {
+    font-size: 10px;
 }
-
 input:valid {
     color: black;
 }
-.label-field{
-	font-weight: bold;
+.label-field {
+    font-weight: bold;
 }
-
 input:invalid ~ .input-validation::before {
-	content: "Matched format required";    
-	color: red;
+    color: red;
+    content: "Matched format required";
 }
-
 input:invalid {
     color: red;
 }
-
-.input-transparent{
-	border: transparent;
-	background: transparent;
-	border: 1px solid #ccc;
-	margin-bottom: 2px;
+.input-transparent {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: transparent none repeat scroll 0 0;
+    border-color: transparent transparent #ccc;
+    border-image: none;
+    border-style: none none solid;
+    border-width: medium medium 1px;
+    margin-bottom: 2px;
 }
-
-.input-transparent:focus{
-	background: white;
+.input-transparent:focus {
+    background: white none repeat scroll 0 0;
 }
-
-.box h3{
-	font-size: 12px;
-	padding: 5px 10px;
+.box h3 {
+    font-size: 12px;
 }
-
-.box h5, .dropdown-menu{
-	font-size: 12px;
+.box h5, .dropdown-menu {
+    font-size: 12px;
 }
-
-.form-control{
-	font-size: 12px;
-	height: 24px;
-	padding: 0px 5px;
+.form-control {
+    font-size: 12px;
+    height: 24px;
+    padding: 0 5px;
 }
-
-.disable{
-	display: none;
+.disable {
+    display: none;
 }
-
-.main{
-	margin: 20px;
+.main {
+    margin: 20px;
 }
-
-.btn{
-	font-size: 12px;
+.btn {
+    font-size: 12px;
 }
-
-
 .image-line:hover {
-    background: #f5f5f5;
+    background: #f5f5f5 none repeat scroll 0 0;
 }
-
 .image-line {
     height: 100px;
 }
-
 .image-line span {
-    width: 100px;
     display: inline-block;
     padding-left: 10px;
+    width: 100px;
 }
-
 .image-line img {
     height: 100px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
 }
-
 .fileupload {
-	min-height: 20px;
+    min-height: 20px;
+}
+#drag-here {
+    border-top: 1px solid black;
+    text-align: center;
+}
+#formExport {
+    background-color: #eee;
+}
+#drop-zone {
+    background-color: white;
+}
+label {
+    min-width: 50px;
+}
+.dropdown-menu {
+    max-height: 300px;
+    overflow: auto;
 }

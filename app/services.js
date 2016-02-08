@@ -29,57 +29,68 @@ mainApp.service('sharedData', function($compile, $sce) {
         id: 1,
         name: OPEN,
         icon: "glyphicon-folder-open",
-        selected: false
+        selected: false,
+        disable: false
     }, {
         id: 2,
         name: NEW,
         icon: "glyphicon-plus",
-        selected: false
+        selected: false,
+        disable: false
     }, {
         id: 3,
         name: NEWTEMPLATE,
         icon: "glyphicon-list-alt",
-        selected: false
+        selected: false,
+        disable: true
     }, {
         id: 4,
         name: SAVE,
         icon: "glyphicon-floppy-disk",
-        selected: false
+        selected: false,
+        disable: false
     }, {
         id: 5,
         name: DESIGN,
         icon: "glyphicon-wrench",
-        selected: true
+        selected: true,
+        disable: true
     }, {
         id: 6,
         name: EDIT,
-        icon: "glyphicon-edit",
-        selected: false
+        icon: "glyphicon-search",
+        selected: false,
+        disable: true
     }, {
         id: 7,
         name: CLEAR,
         icon: "glyphicon-remove",
-        selected: false
+        selected: false,
+        disable : true
     }, {
         id: 8,
         name: CLEARALL,
         icon: "glyphicon-trash",
-        selected: false
+        selected: false,
+        disable: true
     }, {
         id: 9,
         name: SIGN,
         icon: "glyphicon-pencil",
-        selected: false
+        selected: false,
+        disable: true
     }, {
         id: 10,
         name: VERIFY,
         icon: "glyphicon-ok",
-        selected: false
+        selected: false,
+        disable: true
     }, {
         id: 11,
         name: FILL,
         icon: "glyphicon-indent-left",
-        selected: false
+        selected: false,
+        disable: true
     }];
 
     sharedData.hashCode = '';
@@ -364,7 +375,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 sharedData.originDoc = html;
                 alert(ERROR3_MESSAGE);
                 signed = true;
-                sharedData.currentFunction = 10;
+                //sharedData.currentFunction = 10;
             }
 
             //Parse the file and apply to models
@@ -378,15 +389,17 @@ mainApp.service('sharedData', function($compile, $sce) {
             }
 
             //update the current function and apply the change in view
-            sharedData.changeFunction(sharedData.currentFunction);
+            //sharedData.changeFunction(sharedData.currentFunction);
             
             if (check != null && check != undefined && check == false)
                 return;
             //check modification structure
+            /*
             if (sharedData.signed != true ){
                 if (sharedData.getHashCode() != sharedData.hashCode)
                     alert(ERROR_MODIFICATION);
             }
+            */
     }
 
     /*
@@ -407,11 +420,13 @@ mainApp.service('sharedData', function($compile, $sce) {
         var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
 
+        /*
         if (sharedData.hashCode == ''){
             sharedData.hashCode = html.querySelector('#hashValue') != undefined ? html.querySelector('#hashValue').value : '';
             sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
             sharedData.title = html.title;
-        }
+        }*/
+        
         var li = result.iterateNext();
         //in case of a container
 

@@ -44,17 +44,16 @@
 	     it from the original list yourself using the dnd-moved attribute -->
             <script type="text/ng-template" id="list.html">
                 <ul dnd-list="list" dnd-inserted = "updateSemanticDrop(event, index, item, external, type, 'containerType')">
-                    <li ng-repeat="item in list" el
+                    <li ng-repeat="item in list"
                         dnd-draggable="item" 
                         dnd-effect-allowed="move" 
                         dnd-moved="list.splice($index, 1)" 
                         dnd-selected="selectItem(item)" 
-                        dnd-disable-if="restrictMode==true"
+                        dnd-disable-if="sharedData.signed == true"
                         ng-class="{selected: models.selected === item}" 
                         ng-include="item.type + '.html'" 
-                        flitem="models" 
+                        flitem = "models" 
                         class="row-form" />
-
                     </li>
                 </ul>
             </script>
@@ -64,29 +63,31 @@
             <script type="text/ng-template" id="container.html">
                 <div class="container-element box box-blue">
                     <h3> 
-						[Type] 
+						<label>Type</label> 
 						<input 
 							class='input-transparent' 
 							type='text' 
 							ng-model="item.name" 
 							value="item.name"
 							uib-typeahead="object for object in schema.objects | filter:$viewValue" typeahead-min-length="0" />
-
-						[Instance] <input class='input-transparent' type='text' ng-model="item.subtype"/>
-									
-						[ID] <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
+						<label>Instance</label> 
+                        <input class='input-transparent' type='text' ng-model="item.subtype"/>	
+                        <!--
+						<label>ID</label> 
+                        <input class='input-transparent' type='number' ng-model="item.id" style="width:50px"/>
+                        -->
 					</h3>
 
                     <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
                     <div class="clearfix"></div>
                 </div>
-                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+                <a ng-hide="sharedData.signed == true" class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
             </script>
 
              <script type="text/ng-template" id="subProperty.html">
                 <div class="container-element box box-yellow">
                     <h3> 
-                        [Property] 
+                        <label>Property</label> 
                         <input 
                             class='input-transparent' 
                             type='text' 
@@ -97,7 +98,7 @@
                                 typeahead-on-select="matchTypeOfProperty($item, item)"
                                 typeahead-min-length="0"/>
 
-                        [Type] 
+                        <label>Type</label>
                         <input 
                             class='input-transparent' 
                             type='text' 
@@ -109,33 +110,37 @@
                     <div class="column" ng-repeat="list in item.templates" ng-include="'list.html'"></div>
                     <div class="clearfix"></div>
                 </div>
-                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+                <a ng-hide="sharedData.signed == true" class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
             </script>
 
             <!-- Template for a normal list item -->
             <script type="text/ng-template" id="item.html">
                 <div ng-if='item.noinput == null' class="item row-form">
-                    <div class='label-block'>
-                        <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                    <!--<div class='label-block'>-->
+                        <label>Label</label>
                         <input class='input-transparent label-field' type='text' ng-model="item.label" value="item.label" />
-                        <br/>
+                        <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+
                         <div ng-if="item.semantic.class != null">
-                            [Property]
+                        <label>Property</label>
                             <input type='text' ng-model="item.semantic.property" class='input-transparent' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" 
                                 ng-change="matchProperty(item.semantic.property, item)"
                                 typeahead-on-select="matchProperty($item, item)" typeahead-min-length="0"/>
                         </div>
+                        <!--
                         <span class='label-semantic'>[{{item.name}}] {{item.semantic.class}} / {{item.semantic.property}} </span>
-                    </div>
-                    <div class='item-block'>
+                        -->
+                    <!--</div>-->
+                    
+                    <!--<div class='item-block'>
                         <html-render item="item" val='component'></html-render>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div ng-if='item.noinput != null' class="item">
                     <html-render item="item" val='component'></html-render>
                 </div>
-                <a class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
+                <a ng-hide="sharedData.signed == true" class='mini-item item-remove glyphicon-minus item-fix' ng-click='removeItem(item)'></a>
             </script>
 
             <!-- Main area with dropzones and source code -->
@@ -150,52 +155,42 @@
                         <div class="box box-grey box-padding leftbar">
                             <h3>Toolbox</h3>
                             <div class='menubar'>
-                                <span href="#" ng-repeat="item in commands" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
+                                <span href="#" ng-repeat="item in commands" ng-show="item.disable == false" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
 			    		       </span>
                             </div>
 
-                            <div class="menubar" ng-if="sharedData.currentFunction == 5">
+                            <div class="menubar">
                                 <div ng-if="restrictMode == false">
                                     <h5>Sections</h5>
-                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type == 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
                                     </span>
                                     <br/>
                                     <h5>Fields</h5>
-                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type == 'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
     						        </span>
+                                    <!--
                                     <br/>
                                     <h5>Restrict Editing</h5>
-                                    <button ng-click='lock()'>Enable</button>
+                                    <button ng-click='lock()'>Enable</button> -->
                                 </div>
+                                <!--
                                 <div ng-if="restrictMode == true">
                                     <button ng-click='unlock()'>Disable</button>
-                                </div>
+                                </div> -->
                             </div>
 
                         </div>
-                    </div>
+                        <!--<div class="col-md-3">-->
 
-                    <!--Design view -->
-                    <div ng-if="sharedData.currentFunction == 5">
-                        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-                            <div id="formExport" class="dropzone box box-grey centerarea">
-                                <!-- The dropzone also uses the list template -->
-                                <div ng-include="'list.html'"></div>
-                            </div>                            
-                        </div>
-
-
-                        <div class="col-md-3" ng-if="restrictMode == false">
-
-                            <div class="box box-grey box-padding rightbar">
+                            <div class="box box-grey box-padding propbar" ng-if="models.selected != null">
                                 <h3>Properties</h3>
 
                                 <div ng-if="models.selected.type == 'item'">
                                     <strong>Type: </strong> {{models.selected.name}}
                                     <br>
                                     <strong ng-if="models.selected.required != null">
-								Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
-							</strong>
+                                Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
+                            </strong>
                                     <br/>
                                     <strong>Label: </strong>
                                     <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
@@ -230,16 +225,39 @@
                                 </div>
 
                                 <div ng-if="models.selected.semantic.class != null && models.selected.type == 'item'">
+                                    <!--
                                     <strong>Object Type: </strong> {{models.selected.semantic.class}}
                                     <br>
                                     <strong>Object ID: </strong> {{models.selected.semantic.id}}
-                                    <br>
-                                    <strong>Object Property: </strong>
+                                    <br> -->
+                                    <strong>Property: </strong>
                                     <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" typeahead-min-length="0"/>
                                 </div>
                             </div>
-                        </div>
+                        <!--</div>-->
                     </div>
+
+                    <!--Design view -->
+                    <!--<div ng-if="sharedData.currentFunction == 5">-->
+                        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-3 template-zone">
+                            <div id="formExport" class="dropzone box box-grey centerarea">
+                                <!-- The dropzone also uses the list template -->
+                                <div id="drop-zone" ng-include="'list.html'"></div>
+                                <div id='drag-here'>Drop above this line</div>
+                            </div>
+                        </div>
+
+                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
+                            <div id='form' class="box box-grey centerarea">
+                                <!-- The dropzone also uses the list template -->
+                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    <!--</div>-->
 
                     <!--Edit view-->
 
@@ -284,18 +302,11 @@
                     </script>
 
                     <div ng-if="sharedData.currentFunction != 5">
-                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-                            <div id='form' class="box box-grey centerarea">
-                                <!-- The dropzone also uses the list template -->
-                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
-                                </div>
-                            </div>
-                        </div>
+                    <!--
                         <div>
                             <div ng-if="sharedData.currentFunction == 9">
                                 <div class="col-md-3 template-zone">
                                     <div class="box box-grey centerarea">
-                                        <!-- The dropzone also uses the list template -->
                                         <h3>Sign</h3>
                                         <div class='main'>
                                             <h5>Private Key</h5>
@@ -315,7 +326,6 @@
                             <div ng-if="sharedData.currentFunction == 10">
                                 <div class="col-md-3 template-zone">
                                     <div class="box box-grey centerarea">
-                                        <!-- The dropzone also uses the list template -->
                                         <h3>Verify</h3>
                                         <div class='main'>
                                             <h5>Public Key</h5>
@@ -332,7 +342,6 @@
                             <div ng-if="sharedData.currentFunction == 11">
                                 <div class="col-md-3 template-zone">
                                     <div class="box box-grey centerarea">
-                                        <!-- The dropzone also uses the list template -->
                                         <h3>Fill</h3>
                                         <div class='main'>
                                             <h5>Forms</h5>
@@ -367,6 +376,7 @@
                                 </div>
                             </div>
                         </div>
+                    -->
                     </div>
                 </div>
             </div>

@@ -133,12 +133,13 @@
  */
  mainApp.directive('flitem', ['sharedData', function() {
     return {
-        restrict: "A",
+        restrict: "EA",
         scope: {
-            "flitem": "@"
+            flitem: "@"        
         },
         link: function(scope, element, attr) {
             var delete_button = angular.element(element[0].querySelector('.item-fix'));
+
 
             //Upon mouse leaves
             element.on('mouseleave', function() {
