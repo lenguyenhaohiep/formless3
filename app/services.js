@@ -811,11 +811,11 @@ mainApp.service('rdfa', function(){
             if (!rdfaInfo[_typeof][_resource]){
                 rdfaInfo[_typeof][_resource] = {};
             }
+            _id = 1; 
 
             if (!rdfaInfo[_typeof][_resource][_id]){
                 rdfaInfo[_typeof][_resource][_id] = {};
             }           
-            _id = 1; 
 
             //parse properties 
             doc = parser.parseFromString(object.innerHTML,'text/html');
