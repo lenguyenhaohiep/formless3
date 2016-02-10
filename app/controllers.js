@@ -870,6 +870,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var message = html_beautify(body);
             sharedData.clearAll();
             document.getElementById('form').innerHTML = message;
+            updateFileEvent();
+            updateButtonEvent();
+            updateImageEvent();
         }, 100);
     }
 
