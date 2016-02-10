@@ -804,7 +804,7 @@ mainApp.service('rdfa', function(){
             }
 
             if (_resource == null)
-                _resource = 1;
+                _resource = "1";
 
             while (_resource.indexOf(" ") != -1)
                 _resource = _resource.replace(" ","_");
