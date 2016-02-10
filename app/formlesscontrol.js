@@ -146,7 +146,8 @@ function reset(object) {
     var divs = object.querySelectorAll('div');
     if (divs.length == 0) {
         input = object.querySelector('input');
-        input.value = '';
+        if (input != undefined)
+            input.value = '';
     }
 }
 
