@@ -401,7 +401,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 alert(KEY1_CONFIRM);
             }
         } catch (err) {
-            alert(ERROR1_MESSAGE);
+            alert(ERROR1_MESSAGE + "\n" + err);
         }
     }
 
