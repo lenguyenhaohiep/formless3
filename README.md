@@ -25,6 +25,7 @@ https://rawgit.com/lenguyenhaohiep/formless3/master/index.html
 
 4/ Click the button Sign to sign your form, you will be requested to enter the public key and the passphrase (Open PGP standard) 
 to sign your form
+
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/sign.png)
 
 5/ Sign and download your signed form
