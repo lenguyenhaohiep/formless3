@@ -43,3 +43,5 @@ https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
 
 4/ Click button Verify to verify the signature of your form
 
+For more details, please read the report in the Report folder
+
