@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html data-signature-header='
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+'>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Untitled Form</title>
+    <style type="text/css">
+        .form-final h3,
+        .form-final h5,
+        .label-field,
+        a {
+            font-weight: 700
+        }
+
+        .form-final,
+        a {
+            box-shadow: 0 0 20px #d1d1d1;
+            border: 1px solid #d1d1d1
+        }
+
+        #a,
+        .form-final,
+        a {
+            background-color: #fff
+        }
+
+        .form-final h3,
+        .form-final h5 {
+            text-align: center;
+            font-weight: 700
+        }
+
+        .form-final .required-field,
+        input:invalid {
+            color: red
+        }
+
+        #form,
+        a,
+        input:valid {
+            color: #000
+        }
+
+        a {
+            font-size: 12px;
+            border-radius: 5px;
+            padding: 5px 10px
+        }
+
+        a:hover {
+            cursor: pointer
+        }
+
+        body {
+            background-color: #eee;
+            font-family: Arial;
+            font-size: 14px;
+            color: #eee
+        }
+
+        label {
+            display: inline-block;
+            margin: 5px 0
+        }
+
+        .form-final {
+            margin: 0 auto;
+            padding: 20px;
+            width: 700px
+        }
+
+        .form-final h3 {
+            font-size: 20px
+        }
+
+        .form-final h5 {
+            font-size: 16px
+        }
+
+        .form-final .form-control {
+            width: 100%
+        }
+
+        .form-final .label-block {
+            border: none;
+            display: inline-block;
+            height: 20px;
+            width: 100px
+        }
+
+        .form-final .control-block {
+            display: inline-block;
+            width: 100%
+        }
+
+        .form-final ul {
+            list-style: none;
+            padding-left: 0
+        }
+
+        input:invalid~.input-validation::before {
+            color: red;
+            content: "Matched format required"
+        }
+
+        .image-line:hover {
+            background: #f5f5f5
+        }
+
+        .image-line {
+            height: 100px
+        }
+
+        .image-line span {
+            display: inline-block;
+            padding-left: 10px;
+            width: 100px
+        }
+
+        .image-line img {
+            height: 100px;
+            padding: 10px
+        }
+    </style>
+    <script type="text/javascript">
+        function verify(){
+            window.open('https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html','_blank');
+        }
+    </script>
+</head>
+
+<body>
+    <a id="b-verify" onclick="verify()">Link to Verify Tool</a>
+    <div id="form" class="box box-grey centerarea">
+        <!-- The dropzone also uses the list template -->
+        <!-- ngInclude: 'list2.html' -->
+        <div class="form-final ng-scope" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+            <ul class="ng-scope">
+                <!-- ngRepeat: item in list -->
+                <!-- ngInclude: item.type + '2.html' -->
+                <li class="ng-scope">
+                    <h5 style="text-align: left" class="ng-binding ng-scope">Student</h5>
+                    <div resource="Student1" data-oid="1" typeof="Person" class="ng-scope">
+                        <!-- ngRepeat: list in item.templates -->
+                        <!-- ngInclude: 'list2.html' -->
+                        <div class="ng-scope">
+                            <ul class="ng-scope">
+                                <!-- ngRepeat: item in list -->
+                                <!-- ngInclude: item.type + '2.html' -->
+                                <li class="ng-scope">
+                                    <!-- ngIf: item.noinput == null -->
+                                    <div class="ng-scope">
+                                        <label class="label-view ng-binding">Name</label>
+                                        <!-- ngIf: item.required == 'yes' --><span class="required-field ng-scope">*</span>
+                                        <!-- end ngIf: item.required == 'yes' -->
+                                        <br>
+                                        <div class="control-block">
+                                            <div class="ng-isolate-scope">
+                                                <input data-oid="0" type="text" value="" property="name" content="" class="form-control ng-pristine ng-untouched ng-valid ng-scope" disabled="">
+                                                <div class="input-validation ng-scope"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end ngIf: item.noinput == null -->
+
+                                    <!-- ngIf: item.noinput != null -->
+                                </li>
+                                <!-- end ngRepeat: item in list -->
+                            </ul>
+                        </div>
+                        <!-- end ngRepeat: list in item.templates -->
+                    </div>
+                </li>
+                <!-- end ngRepeat: item in list -->
+            </ul>
+        </div>
+    </div>
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v1.3.0
+Comment: http://openpgpjs.org
+
+wsFcBAEBCAAQBQJWz314CRCv9OLUjFbvlwAAb2sP/3xewG9+wTVjvVbTGFQM
+2iesDXgA7JQXX0iSTImLKFNTVcFQq+K8DchUBvtcpk/Qwx+wJyfTHV7v4yaR
+5BtNWZH3rLBQwrVynyXv+TnOcYhGqvOxOxZCLZRjC/NiYgGxDdtRYu2ngtTB
+FfmLf/xLRhMOg1J26OxnJgOqbBptt3JgffVZ0QTS5cVrSUsStPraOGhnxoPd
+F5HeR4CLEsfjl4AtzKs9jwm6fzl0yWwfKKd8zt5rz5Hz/kOudHta2DKOT1M6
+yIWw/51fZsGF//G9kvwbT531uIsVSC6rXnpSq+C1Cerxt1vtMurF3mdV9UXh
+0S9DRd20VLqh8JCenYY0D6l6Eh5SPPb7ksR9ZDoJsrVMYIy0NhgMT/vZVmJf
+FrfsK3n/jUCRFmBpoPtpA8TTXWrJOBDs7WLUzoDwnwH+Lg9R4E4L6UlS9fNi
+dzQPJKP34bik5z/wnVMolnR4esG4GBuHPSQapEuGfygPQMKQszv0cmI2X8I9
+IIQk9Z8zPJxSe1tIGx9GxYjJsC0kmPCCCM5lxaVuqxGZuGO301FImNIXONkX
+JEicQv6fYBItgkrV76p1Jq85v2UFe9gEyioiP38nBdjmbeS+btBseItLbBS0
+JUtSreg70HvlmIomYBPgvK/D0vd+bysrK3j583u5qBUm2Ij4IX+V2KId0mfX
+0/Dy
+=X+tU
+-----END PGP SIGNATURE-----
+</body>
+</html>

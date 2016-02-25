@@ -95,7 +95,7 @@ mainApp.service('sharedData', function($compile, $sce) {
 
     sharedData.hashCode = '';
     sharedData.lockCode = '';
-    sharedData.title = 'Untitled Form'
+    sharedData.title = 'Untitled Form';
 
     //Template
     sharedData.models = {
@@ -373,7 +373,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 //signed form
                 sharedData.signed = true;
                 sharedData.originDoc = html;
-                alert(ERROR3_MESSAGE);
+                //alert(ERROR3_MESSAGE);
                 signed = true;
                 sharedData.changeFunction(sharedData.currentFunction);
                 //sharedData.currentFunction = 10;
@@ -392,8 +392,8 @@ mainApp.service('sharedData', function($compile, $sce) {
             //update the current function and apply the change in view
             //sharedData.changeFunction(sharedData.currentFunction);
             
-            if (check != null && check != undefined && check == false)
-                return;
+            //if (check != null && check != undefined && check == false)
+                //return;
             //check modification structure
             /*
             if (sharedData.signed != true ){
@@ -425,8 +425,9 @@ mainApp.service('sharedData', function($compile, $sce) {
         if (sharedData.hashCode == ''){
             sharedData.hashCode = html.querySelector('#hashValue') != undefined ? html.querySelector('#hashValue').value : '';
             sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
-            sharedData.title = html.title;
         }*/
+        if (html.title != '')
+        sharedData.title = html.title;
 
         var li = result.iterateNext();
         //in case of a container

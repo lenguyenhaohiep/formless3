@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Design and fill your form easily</title>
+    <meta content="utf8">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/framework.css">
+    <link rel="stylesheet" href="assets/css/dragdroplist.css" />
+    <link rel="stylesheet" href="assets/css/formless3.css" />
+    <link rel="stylesheet" href="assets/css/standalone.css" />
+
+    <script src="app/lang_en.js"></script>     
+    <script src="app/defaultvalue.js"></script>   
+    <script src="app/schemaorg.js"></script>
+    <script src="assets/js/angular.js"></script>
+    <script src="assets/js/angular-route.js"></script>
+    <script src="assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
+    <script src="assets/js/typeahead-focus.js"></script>
+    <script src="assets/js/openpgp.js"></script>
+    <script src="assets/js/FileSaver.js"></script>
+    <script src="assets/js/beautify-html.js"></script>
+    <script src="assets/js/beautify.js"></script>
+    <script src="assets/js/beautify-css.js"></script>
+    <script src="assets/js/angular-drag-and-drop-lists.js"></script>
+    <script src="app/controllers.js"></script>
+    <script src="app/directives.js"></script>
+    <script src="app/services.js"></script>
+    <script src="app/formlesscontrol.js"></script>
+</head>
+
+<body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr" data-ng-init="init()">
+    <input id="tempFile" file1 type="file" on-finish="loadfile()" data-file="openedfile" style="visibility:hidden;position:absolute;top:0;left:0" accept=".html"/>
+    <div ng-controller="FormCtr">
+        <div class="container-fluid nestedDemo" ng-if="schema.json != null">
+            <div class="col-md-12">
+                <div class="row">
+                    <center>
+                        <input id='form-title' type='text' ng-model='sharedData.title' placeholder='Enter form title'/>
+                    </center>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="box box-grey box-padding leftbar" style='height:100px'>
+                            <h3>Toolbox</h3>
+                            <div class='menubar'>
+                                <span href="#" ng-repeat="item in commands" ng-show="item.id == 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
+			    		       </span>
+                            </div>
+                        </div>
+
+                            <div class="box box-grey box-padding propbar">
+                                <h3>Verify</h3>
+                                        <div class='main'>
+                                            <h5>Public Key</h5>
+                                            <input file2 type="file" ng-model="keys.public_key" />
+                                            <br/>
+                                            <textarea rows='15' ng-model='keys.public_key' class='form-control' placeholder="Enter the public key"></textarea>
+                                            <br/>
+                                            <button class='btn' ng-click='verify()'>Verify</button>
+                                        </div>
+                            </div>
+                    </div>
+
+                    <!--Design view -->
+                    <!--<div ng-if="sharedData.currentFunction == 5">-->
+
+                        <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
+                            <div id='form' class="box box-grey centerarea">
+                                <!-- The dropzone also uses the list template -->
+                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    <!--</div>-->
+
+                    <!--Edit view-->
+
+                    <script type="text/ng-template" id="list2.html">
+                        <ul dnd-list="list">
+                            <li ng-repeat="item in list" ng-include="item.type + '2.html'">
+                            </li>
+                        </ul>
+                    </script>
+
+
+
+                    <!-- This template is responsible for rendering a container element. It uses
+			     the above list template to render each container column -->
+                    <script type="text/ng-template" id="container2.html">
+                        <h5 style="text-align: left">{{item.subtype}}</h5>
+                        <div resource="{{item.subtype}}{{item.id}}" data-oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
+                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        </div>
+                    </script>
+
+                    <script type="text/ng-template" id="subProperty2.html">
+                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid='{{item.id}}' data-temptype='{{item.semantic.class}}' data-sid='{{item.semantic.id}}'>
+                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        </div>
+                    </script>
+
+                    <!-- Template for a normal list item -->
+                    <script type="text/ng-template" id="item2.html">
+                        <div ng-if='item.noinput == null'>
+                            <label class='label-view'>{{item.label}}</label>
+                            <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                            <br/>
+                            <div class='control-block'>
+                                <html-render item="item" val='component'></html-render>
+                            </div>
+                        </div>
+
+                        <div ng-if='item.noinput != null'>
+                            <h3 data-oid='{{item.id}}' ng-if='item.name == "Header"'>{{item.label}}</h3>
+                            <h5 data-oid='{{item.id}}' ng-if='item.name == "Section"'>{{item.label}}</h5>
+                        </div>
+                    </script>
+
+                    <div ng-if="sharedData.currentFunction != 5">
+                    <!--
+                        <div>
+                            <div ng-if="sharedData.currentFunction == 9">
+                                <div class="col-md-3 template-zone">
+                                    <div class="box box-grey centerarea">
+                                        <h3>Sign</h3>
+                                        <div class='main'>
+                                            <h5>Private Key</h5>
+                                            <input file2 type="file" ng-model="keys.private_key" />
+                                            <br />
+                                            <textarea ng-model='keys.private_key' rows='15' class='form-control' placeholder="Enter your private key"></textarea>
+                                            <h5>Passphrase</h5>
+                                            <input type='password' ng-model='keys.passphrase' class='form-control' placeholder='Enter your passphrase' />
+                                            <br/>
+                                            <button class='btn' ng-click='sign()'>Sign</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        -->
+
+                            <div ng-if="sharedData.currentFunction == 10">
+                                <div class="col-md-3 template-zone">
+                                    <div class="box box-grey centerarea">
+                                        <h3>Verify</h3>
+                                        <div class='main'>
+                                            <h5>Public Key</h5>
+                                            <input file2 type="file" ng-model="keys.public_key" />
+                                            <br/>
+                                            <textarea rows='15' ng-model='keys.public_key' class='form-control' placeholder="Enter the public key"></textarea>
+                                            <br/>
+                                            <button class='btn' ng-click='verify()'>Verify</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--
+                            <div ng-if="sharedData.currentFunction == 11">
+                                <div class="col-md-3 template-zone">
+                                    <div class="box box-grey centerarea">
+                                        <h3>Fill</h3>
+                                        <div class='main'>
+                                            <h5>Forms</h5>
+                                            <input id='fileSelection' file3 type="file" ng-model="formsInput" on-finish='alert()' multiple />
+                                            <br/>
+                                            <span>{{formsInput.length}} Document(s) selected</span>
+                                            <br/>
+
+                                            <div ng-if="formsInput.length > 0"> 
+                                                <button class='btn' ng-click='clearDoc()'>Clear</button>
+                                                <button class='btn' ng-click='analyse()'>Import</button>
+                                                <div ng-if="rdfaCurrent.length > 0">
+                                                    <h5>Mapping</h5>
+                                                        <table class="table table-bordered">
+                                                            <tbody>
+                                                                <tr ng-repeat='obj in rdfaCurrent'>
+                                                                    <td>
+                                                                        <label>{{obj.field}}</label>
+                                                                        <select class='form-control' ng-change='fill()' ng-model='obj.data'>
+                                                                            <option></option>
+                                                                            <option ng-repeat="option in rdfa" value="{{option}}">{{option}}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    <button class='btn' ng-click='fill()'>Fill</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="SchemaCtr" ng-if="schema.json == null">
+        <div class="container">
+            <h3>Please select an OWL file</h3> File can be found at : <b>{{schema.path}}</b>
+            <input file1 type="file" on-finish='initialize()' data-file="schema.file" />
+        </div>
+    </div>
+</body>
+
+</html>
