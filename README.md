@@ -16,14 +16,23 @@ https://rawgit.com/lenguyenhaohiep/formless3/master/index.html
 
 ## Sign, Import or Fill your form
 1/ Open the form download
+
 2/ Fill the blanks and save your forms
+
 3/ Click the button Import your previous forms to fill the blanks of new forms
-4/ Click the button Sign to sign your form, you will be requested to enter the public key and the passphrase (Open PGP standard) to sign your form
+
+4/ Click the button Sign to sign your form, you will be requested to enter the public key and the passphrase (Open PGP standard) 
+to sign your form
+
 5/ Sign and download your signed form
 
 ## Verify the form signature
-1/ Open the signed form and open the verification tool or go to the Verification Page https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
+1/ Open the signed form and open the verification tool or go to the Verification Page 
+https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
+
 2/ Open the signed form
+
 3/ Provide the public key
+
 4/ Click button Verify to verify the signature of your form
 
