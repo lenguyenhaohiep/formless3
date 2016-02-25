@@ -5,27 +5,25 @@ This project aims to develop a lightweight plug-in for the e-form
 The project is an lightweight plugin that allows design, fill, sign and verify electronic forms. It's html and javascript-based application with the integration of rdfa
 
 # How to use
-## Standalone
-1/ Clone/download this repository and open index.html in any browser which the availability of Javascript  
-
+## Form Creation Tool
+1/ Go to this webpage and design the form that fits your need  
+https://rawgit.com/lenguyenhaohiep/formless3/master/index.html
 
 2/ Drag and drop form components into drop-zone   
 
 
-3/ Download, sign, verify or fill    
+3/ Download your form
 
-Mainscreen with toolbar in leftside and drop-zone in the center, the right side for control properties    
+## Sign, Import or Fill your form
+1/ Open the form download
+2/ Fill the blanks and save your forms
+3/ Click the button Import your previous forms to fill the blanks of new forms
+4/ Click the button Sign to sign your form, you will be requested to enter the public key and the passphrase (Open PGP standard) to sign your form
+5/ Sign and download your signed form
 
-![ScreenShot](https://github.com/lenguyenhaohiep/formless3/blob/master/Screenshots/mainscreen.png)
+## Verify the form signature
+1/ Open the signed form and open the verification tool or go to the Verification Page https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
+2/ Open the signed form
+3/ Provide the public key
+4/ Click button Verify to verify the signature of your form
 
-Description of form controls and functionalites    
-
-![ScreenShot](https://github.com/lenguyenhaohiep/formless3/blob/master/Screenshots/controls.png)
-
-
-## Chrome Extension
-Follow instruction here
-https://developer.chrome.com/extensions/getstarted#unpacked and load the folder as a chrome extension. It's notice that this extension supports some functionalites   
-
-
-![ScreenShot](https://github.com/lenguyenhaohiep/formless3/blob/master/Screenshots/chromeextension.png)
