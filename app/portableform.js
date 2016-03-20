@@ -1,7 +1,8 @@
 scriptFunctionLoaded = true;
 
 function sign () {
-	display('sign');
+	if (checkValidate() == true)
+		display('sign');
 }
 
 function verify() {
@@ -59,10 +60,10 @@ function display(func){
 	var funcHTML = "";
 	switch (func) {
 	    case "sign":
-	        funcHTML = "<h3>Sign</h3><div class='main'><h5>Private Key</h5><input id='file' type='file' /><textarea id='private_key' rows='15' class='form-control' placeholder='Enter your private key'></textarea><h5>Passphrase</h5><input id='passphrase' type='password' class='form-control' placeholder='Enter your passphrase'/><br/><button class='btn' id='sign'>Click to sign this form</button></div>"
+	        funcHTML = "<h3>Sign</h3><div class='main'><h5>Private Key</h5><input id='file' type='file' /><textarea id='private_key' rows='15' class='form-control' placeholder='Import your private key from file or enter here'></textarea><h5>Passphrase</h5><input id='passphrase' type='password' class='form-control' placeholder='Enter your passphrase'/><br/><button class='btn' id='sign'>Click to sign this form</button></div>"
 	        break;
 	    case "verify":
-	        funcHTML = "<h3>Verify</h3><div class='main'><h5>Public Key</h5><input id='file' type='file' /><textarea id='public_key' rows='15' class='form-control' placeholder='Enter the public key'></textarea><br/><button class='btn' id='verify'>Click to verify this form</button></div>"
+	        funcHTML = "<h3>Verify</h3><div class='main'><h5>Public Key</h5><input id='file' type='file' /><textarea id='public_key' rows='15' class='form-control' placeholder='Import your public key from file or enter here'></textarea><br/><button class='btn' id='verify'>Click to verify this form</button></div>"
 	        break;
 	    case "importData":
 	    	var tempForm = '<script type="text/ng-template" id="list2.html"> <ul dnd-list="list"> <li ng-repeat="item in list" ng-include="item.type + \'2.html\'"> </li></ul> </script> <script type="text/ng-template" id="container2.html"> <h5 style="text-align: left">{{item.subtype}}</h5> <div resource="{{item.subtype}}{{item.id}}" data-oid="{{item.id}}" typeof="{{schema.getType(item.name)}}"> <div ng-repeat="list in item.templates" ng-include="\'list2.html\'"></div></div></script> <script type="text/ng-template" id="subProperty2.html"> <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid="{{item.id}}" data-temptype="{{item.semantic.class}}" data-sid="{{item.semantic.id}}"> <div ng-repeat="list in item.templates" ng-include="\'list2.html\'"></div></div></script> <script type="text/ng-template" id="item2.html"> <div ng-if="item.noinput==null"> <label class="label-view">{{item.label}}</label> <span ng-if="item.required==\'yes\'" class="required-field">*</span> <br/> <div class="control-block"> <html-render item="item" val="component"></html-render> </div></div><div ng-if="item.noinput !=null"> <h3 data-oid="{{item.id}}" ng-if="item.name==\'Header\'">{{item.label}}</h3> <h5 data-oid="{{item.id}}" ng-if="item.name==\'Section\'">{{item.label}}</h5> </div></script> <div ng-repeat="(zone, list) in sharedData.models.dropzones" style="display:none" class="col-md-6 template-zone"> <div id="form2" class="box box-grey centerarea"> <div ng-include="\'list2.html\'" class="form-final" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/"> </div></div></div>';

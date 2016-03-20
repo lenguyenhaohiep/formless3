@@ -27,6 +27,16 @@ function cleanHTML(dom){
 
     for (var i = 0; i < atts.length ; i++){
         var att = atts[i].nodeName;
+
+        //case of required
+        var tag = "ng-required"
+        if (att == tag){
+            var val = dom.getAttribute(tag);
+            dom.removeAttribute(tag);
+            if (val == 'yes')
+                dom.setAttribute("required", true);
+        }
+
         for (var j=0; j < invalidAttrs.length; j++){
             if (att == invalidAttrs[j]){
                 dom.removeAttribute(att);

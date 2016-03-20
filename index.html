@@ -184,7 +184,7 @@
                         </div>
                         <!--<div class="col-md-3">-->
 
-                            <div class="box box-grey box-padding propbar">
+                            <div class="box box-grey box-padding propbar" style="height:40vh">
                                 <h3>Properties</h3>
 
                                 <div ng-if="models.selected.type == 'item'">
@@ -254,8 +254,8 @@
                         <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
                             <div id='form' class="box box-grey centerarea">
                                 <!-- The dropzone also uses the list template -->
-                                <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
-                                </div>
+                                    <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+                                    </div>
                             </div>
                         </div>
 

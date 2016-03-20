@@ -101,7 +101,8 @@ body {
     height: 96vh;
 }
 .propbar {
-    min-height: 45vh;
+    height: 45vh;
+    overflow-x: scroll;
 }
 .centerarea {
     min-height: 100vh;
@@ -160,7 +161,6 @@ input:valid {
 }
 input:invalid ~ .input-validation::before {
     color: red;
-    content: "Matched format required";
 }
 input:invalid {
     color: red;

@@ -49,7 +49,6 @@ input:valid {
 }
 
 input:invalid ~ .input-validation::before {
-	content: "Matched format required";    
 	color: red;
 }
 

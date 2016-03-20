@@ -161,7 +161,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             component: COMPONENT_RADIO,
             field_options: DEFAULT_OPTIONS,
             value: null,
-            properties: PROPERTIES_DEFAULT,
+            properties: PROPERTIES_DEFAULT_RADIO,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "item",
@@ -415,7 +415,7 @@ mainApp.service('sharedData', function($compile, $sce) {
      */
      sharedData.htmlToTemplate = function(html, _class, _id) {
         var res = [];
-        var xPath = "/html/body/div/div/ul/li";
+        var xPath = "/html/body/form/div/div/ul/li";
         var xPath2 = "/html/body/div/div/ul";
         var parser = new DOMParser();
         var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
