@@ -417,6 +417,8 @@ mainApp.service('sharedData', function($compile, $sce) {
         var res = [];
         var xPath = "/html/body/form/div/div/ul/li";
         var xPath2 = "/html/body/div/div/ul";
+        var xPath3 = "/html/body/div/div/ul/li";
+
         var parser = new DOMParser();
         var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
 
@@ -430,12 +432,15 @@ mainApp.service('sharedData', function($compile, $sce) {
         sharedData.title = html.title;
 
         var li = result.iterateNext();
+        if (!li)
+            li = html.evaluate(xPath3, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null).iterateNext();
         //in case of a container
 
         var count = 0;
 
         while (li) {
             htmlDoc = parser.parseFromString(li.innerHTML, "text/html");
+            console.log (li.innerHTML);
             //res.templates.push(sharedData.htmlToTemplate(htmlDoc));
             //check item or container
             var check = htmlDoc.evaluate(xPath2, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
