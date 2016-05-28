@@ -48,6 +48,16 @@ function cleanHTML(dom){
         cleanHTML(dom.childNodes[k]);
 }
 
+function clearComment(html){
+    pattern = /<!--((?!-->).)*-->(\\n)*/
+    res = html
+    while (res.search(pattern) != -1){
+        res = res.replace(pattern,'')
+        console.log(res)
+    }
+    return res
+}
+
 /*
  * Find the similarity between 2 strings
  * 

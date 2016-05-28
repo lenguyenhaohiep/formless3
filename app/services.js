@@ -418,9 +418,11 @@ mainApp.service('sharedData', function($compile, $sce) {
         var xPath = "/html/body/form/div/div/ul/li";
         var xPath2 = "/html/body/div/div/ul";
         var xPath3 = "/html/body/div/div/ul/li";
+        //*[@id="form"]/div/ul/li/div/div/ul/li[1]
 
         var parser = new DOMParser();
         var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        console.log(html)
 
 
         /*
@@ -432,15 +434,17 @@ mainApp.service('sharedData', function($compile, $sce) {
         sharedData.title = html.title;
 
         var li = result.iterateNext();
-        if (!li)
-            li = html.evaluate(xPath3, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null).iterateNext();
+        if (!li) {
+            result = html.evaluate(xPath3, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+            li = result.iterateNext();
+        }
         //in case of a container
 
         var count = 0;
 
         while (li) {
+            console.log("inner", li.innerHTML)
             htmlDoc = parser.parseFromString(li.innerHTML, "text/html");
-            console.log (li.innerHTML);
             //res.templates.push(sharedData.htmlToTemplate(htmlDoc));
             //check item or container
             var check = htmlDoc.evaluate(xPath2, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
@@ -464,9 +468,11 @@ mainApp.service('sharedData', function($compile, $sce) {
                     //container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
                     //parse controls belongs to this object
+                    console.log(htmlDoc)
                     container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
                     //add to list
                     res.push(container);
+                    console.log(container)
                 } else {
                     //if it is a container => an object => find name, subtype, id
 

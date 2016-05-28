@@ -42,3 +42,8 @@ var COMPONENT_SIGNATURE = "<input data-oid='{{item.id}}' class= 'fileupload' fil
 var COMPONENT_ATTACH = "<input data-oid='{{item.id}}' class= 'fileupload' fileimage type-mode=2 ng-model='item.value' data-tempproperty='{{item.semantic.prefix}}{{item.semantic.property}}' type='file' multiple accept='image/*' ng-required='{{item.required}}' title='Image format is required, at least one image is required'/><div ng-repeat-start='img in item.value' class='image-line'><span>{{img.name}}</span><img alt='' property='{{item.semantic.prefix}}{{item.semantic.property}}' src='{{img.src}}' title='{{img.name}}' ><button ng-click='$parent.$parent.deleteImage(item,img)'>Remove</button></div><br ng-repeat-end />";
 var COMPONENT_HEADER = "<h3 data-oid='{{item.id}}'>{{item.label}}</h3>";
 var COMPONENT_SECTION = "<h3 data-oid='{{item.id}}'>{{item.label}}</h3>";
+
+var test = 
+`sas
+sasas
+sasas`

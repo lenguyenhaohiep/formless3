@@ -81,8 +81,10 @@ function display(func){
 	    document.body.appendChild(div);
 
 	    var dialog = document.getElementById('window');
-	    dialog.style.width = "500px";
+	    dialog.style.width = "800px";
 	    dialog.style.height = "500px";
+	    dialog.style.overflow = "scroll"
+	    dialog.style.resize = "both"
 
 	    document.getElementById('exit').onclick = function() {
 	    	overlay();    
