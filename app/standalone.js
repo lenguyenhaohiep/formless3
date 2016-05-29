@@ -10,7 +10,10 @@ var htmlButtons =
 var htmlButtonVerificaton = 
 `<a id="b-verify" onclick="verify()">Open Verification Tool</a>`
 
-var domain='/Volumes/DATA/dev/formless3/'
+//for dev
+//var domain='/Volumes/DATA/dev/formless3/'
+
+var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
 
 var formExJS = 
 `<script src="`+domain+`assets/js/openpgp.js"></script>
