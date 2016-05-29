@@ -13,10 +13,28 @@ function importData(){
 	display('importData');
 }
 
+function printPage(){
+	window.print()
+}
+
+function signByImage(){
+	if (checkValidate() == true) {
+    	disableAll('form', true, null);
+    	updateStateOfForm()
+        var t = document.title + ".html",
+            n = window.prompt("Please enter the file name", t);
+        if (null != n && n !== !1) {
+            var i = document.getElementById("b-lock");
+            i.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), i.download = t
+        }
+	}
+}
+
 
 function overlay() {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+	document.body.style.overflow= (el.style.visibility == "visible") ? "hidden" : "auto";
 }
 
 /*
@@ -67,13 +85,13 @@ function display(func){
 	        break;
 	    case "importData":
 	    	var tempForm = '<script type="text/ng-template" id="list2.html"> <ul dnd-list="list"> <li ng-repeat="item in list" ng-include="item.type + \'2.html\'"> </li></ul> </script> <script type="text/ng-template" id="container2.html"> <h5 style="text-align: left">{{item.subtype}}</h5> <div resource="{{item.subtype}}{{item.id}}" data-oid="{{item.id}}" typeof="{{schema.getType(item.name)}}"> <div ng-repeat="list in item.templates" ng-include="\'list2.html\'"></div></div></script> <script type="text/ng-template" id="subProperty2.html"> <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid="{{item.id}}" data-temptype="{{item.semantic.class}}" data-sid="{{item.semantic.id}}"> <div ng-repeat="list in item.templates" ng-include="\'list2.html\'"></div></div></script> <script type="text/ng-template" id="item2.html"> <div ng-if="item.noinput==null"> <label class="label-view">{{item.label}}</label> <span ng-if="item.required==\'yes\'" class="required-field">*</span> <br/> <div class="control-block"> <html-render item="item" val="component"></html-render> </div></div><div ng-if="item.noinput !=null"> <h3 data-oid="{{item.id}}" ng-if="item.name==\'Header\'">{{item.label}}</h3> <h5 data-oid="{{item.id}}" ng-if="item.name==\'Section\'">{{item.label}}</h5> </div></script> <div ng-repeat="(zone, list) in sharedData.models.dropzones" style="display:none" class="col-md-6 template-zone"> <div id="form2" class="box box-grey centerarea"> <div ng-include="\'list2.html\'" class="form-final" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/"> </div></div></div>';
-	    	funcHTML = "<h3>Import</h3> <div id='FunctionCtr' class='main'> "+tempForm+" <h5>Forms</h5> <input id='fileSelection' file3 type='file' ng-model='formsInput' on-finish='alert()' multiple/> <br/> <span>{{formsInput.length}} Document(s) selected</span> <br/> <div ng-if='formsInput.length > 0'> <button class='btn' ng-click='clearDoc()'>Clear</button> <button class='btn' ng-click='analyse2()'>Import</button> <div ng-if='rdfaCurrent.length > 0'> <h5>Mapping</h5> <table class='table table-bordered'> <tbody> <tr ng-repeat='obj in rdfaCurrent'> <td> <label>{{obj.field}}</label> <select class='form-control' ng-change='fill()' ng-model='obj.data'> <option></option> <option ng-repeat='option in rdfa' value='{{option}}'>{{option}}</option> </select> </td></tr></tbody> </table> <button class='btn' ng-click='fill2()'>Fill</button> </div></div></div>";
+	    	funcHTML = "<h3>Import</h3> <div id='FunctionCtr' class='main'> "+tempForm+" <h5>Forms</h5> <input id='fileSelection' file3 type='file' ng-model='formsInput' on-finish='alert()' multiple/> <br/> <span>{{formsInput.length}} Document(s) selected</span> <br/> <div ng-if='formsInput.length > 0'> <button class='btn' ng-click='clearDoc()'>Clear</button> <button class='btn' ng-click='analyse2()'>Import</button> <div ng-if='rdfaCurrent.length > 0'> <h5>Mapping</h5> <table class='table table-bordered'> <tbody> <tr ng-repeat='obj in rdfaCurrent'> <td> <label>{{obj.field}}</label> <select class='form-control' ng-change='fill()' ng-model='obj.data'> <option></option> <option ng-repeat='option in rdfa' value='{{option}}'>{{option}}</option> </select> </td></tr></tbody> </table> <button id='b-fill' class='btn' ng-click='fill2()'>Fill</button> </div></div></div>";
 	        break;
 	    default:
 	        break;
 	}
 
-	var dialogHTML = '<div id="overlay"><div id="window"><button id="exit">Exit</button>' + funcHTML + '</div></div>';
+	var dialogHTML = '<div id="overlay"><div id="window"><button id="exit">×</button>' + funcHTML + '</div></div>';
 	var div = document.createElement("div");
 	div.id = 'append';
 	div.innerHTML = dialogHTML;
@@ -85,6 +103,19 @@ function display(func){
 	    dialog.style.height = "500px";
 	    dialog.style.overflow = "scroll"
 	    dialog.style.resize = "both"
+
+	    document.onkeydown = function(evt) {
+		    evt = evt || window.event;
+		    var isEscape = false;
+		    if ("key" in evt) {
+		        isEscape = evt.key == "Escape";
+		    } else {
+		        isEscape = evt.keyCode == 27;
+		    }
+		    if (isEscape) {
+		    	overlay();
+		    }
+		};
 
 	    document.getElementById('exit').onclick = function() {
 	    	overlay();    

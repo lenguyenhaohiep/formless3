@@ -9,6 +9,7 @@
      overflow: none;
      font-size: 12px;
      color: black;
+     background-color: rgba(0,0,0, 0.7); /* Black w/opacity */
 }
 
 #overlay #window {
@@ -18,23 +19,93 @@
      border: 2px solid #000;
      padding:15px;
      z-index: 1001;
-     opacity: 1;
 }
 
 #overlay h3{
-	font-size: 16px;
-	text-align: center;
+     font-size: 16px;
+     text-align: center;
 }
 
 #overlay h5{
-	font-size: 14px;
+     font-size: 14px;
 }
 #overlay button, #overlay input, #overlay textarea{
-	margin: 5px;
+     margin: 5px;
 }
 #overlay textarea, #overlay input[type=password]{
-	width: 96%;
+     width: 96%;
 }
 #overlay label{
-	min-width: 300px;
+     min-width: 300px;
+}
+
+#overlay #exit{
+     float: right;
+     position: fixed;
+     top: 0;
+     right: 0;
+     background: transparent;
+     color: white;
+     border: none;
+     font-size: 24px;
+     text-align: right;
+}
+
+#overlay h3, #overlay h5{
+     margin: 0
+}
+
+#overlay h3{
+     font-size: 24px;
+}
+
+#overlay button{
+     font-family: inherit;
+     font-size: 12px;
+     border-radius: 3px;
+     border: none;
+     background-color: #2b669a;
+     color: white;
+     height: 30px;
+     min-width: 80px;
+}
+
+
+@media print {
+     @page { 
+          margin: 10%; 
+     }
+     a {
+          display: none;
+     }
+     input, textarea, select, input:invalid, textarea:invalid{
+          border: none !important;
+          border-bottom: 1px black dotted !important;
+          color: black;
+     }
+     select{
+          appearance: none;
+          -moz-appearance: none;
+          -webkit-appearance: none;
+          border-radius: 0px;
+     }
+     #form, .form-final{
+          border: none;
+          box-shadow: none;
+     }
+     .image-line span{
+          display: none !important;
+     }
+     .multiple{
+          display: none !important;
+     }
+     input[type='file']{
+          display: none !important;
+     }
+     input[multiple] < div {
+          display: none !important;
+     }
+     button{
+          display: none !important;
+     }
 }

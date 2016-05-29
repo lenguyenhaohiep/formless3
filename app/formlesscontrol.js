@@ -17,7 +17,7 @@ function hashFunction(str){
  */
 
 function cleanHTML(dom){
-    var invalidAttrs = ['ng-repeat', 'ng-include','ng-if','ng-model','ng-repeat-start','ng-repeat-end','ng-click','ng-value','ng-model','ng-options','dnd-list','item','fileimage','type-mode', 'val', 'data'];
+    var invalidAttrs = ['ng-repeat', 'ng-include','ng-if','ng-model','ng-repeat-start','ng-repeat-end','ng-click','ng-value','ng-model','ng-show','ng-options','dnd-list','item','fileimage','type-mode', 'val', 'data', 'ng-class'];
     if (dom.attributes == undefined) return;
 
     var atts = [];
@@ -53,9 +53,20 @@ function clearComment(html){
     res = html
     while (res.search(pattern) != -1){
         res = res.replace(pattern,'')
-        console.log(res)
     }
     return res
+}
+
+
+function findByXpath(html, listXpath){
+    for (i=0; i < listXpath.length; i++){
+        result = html.evaluate(listXpath[i], html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        li = result.iterateNext();
+        if (li) {
+            return html.evaluate(listXpath[i], html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        }
+    }
+    return result;
 }
 
 /*
@@ -150,7 +161,11 @@ function create_line_image(object, source, name) {
     });
 
     var div = document.createElement('div');
-    div.className = 'image-line';
+    if (multiple != null) {
+        div.className = 'image-line multiple';        
+    } else {
+        div.className = 'image-line';        
+    }
     div.appendChild(span);
     div.appendChild(image);
     div.appendChild(button);

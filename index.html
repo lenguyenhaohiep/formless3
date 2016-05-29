@@ -29,6 +29,7 @@
     <script src="app/directives.js"></script>
     <script src="app/services.js"></script>
     <script src="app/formlesscontrol.js"></script>
+    <script src="app/standalone.js"></script>
 </head>
 
 <body ng-app="MainApp" ng-controller="FunctionCtr" id="FunctionCtr" data-ng-init="init()">
@@ -153,49 +154,53 @@
                     </center>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="box box-grey box-padding leftbar">
-                            <h3>Toolbox</h3>
-                            <div class='menubar'>
-                                <span href="#" ng-repeat="item in commands" ng-show="item.disable == false" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
-			    		       </span>
-                            </div>
+                    <div class="col-md-3 leftbar">
+                            <uib-accordion close-others="false">
+                                <uib-accordion-group is-open="true">
+                                <uib-accordion-heading>
+                                Toolbox <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': False}"></i>
+                                </uib-accordion-heading>
 
-                            <div class="menubar">
-                                <div ng-if="sharedData.signed == false">
-                                    <h5>Sections</h5>
-                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type == 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
-                                    </span>
-                                    <br/>
-                                    <h5>Fields</h5>
-                                    <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
-    						        </span>
-                                    <!--
-                                    <br/>
-                                    <h5>Restrict Editing</h5>
-                                    <button ng-click='lock()'>Enable</button> -->
+                                <div class='menubar'>
+                                    <span href="#" ng-repeat="item in commands" ng-show="item.disable == false" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
+                                   </span>
                                 </div>
-                                <!--
-                                <div ng-if="restrictMode == true">
-                                    <button ng-click='unlock()'>Disable</button>
-                                </div> -->
-                            </div>
 
-                        </div>
-                        <!--<div class="col-md-3">-->
+                                <div class="menubar">
+                                    <div ng-if="sharedData.signed == false">
+                                        <h5>Sections</h5>
+                                        <span href="#" ng-repeat="item in models.templates" ng-show="item.type == 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+                                        </span>
+                                        <br/>
+                                        <h5>Fields</h5>
+                                        <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+                                        </span>
+                                        <!--
+                                        <br/>
+                                        <h5>Restrict Editing</h5>
+                                        <button ng-click='lock()'>Enable</button> -->
+                                    </div>
+                                    <!--
+                                    <div ng-if="restrictMode == true">
+                                        <button ng-click='unlock()'>Disable</button>
+                                    </div> -->
+                                </div>
 
-                            <div class="box box-grey box-padding propbar" style="height:40vh">
-                                <h3>Properties</h3>
+                            </uib-accordion-group>
+                            <uib-accordion-group is-open="true">
+                                <uib-accordion-heading>
+                                Properties <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': false}"></i>
+                                </uib-accordion-heading>
 
                                 <div ng-if="models.selected.type == 'item'">
                                     <strong>Type: </strong> {{models.selected.name}}
                                     <br>
                                     <strong ng-if="models.selected.required != null">
                                 Require <input type="checkbox" ng-model="models.selected.required" ng-true-value="'yes'" ng-false-value="'no'">
-                            </strong>
+                                    </strong>
                                     <br/>
                                     <strong>Label: </strong>
-                                    <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+                                    <textarea ng-model="models.selected.label" class="form-control" style="margin-top: 5px" rows="2"></textarea>
 
                                     <div ng-if='models.selected.properties != null'>
                                         <html-render item='models.selected' val='properties'></html-render>
@@ -237,8 +242,12 @@
                                     <strong>Property: </strong>
                                     <input type='text' ng-model="models.selected.semantic.property" class='form-control' uib-typeahead="property for property in findProperties(models.selected.semantic.class) | filter:$viewValue" typeahead-min-length="0"/>
                                 </div>
-                            </div>
-                        <!--</div>-->
+                                <div ng-if="models.selected != null && models.selected.type != 'subProperty' && models.selected.name != 'StaticText'">
+                                    <strong>Note: </strong>         
+                                    <input type='text' ng-model="models.selected.note" class='form-control'/>
+                                </div>
+                            </uib-accordion-group>
+                          </uib-accordion>                            
                     </div>
 
                     <!--Design view -->
@@ -277,33 +286,47 @@
                     <!-- This template is responsible for rendering a container element. It uses
 			     the above list template to render each container column -->
                     <script type="text/ng-template" id="container2.html">
-                        <h5 style="text-align: left">{{item.subtype}}</h5>
-                        <div resource="{{item.subtype}}{{item.id}}" data-oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
-                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        <div class='item-box' ng-class="{'item-selected' : item==models.selected}" ng-click='setSelectedItem(item, $event)'>
+                            <h5 style="text-align: left">{{item.subtype}}</h5>
+                            <span class="note-sec" ng-show="item.note != ''">{{item.note}}</span>
+                            <div resource="{{item.subtype}}{{item.id}}" data-oid='{{item.id}}' typeof="{{schema.getType(item.name)}}">
+                                <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                            </div>
                         </div>
                     </script>
 
                     <script type="text/ng-template" id="subProperty2.html">
-                        <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid='{{item.id}}' data-temptype='{{item.semantic.class}}' data-sid='{{item.semantic.id}}'>
-                            <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                        <div class='item-box' ng-class="{'item-selected' : item==models.selected}" ng-click='setSelectedItem(item, $event)'>
+                            <div property="{{item.subtype}}" typeof="{{schema.getType(item.name)}}" data-oid='{{item.id}}' data-temptype='{{item.semantic.class}}' data-sid='{{item.semantic.id}}'>
+                                <div ng-repeat="list in item.templates" ng-include="'list2.html'"></div>
+                            </div>
                         </div>
                     </script>
 
                     <!-- Template for a normal list item -->
                     <script type="text/ng-template" id="item2.html">
-                        <div ng-if='item.noinput == null'>
-                            <label class='label-view'>{{item.label}}</label>
-                            <span ng-if="item.required == 'yes' " class='required-field'>*</span>
-                            <br/>
-                            <div class='control-block'>
-                                <html-render item="item" val='component'></html-render>
+                        <div class='item-box' ng-class="{'item-selected' : item==models.selected}" ng-click='setSelectedItem(item, $event)'>
+                            <div ng-if='item.noinput == null'>
+                                <label class='label-view'>{{item.label}}</label>
+                                <span ng-if="item.required == 'yes' " class='required-field'>*</span>
+                                <br/>
+                                <span class="note-attr"  ng-show="item.note != ''">{{item.note}}</span>
+                                <div class='control-block'>
+                                    <html-render item="item" val='component'></html-render>
+                                </div>
                             </div>
-                        </div>
 
-                        <div ng-if='item.noinput != null'>
-                            <h3 data-oid='{{item.id}}' ng-if='item.name == "Header"'>{{item.label}}</h3>
-                            <h5 data-oid='{{item.id}}' ng-if='item.name == "Section"'>{{item.label}}</h5>
-                        </div>
+                            <div ng-if='item.noinput != null'>
+                                <h3 data-oid='{{item.id}}' ng-if='item.name == "Header"'>{{item.label}}</h3>
+                                <h5 data-oid='{{item.id}}' ng-if='item.name == "Section"'>{{item.label}}</h5>
+                                <span data-oid='{{item.id}}' ng-if='item.name == "StaticText"' class="static-text">{{item.label}}</span>
+
+                                <br/>
+                                <center ng-if='item.name == "Header"'><span class="note-attr"  ng-show="item.note != ''">{{item.note}}</span></center>
+                                <span ng-if='item.name == "Section"' class="note-attr"  ng-show="item.note != ''">{{item.note}}</span>
+
+                            </div>
+                        <div>
                     </script>
 
                     <div ng-if="sharedData.currentFunction != 5">

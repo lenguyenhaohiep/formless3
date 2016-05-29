@@ -5,6 +5,7 @@
  */
 
 var mainApp;
+var DEFAULT_PROP_CHAR = " \u2192 ";
 
 
 // Load some dependencies for the functionalitites of the form
@@ -194,6 +195,15 @@ else{
         }
     };
 
+    $scope.setSelectedItem = function (item, e) {
+        $scope.models.selected = item
+        var event = e || arguments[0] || window.event;
+        event.stopPropagation();
+        setTimeout(function (){
+            document.getElementsByClassName("selected")[0].scrollIntoView()
+        }, 100); 
+    }
+
     /*
      * Update the semantic info of a node in a list
      * Node belongs to the closest Object
@@ -230,6 +240,9 @@ else{
     $scope.selectItem = function(item) {
         $scope.models.selected = item;
         $scope.updateSemantic($scope.models.dropzones, $scope.models.selected);
+        setTimeout(function (){
+            document.getElementsByClassName("item-selected")[0].scrollIntoView()
+        }, 100); 
     };
 
 
@@ -494,17 +507,17 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var str = $scope.rdfaCurrent[i].field;
 
             //source label (name, subtype, id)
-            var _name = str.split("@")[0];
-            var _subtype = str.split("@")[1];
+            var _name = str.split(DEFAULT_PROP_CHAR)[0];
+            var _subtype = str.split(DEFAULT_PROP_CHAR)[1];
             //var _id = parseInt(str.split("-")[2]);
 
             if ($scope.rdfaCurrent[i].data == null)
                 break;
             //dest (#doc, name, subtype, id)
             var str2 = $scope.rdfaCurrent[i].data;
-            var _nDoc = parseInt(str2.split("@")[0]) - 1;
-            var _obj = str2.split("@")[1];
-            var _subObj = str2.split("@")[2];
+            var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
+            var _obj = str2.split(DEFAULT_PROP_CHAR)[1];
+            var _subObj = str2.split(DEFAULT_PROP_CHAR)[2];
             //var _sid = parseInt(str2.split("-")[3]);
             var _sid = 1;
 
@@ -681,25 +694,20 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var node = document.getElementById("export").cloneNode(true); 
             cleanHTML(node);
             body =  clearComment(node.innerHTML);
-            console.log(body)
         }
                 
         if (signed == false){
-            var js = 'function updateButtonEvent(){var e=document.querySelectorAll("button");for(i=0;i<e.length;i++)"Remove"==e[i].textContent&&e[i].addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))})}function create_line_image(e,t,n){var r=e.getAttribute("multiple"),a=e.parentNode;if(null==r){var o=a.querySelectorAll("div");for(i=0;i<o.length;i++)a.removeChild(o[i])}var u=document.createElement("img");u.setAttribute("property",e.getAttribute("data-tempproperty")),u.setAttribute("alt",""),u.src=t,u.addEventListener("click",function(){window.open(this.src,"_blank")});var l=document.createElement("span");l.innerHTML=n;var d=document.createElement("button");d.innerHTML="Remove",d.addEventListener("click",function(){var e=confirm("Do you want to remove this file");1==e&&(parent2=this.parentNode,parent1=parent2.parentNode,parent1.removeChild(parent2),reset(parent1))});var c=document.createElement("div");c.className="image-line",c.appendChild(l),c.appendChild(u),c.appendChild(d),a.appendChild(c)}function reset(e){var t=e.querySelectorAll("div");0==t.length&&(input=e.querySelector("input"),input.value="")}function updateFileEvent(){var e=document.getElementsByClassName("fileupload");for(i=0;i<e.length;i++)signature=e[i],signature.addEventListener("change",function(){var e=this,t=this.files;if(null!=t)for(var n=0;n<t.length;n++){file=t[n];var i=file.name,r=new FileReader;r.onload=function(t){create_line_image(e,t.target.result,i)},r.readAsDataURL(file)}})}function updateImageEvent(){var e=document.getElementsByTagName("img");for(i=0;i<e.length;i++)e[i].addEventListener("click",function(){window.open(this.src,"_blank")})}function save(){if (checkValidate() == true){var e=document.getElementById("append");e&&e.remove(),updateStateOfForm();var t=document.title+".html",n=window.prompt("Please enter the file name",t);if(null!=n&&n!==!1){var i=document.getElementById("b-save");i.href="data:Application/octet-stream,"+encodeURIComponent(document.documentElement.outerHTML),i.download=t}}}function disable(e){1==e.disable?e.setAttribute("disable","true"):e.removeAttribute("disable")}function updateStateOfForm(){var e=document.getElementById("form");if(null!=e){for(type=["input","textarea"],k=0;k<type.length;k++)for(inputs=e.querySelectorAll(type[k]),i=0;i<inputs.length;i++)input=inputs[i],"checkbox"==input.type||"radio"==input.type?(input.checked?(input.setAttribute("property",input.getAttribute("data-property2")),input.setAttribute("checked","checked")):(input.removeAttribute("property"),input.removeAttribute("checked")),disable(input)):"textarea"==input.type?(input.setAttribute("content",input.value),input.innerHTML=input.value):"file"!=input.type&&(input.setAttribute("content",input.value),input.setAttribute("value",input.value));var t=document.getElementsByTagName("select");for(i=0;i<t.length;i++){for(select=t[i],j=0;j<select.options.length;j++)select.options[j].removeAttribute("selected");-1!=select.selectedIndex&&select.options[select.selectedIndex].setAttribute("selected","selected"),disable(select)}}}function updateFunction(){var e=document.getElementById("b-sign"),t=document.getElementById("b-import"),n=document.getElementById("b-verify");(void 0==window.openpgp||0==scriptFunctionLoaded)&&(disableFunction(e,!0),disableFunction(t,!0),disableFunction(n,!0))}function run(e){switch(e){case"import":importData();break;case"sign":sign();break;case"verify":verify()}}function disableFunction(e,t){if(void 0!=e){e.disabled=t;var n=function(){alert("This feature is not supported in offline mode")};e.onclick=n}}var scriptFunctionLoaded=!1;document.addEventListener("DOMContentLoaded",function(){updateFileEvent(),updateButtonEvent(),updateImageEvent(),updateFunction()});function checkValidate(){var e=document.getElementById("form-validate");if(0==e.checkValidity()){var t=confirm("The form has missing fields or invalid format fields, do you want to continue the process?"),i=document.getElementById("submit");return t?!0:(i.click(),!1)}return!0}';
-            //For production
-            var exJs = '<script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/openpgp.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/portableform.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/angular.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/angular-route.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/lang_en.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/defaultvalue.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/controllers.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/directives.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/services.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/app/formlesscontrol.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/beautify-html.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/beautify.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/beautify-css.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/FileSaver.js"></script> <script src="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/js/angular-drag-and-drop-lists.js"></script> <link rel="stylesheet" href="https://rawgit.com/lenguyenhaohiep/formless3/master/assets/css/portableform.css"/>';        
-            
-            //For development
-            var exJs = '<script src="assets/js/openpgp.js"></script> <script src="app/portableform.js"></script> <script src="assets/js/angular.js"></script> <script src="assets/js/angular-route.js"></script> <script src="app/lang_en.js"></script> <script src="app/defaultvalue.js"></script> <script src="app/controllers.js"></script> <script src="app/directives.js"></script> <script src="app/services.js"></script> <script src="app/formlesscontrol.js"></script> <script src="assets/js/beautify-html.js"></script> <script src="assets/js/beautify.js"></script> <script src="assets/js/beautify-css.js"></script> <script src="assets/js/FileSaver.js"></script> <script src="assets/js/angular-drag-and-drop-lists.js"></script> <link rel="stylesheet" href="assets/css/portableform.css"/>';        
+            var js = formJS
+            var exJs = formExJS
         }
         else {
             var js = "function verify(){window.open('https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html','_blank');}";
             var exJs = '';
         }
         
-        var css = '.form-final h3,.form-final h5,.label-field,a{font-weight:700}.form-final,a{box-shadow:0 0 20px #d1d1d1;border:1px solid #d1d1d1}#a,.form-final,a{background-color:#fff}.form-final h3,.form-final h5{text-align:center;font-weight:700}.form-final .required-field,input:invalid{color:red}#form,a,input:valid{color:#000}a{font-size:12px;border-radius:5px;padding:5px 10px}a:hover{cursor:pointer}body{background-color:#eee;font-family:Arial;font-size:14px;color:#eee}label{display:inline-block;margin:5px 0}.form-final{margin:0 auto;padding:20px;width:700px}.form-final h3{font-size:20px}.form-final h5{font-size:16px}.form-final .form-control{width:100%}.form-final .label-block{border:none;display:inline-block;height:20px;width:100px}.form-final .control-block{display:inline-block;width:100%}.form-final ul{list-style:none;padding-left:0} textarea:invalid, input[type=text]:invalid, input[type=date]:invalid, input[type=email]:invalid, input[type=number]:invalid{border: 1px solid red;}.image-line:hover{background:#f5f5f5}.image-line{height:100px}.image-line span{display:inline-block;padding-left:10px;width:100px}.image-line img{height:100px;padding:10px}';
-        var saveButton = (signed == false || signed == undefined) ? '<a id="b-save" onclick="save()">Save</a>\n<a id="b-import" onclick="run(\'import\')">Import</a>\n<a id="b-sign" onclick="run(\'sign\')">PGP Sign</a>' : '<a id="b-verify" onclick="verify()">Open Verification Tool</a>';
-        
+        var css = formCSS
+        var saveButton = (signed == false || signed == undefined) ? htmlButtons : htmlButtonVerificaton;
+
         var title = sharedData.title != '' ? sharedData.title : "Untitled";
         var html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>'+title+'</title><style type="text/css"> '+css+' </style><script type="text/javascript">'+js+'</script>'+exJs+'</head><body><form id="form-validate" onsubmit="return false;">\n' + saveButton + '\n'+body+'<input id="submit" type="submit" style="display:none"/></form></body></html>';
         
@@ -808,7 +816,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                     for (type in objs[obj]) {
                         for (id in objs[obj][type])
                         //Detect objets label 
-                        $scope.rdfa.push([i + 1, obj, type].join('@'));
+                        $scope.rdfa.push([i + 1, obj, type].join(DEFAULT_PROP_CHAR));
                     }
                 }
                 //Extract data
@@ -829,7 +837,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 for (type in currentObjs[obj]) {
                     for (id in currentObjs[obj][type])
                     $scope.rdfaCurrent.push({
-                        field: [obj, type].join('@'),
+                        field: [obj, type].join(DEFAULT_PROP_CHAR),
                         data: null
                     });
                 }
@@ -856,7 +864,10 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      */
     $scope.analyse2 = function(){
         $scope.findMatchers();
-        $scope.fill2();
+        //$scope.fill2();
+        setTimeout(function(){
+            document.getElementById('b-fill').scrollIntoView()
+        }, 100);
     }
 
     /*
@@ -885,6 +896,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             updateFileEvent();
             updateButtonEvent();
             updateImageEvent();
+            overlay();
         }, 100);
     }
 
@@ -904,9 +916,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 var str2 = $scope.rdfa[j];
 
                 if (checked.indexOf(j) == -1){
-                    arr = str2.split('@');
+                    arr = str2.split(DEFAULT_PROP_CHAR);
                     //Check the similarity between two label of object
-                    val = checkSimilarity(str, arr[1]+'@'+arr[2]);
+                    val = checkSimilarity(str, arr[1]+DEFAULT_PROP_CHAR+arr[2]);
                     //update the most similar
                     if (val > similarity){
                         similarity = val;

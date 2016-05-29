@@ -6,7 +6,7 @@
  */
 .nestedDemo ul[dnd-list],
 .nestedDemo ul[dnd-list] > li {
-	position: relative;
+    position: relative;
 }
 
 /***************************** Dropzone Styling *****************************/
@@ -67,19 +67,16 @@
 /***************************** Element Selection *****************************/
 
 .nestedDemo .dropzone .selected .item {
-    color: #3c763d;
-    background-color: #dff0d8;
+    background-color: #f5f5f5;
+    border: 1px red dotted;
 }
 
 .nestedDemo .dropzone .selected .box {
-    border-color: #d6e9c6;
+    border: 1px red dotted;
 }
 
 .nestedDemo .dropzone .selected .box > h3 {
-    color: #3c763d;
-    background-color: #dff0d8;
-    background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
-    border-color: #d6e9c6;
+    background-color: #f5f5f5;
 }
 
 /***************************** Element type specific styles *****************************/

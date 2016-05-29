@@ -106,6 +106,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Text",
             icon: 'glyphicon-font',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
@@ -116,6 +117,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Number",
             icon: 'glyphicon-sound-5-1',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
@@ -126,6 +128,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Date",
             icon: 'glyphicon-calendar',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
@@ -136,6 +139,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Email",
             icon: 'glyphicon-envelope',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
@@ -146,6 +150,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Paragraph",
             icon: 'glyphicon-align-justify',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: null,
@@ -156,6 +161,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Radio",
             icon: 'glyphicon-record',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             component: COMPONENT_RADIO,
@@ -168,6 +174,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Checkbox",
             icon: 'glyphicon-ok-circle',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             component: COMPONENT_CHECKBOX,
@@ -181,6 +188,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Dropdown",
             icon: 'glyphicon-collapse-down',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             component: COMPONENT_SELECT,
@@ -194,6 +202,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Signature",
             icon: 'glyphicon-pencil',
+            note: '',
             required: REQ_DEFAULT,
             label: DEFAULT_LABEL,
             value: [],
@@ -205,6 +214,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Attached File(s)",
             required: REQ_DEFAULT,
             icon: 'glyphicon-paperclip',
+            note: '',
             label: DEFAULT_LABEL,
             value: [],
             component: COMPONENT_ATTACH,
@@ -215,6 +225,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Header",
             icon: 'glyphicon-header',
+            note: '',
             label: "Header of the form",
             component: COMPONENT_HEADER,
             semantic: DEFAULT_SEMANTIC
@@ -224,8 +235,19 @@ mainApp.service('sharedData', function($compile, $sce) {
             id: 0,
             name: "Section",
             icon: 'glyphicon-minus',
+            note: '',
             label: "Section",
             component: COMPONENT_SECTION,
+            semantic: DEFAULT_SEMANTIC
+        }, {
+            type: "item",
+            noinput: true,
+            id: 0,
+            name: "StaticText",
+            icon: 'glyphicon-tag',
+            note: '',
+            label: "Static Text",
+            component: COMPONENT_STATICTEXT,
             semantic: DEFAULT_SEMANTIC
         }, {
             type: "container",
@@ -233,6 +255,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Person",
             subtype: '',
             icon: 'glyphicon-user',
+            note: '',
             templates: [ [] ]
         }, 
         {
@@ -241,6 +264,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "Thing",
             subtype: '',
             icon: 'glyphicon-star',
+            note: '',
             templates: [ [] ]
         },
         {
@@ -249,6 +273,7 @@ mainApp.service('sharedData', function($compile, $sce) {
             name: "SubProperty",
             subtype: '',
             icon: 'glyphicon-unchecked',
+            note: '',
             semantic: DEFAULT_SEMANTIC,
             templates: [ [] ]
         }
@@ -415,14 +440,18 @@ mainApp.service('sharedData', function($compile, $sce) {
      */
      sharedData.htmlToTemplate = function(html, _class, _id) {
         var res = [];
-        var xPath = "/html/body/form/div/div/ul/li";
-        var xPath2 = "/html/body/div/div/ul";
-        var xPath3 = "/html/body/div/div/ul/li";
+        // Support the old versions
+        var xPath = "/html/body/form/div/div/ul/li/div[contains(@class,'item-box')]";
+        var xPath2 = "/html/body/div/div/ul/div[contains(@class,'item-box')]";
+        var xPath3 = "/html/body/div/div/ul/li/div[contains(@class,'item-box')]";
+        var xPath_old = "/html/body/form/div/div/ul/li";
+        var xPath2_old = "/html/body/div/div/ul";
+        var xPath3_old = "/html/body/div/div/ul/li";
+
         //*[@id="form"]/div/ul/li/div/div/ul/li[1]
 
         var parser = new DOMParser();
-        var result = html.evaluate(xPath, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-        console.log(html)
+
 
 
         /*
@@ -433,27 +462,22 @@ mainApp.service('sharedData', function($compile, $sce) {
         if (html.title != '')
         sharedData.title = html.title;
 
+        var result = findByXpath(html,[xPath, xPath_old, xPath3, xPath3_old])
         var li = result.iterateNext();
-        if (!li) {
-            result = html.evaluate(xPath3, html, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-            li = result.iterateNext();
-        }
+    
         //in case of a container
 
         var count = 0;
 
         while (li) {
-            console.log("inner", li.innerHTML)
             htmlDoc = parser.parseFromString(li.innerHTML, "text/html");
-            //res.templates.push(sharedData.htmlToTemplate(htmlDoc));
             //check item or container
-            var check = htmlDoc.evaluate(xPath2, htmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-
+            var check = findByXpath(htmlDoc, [xPath2, xPath2_old])                
             if (check.iterateNext()) {
                 if (res.templates == null)
                     res.templates = [];
 
-                var container = angular.copy(sharedData.models.templates[12]);
+                var container = angular.copy(sharedData.models.templates[13]);
 
                 var div = htmlDoc.getElementsByTagName('div')[0];
 
@@ -465,14 +489,15 @@ mainApp.service('sharedData', function($compile, $sce) {
                     var temp = div.getAttribute("resource");
                     container.id = parseInt(div.getAttribute('data-oid'));
                     container.subtype = temp.substring(0, temp.length - div.getAttribute('data-oid').length);
+                    note = htmlDoc.getElementsByClassName("note-sec")[0]
+                    container.note = note ? note.textContent : '';
+
                     //container.id = parseInt(temp.substring(temp.length - 1, temp.length));
 
                     //parse controls belongs to this object
-                    console.log(htmlDoc)
                     container.templates[0] = sharedData.htmlToTemplate(htmlDoc, container.name, container.id);
                     //add to list
                     res.push(container);
-                    console.log(container)
                 } else {
                     //if it is a container => an object => find name, subtype, id
 
@@ -512,6 +537,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 "//div/input[@type='file']",
                 "//h3",
                 "//h5",
+                "//span[contains(@class,'static-text')]"
                 ];
 
                 for (i = 0; i < xpaths.length; i++) {
@@ -535,8 +561,11 @@ mainApp.service('sharedData', function($compile, $sce) {
                         }
 
                         //get Labels of Header, Sections
-                        if (i == 10 || i == 11) {
+                        if (i == 10 || i == 11 || i == 12) {
                             item.label = control.textContent;
+                            note = htmlDoc.getElementsByClassName("note-attr")[0]
+                            item.note = note ? note.textContent : '';
+
                         } else {
                             //get label of the control
                             label = htmlDoc.getElementsByTagName("label")[0];
@@ -545,6 +574,8 @@ mainApp.service('sharedData', function($compile, $sce) {
 
                             //check if field is required
                             item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
+                            note = htmlDoc.getElementsByClassName("note-attr")[1]
+                            item.note = note ? note.textContent : '';
                             prop = control.getAttribute("property");
 
                             //in case of file where property in the images, not in input, we use tempproperty

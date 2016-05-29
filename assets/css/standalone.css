@@ -19,9 +19,9 @@
 	font-weight: bold;
 }
 
-.form-final .form-control{
+/*.form-final .form-control{
 	width: 500px;
-}
+}*/
 
 .form-final .label-block{
 	border: none;
@@ -33,6 +33,7 @@
 
 .form-final .control-block{
 	display: inline-block;
+	width: 100%;
 }
 
 .form-final ul{
@@ -42,6 +43,10 @@
 
 .form-final ul li{
 	/*margin: 5px; */
+}
+
+input[type=radio], input[type=checkbox]{
+	margin: 5px;
 }
 
 input:valid {
