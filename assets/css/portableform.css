@@ -71,6 +71,11 @@
      min-width: 80px;
 }
 
+#overlay table{
+     font-style: 12px;
+     color: black;
+}
+
 
 @media print {
      @page { 
@@ -89,6 +94,12 @@
           -moz-appearance: none;
           -webkit-appearance: none;
           border-radius: 0px;
+     }
+     textarea{
+          resize: none;
+     }
+     .img-frame{
+          resize: none;
      }
      #form, .form-final{
           border: none;

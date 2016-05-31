@@ -2,18 +2,18 @@
 var htmlButtons = 
 `<a id="b-save" onclick="save()">Save</a>
 <a id="b-import" onclick="run('import')">Import</a>
-<a id="b-sign" onclick="run('sign')">PGP Sign</a>
-<a id="b-lock" onclick="run('normalsign')">Sign</a>
 <a id="b-print" onclick="run('print')">Print/PDF</a>
+<a id="b-sign" onclick="run('sign')">Lock</a>
 `
 
 var htmlButtonVerificaton = 
 `<a id="b-verify" onclick="verify()">Open Verification Tool</a>`
 
+
+var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
 //for dev
 //var domain='/Volumes/DATA/dev/formless3/'
 
-var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
 
 var formExJS = 
 `<script src="`+domain+`assets/js/openpgp.js"></script>
@@ -45,7 +45,8 @@ a {
 .form-final,
 a {
     box-shadow: 0 0 20px #d1d1d1;
-    border: 1px solid #d1d1d1
+    border: 1px solid #d1d1d1;
+    width: 80px;
 }
 #a,
 .form-final,
@@ -133,7 +134,8 @@ input[type=number]:invalid {
     background: #f5f5f5
 }
 .image-line {
-    height: 100px
+    min-height: 100px;
+    overflow: hidden;
 }
 .image-line span {
     display: inline-block;
@@ -146,8 +148,8 @@ input[type=number]:invalid {
     margin: 10px;
 }
 .image-line img {
-    width: 100px;
-    padding: 10px
+    width: 100%;
+    height: 100%;
 }
 .note-sec, .note-attr{
 	font-size: 12px;
@@ -164,6 +166,14 @@ input, textarea, select{
 }
 input[type=text], input[type=number], input[type=email], input[type=date]{
 	height: 20px;
+}
+.img-frame {
+    resize: both;
+    overflow: auto;
+    margin: 10px;
+    float: left;
+    width: 100px;
+    max-width: 500px;
 }
 `
 
@@ -183,10 +193,13 @@ function create_line_image(e, t, n) {
         var o = a.querySelectorAll("div");
         for (i = 0; i < o.length; i++) a.removeChild(o[i])
     }
+    var frame = document.createElement("div")
+    frame.className="img-frame"
     var u = document.createElement("img");
     u.setAttribute("property", e.getAttribute("data-tempproperty")), u.setAttribute("alt", ""), u.src = t, u.addEventListener("click", function() {
         window.open(this.src, "_blank")
     });
+    frame.appendChild(u)
     var l = document.createElement("span");
     l.innerHTML = n;
     var d = document.createElement("button");
@@ -196,13 +209,13 @@ function create_line_image(e, t, n) {
     });
 
     var div = document.createElement('div');
-    if (multiple != null) {
-        div.className = 'image-line multiple';        
+    if (r != null) {
+        div.className = 'image-line multiple';
+        div.appendChild(l);        
     } else {
         div.className = 'image-line';        
     }
-    div.appendChild(l);
-    div.appendChild(u);
+    div.appendChild(frame);
     div.appendChild(d);
     a.appendChild(div);
 }
