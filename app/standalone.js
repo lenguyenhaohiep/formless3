@@ -30,7 +30,6 @@ var formExJS =
 <script src="`+domain+`assets/js/beautify.js"></script>
 <script src="`+domain+`assets/js/beautify-css.js"></script>
 <script src="`+domain+`assets/js/FileSaver.js"></script>
-<script src="`+domain+`assets/js/angular-drag-and-drop-lists.js"></script>
 <link rel="stylesheet" href="`+domain+`assets/css/portableform.css"/>`
 
 
