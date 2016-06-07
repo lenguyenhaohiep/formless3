@@ -32,6 +32,9 @@
 #overlay button, #overlay input, #overlay textarea{
      margin: 5px;
 }
+#overlay input[type="file"]{
+     width: 70%;
+}
 #overlay textarea, #overlay input[type=password]{
      width: 96%;
 }

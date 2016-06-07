@@ -532,7 +532,6 @@ else{
                 break;
                 case "Radio":
                 case "Dropdown":
-                alert(val)
                 for (var jj = 0; jj < item.field_options.length; jj++) {
                     item.field_options[jj].checked = false;
                     if (item.field_options[jj].label == val) {

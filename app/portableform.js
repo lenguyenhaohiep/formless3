@@ -68,6 +68,13 @@ function overlay() {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 	document.body.style.overflow = (el.style.visibility == "visible") ? "hidden" : "auto";
+	resize = "both"
+	if (el.style.visibility == "visible")
+		resize = "none"
+	imgs = document.getElementsByClassName("img-frame");
+	for (var i=0;i<imgs.length;i++){
+		imgs[i].style.resize = resize
+	}
 }
 
 /*
