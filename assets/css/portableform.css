@@ -89,6 +89,7 @@
      overflow-y: scroll;
      display: block;
      float: left;
+     padding-top: 10px;
 }
 
 @media print {

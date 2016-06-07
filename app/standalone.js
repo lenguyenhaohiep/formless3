@@ -148,7 +148,7 @@ input[type=number]:invalid {
     margin: 10px;
 }
 .image-line img {
-    width: 100%;
+    width: auto;
     height: 100%;
 }
 .note-sec, .note-attr{
@@ -197,7 +197,7 @@ function create_line_image(e, t, n) {
     var frame = document.createElement("div")
     frame.className="img-frame"
     var u = document.createElement("img");
-    u.setAttribute("property", e.getAttribute("data-tempproperty")), u.setAttribute("alt", ""), u.src = t, u.addEventListener("click", function() {
+    u.setAttribute("property", e.getAttribute("data-tempproperty")), u.setAttribute("alt", n), u.src = t, u.addEventListener("click", function() {
         window.open(this.src, "_blank")
     });
     frame.appendChild(u)
@@ -234,11 +234,13 @@ function updateFileEvent() {
         if (null != t)
             for (var n = 0; n < t.length; n++) {
                 file = t[n];
-                var i = file.name,
-                    r = new FileReader;
+                var i = file.name;
+                var r = new FileReader();
                 r.onload = function(t) {
-                    create_line_image(e, t.target.result, i)
-                }, r.readAsDataURL(file)
+                    create_line_image(e, t.target.result, this.fileName)
+                }
+                r.fileName=file.name;
+                r.readAsDataURL(file)
             }
     })
 }

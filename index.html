@@ -173,7 +173,7 @@
                                         </span>
                                         <br/>
                                         <h5>Fields</h5>
-                                        <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'container'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
+                                        <span href="#" ng-repeat="item in models.templates" ng-show="item.type != 'container' && item.name != 'Signature'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}}" aria-hidden="true">
                                         </span>
                                         <!--
                                         <br/>

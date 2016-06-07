@@ -21,17 +21,46 @@ function printPage(){
 }
 
 function signByImage(){
-	if (checkValidate() == true) {
-		overlay();
-    	disableAll('form', true, null);
-    	updateStateOfForm()
-        var t = document.title + ".html",
-            n = window.prompt("Please enter the file name", t);
-        if (null != n && n !== !1) {
-            var i = document.getElementById("b-lock");
-            i.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), i.download = t
-        }
-	}
+	overlay();
+	disableAll('form', true, null);
+	updateStateOfForm()
+    var t = document.title + ".html",
+        n = window.prompt("Please enter the file name", t);
+    if (null != n && n !== !1) {
+        var i = document.getElementById("lock");
+        i.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), i.download = t
+    }
+}
+
+function signByPGP(){
+    private_key = document.getElementById('private_key').value;
+    passphrase = document.getElementById('passphrase').value;
+    if (private_key == '' || passphrase == '') {
+        alert(KEY1_CONFIRM);
+        return;
+    }
+
+    resetOriginal();
+    updateStateOfForm();
+
+    text = document.documentElement.outerHTML;
+
+    scope.$apply(function() {
+    	scope.sign(text, private_key, passphrase);
+        setTimeout(function() {
+       		if (scope.sharedData.originDoc != '')
+            	disableAll('form', true, null);
+        	});
+		}, 100);    
+}
+
+function Lock(){
+    private_key = document.getElementById('private_key').value;
+    passphrase = document.getElementById('passphrase').value;
+    if (private_key == "" && passphrase == "")
+    	signByImage()
+    else
+    	signByPGP()
 }
 
 
@@ -87,12 +116,11 @@ function display(func){
 	        <div class='main'>
 	        	<h5>Private Key</h5>
 	        	<input id='file' type='file' />
-	        	<textarea id='private_key' rows='15' class='form-control' placeholder='Import your private key from file or enter here'></textarea>
+	        	<textarea id='private_key' rows='15' class='form-control' placeholder='If you have a private PGP key, please import or paste it here. Otherwise leave this field empty.'></textarea>
 	        	<h5>Passphrase</h5>
-	        	<input id='passphrase' type='password' class='form-control' placeholder='Enter your passphrase'/>	
+	        	<input id='passphrase' type='password' class='form-control' placeholder='Please provide your passphrase or leave it empty'/>	
 	        	<br/><br/>       
-	        	<a class='btn' id='sign'>PGP Lock</a>
-	        	<a id='b-lock' onclick="signByImage()">Lock without PGP</a>
+	        	<a id='lock' onclick="Lock()">Lock</a>
 	        </div>`
 	        break;
 	    case "verify":
@@ -254,27 +282,6 @@ function display(func){
 	                break;
 	            }
 	            overlay();
-	            document.getElementById('sign').onclick = function() {
-	                private_key = document.getElementById('private_key').value;
-	                passphrase = document.getElementById('passphrase').value;
-	                if (private_key == '' || passphrase == '') {
-	                    alert(KEY1_CONFIRM);
-	                    return;
-	                }
-
-	                resetOriginal();
-	                updateStateOfForm();
-
-	                text = document.documentElement.outerHTML;
-
-	                scope.$apply(function() {
-	                	scope.sign(text, private_key, passphrase);
-		                setTimeout(function() {
-		               		if (scope.sharedData.originDoc != '')
-		                    	disableAll('form', true, null);
-		                	});
-	            		}, 100);    
-	            };
 	            break;
 	        case "verify":
 	            if (!checkSigned(document.body.innerHTML)) {

@@ -276,7 +276,55 @@
             note: '',
             semantic: DEFAULT_SEMANTIC,
             templates: [ [] ]
+        },
+        {
+            type: "container",
+            id: 1,
+            name: "AggreeAction",
+            subtype: '',
+            icon: 'glyphicon-pencil',
+            note: '',
+            templates: [ [  
+                        {
+                            type: "item",
+                            id: 0,
+                            name: "Date",
+                            icon: 'glyphicon-calendar',
+                            note: '',
+                            required: REQ_DEFAULT,
+                            label: "Date",
+                            value: null,
+                            component: COMPONENT_DATE,
+                            semantic: {class: "AggreeAction", id: null, property: "endTime", prefix: ""}
+                        }
+                            ,
+                        {
+                            type: "item",
+                            id: 1,
+                            name: "Text",
+                            icon: 'glyphicon-font',
+                            note: '',
+                            required: REQ_DEFAULT,
+                            label: "City",
+                            value: null,
+                            component: COMPONENT_TEXT,
+                            semantic: {class: "AggreeAction", id: null, property: "location", prefix: ""}
+                        },
+                        {
+                            type: "item",
+                            id: 2,
+                            name: "Signature",
+                            icon: 'glyphicon-pencil',
+                            note: '',
+                            required: REQ_DEFAULT,
+                            label: "Signature",
+                            value: [],
+                            component: COMPONENT_SIGNATURE,
+                            semantic: {class: "AggreeAction", id: null, property: "image", prefix: ""}
+                        }
+            ] ]
         }
+
 
         ],
         dropzones: {
@@ -886,7 +934,7 @@
                     //parse the images
                     if (property.tagName == 'IMG'){
                         _src = property.getAttribute('src');
-                        _name = property.getAttribute('title');
+                        _name = property.getAttribute('alt');
                         _content = {src: _src, name: _name};
                     }
                     else

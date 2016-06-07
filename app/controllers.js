@@ -502,10 +502,6 @@ else{
 
 
     $scope.fillOneItem = function(item, data){
-        var _property = item.semantic.property;
-        var _prefix = item.semantic.prefix;
-        var prop = _prefix + _property;
-
         var val = data
 
         if (val != null && val != undefined)
@@ -584,7 +580,7 @@ else{
             var _id = parseInt(str.split(DEFAULT_PROP_CHAR)[2]);
 
             if ($scope.rdfaCurrent[i].data == null)
-                break;
+                continue;
             //dest (#doc, name, subtype, id)
             var str2 = $scope.rdfaCurrent[i].data;
             var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
@@ -612,10 +608,14 @@ else{
                                 }
                             } else {
                                 $scope.rdfaCurrent[i].check = true;
+                                var _property = item.semantic.property;
+                                var _prefix = item.semantic.prefix;
+                                var prop = _prefix + _property;
                                 var data = null
                                 try{
                                     data = $scope.rdfaData[_nDoc][_obj][_subObj][_sid][prop];
                                 } catch(err){
+                                    console.log(err)
                                 }
                                 $scope.fillOneItem(item, data)
                             }
@@ -636,12 +636,14 @@ else{
         for (var i=0; i < $scope.rdfaCurrent.length; i++){
             if ($scope.rdfaCurrent[i].field == index){
                 var str2 = $scope.rdfaCurrent[i].data;
-                var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
-                var _obj = str2.split(DEFAULT_PROP_CHAR)[1];
-                var _subObj = str2.split(DEFAULT_PROP_CHAR)[2];
-                var _sid = parseInt(str2.split(DEFAULT_PROP_CHAR)[3]); 
-                check = true
-                break;           
+                if (str2 != null && str2 != ""){
+                    var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
+                    var _obj = str2.split(DEFAULT_PROP_CHAR)[1];
+                    var _subObj = str2.split(DEFAULT_PROP_CHAR)[2];
+                    var _sid = parseInt(str2.split(DEFAULT_PROP_CHAR)[3]); 
+                    check = true
+                    break;      
+                }     
             }
         }
         if (check)
@@ -950,7 +952,7 @@ else{
 
         for (var i=0; i<$scope.rdfaCurrent.length; i++){
             var str = $scope.rdfaCurrent[i].field;
-            var similarity = -1;
+            var similarity = 0;
             var trace;
 
             for (var j=0; j<$scope.rdfa.length; j++){
@@ -970,7 +972,7 @@ else{
 
             }
 
-            if (similarity != -1){
+            if (similarity != 0){
                 $scope.rdfaCurrent[i].data = $scope.rdfa[trace];
                 //mark as use
                 checked.push(trace);

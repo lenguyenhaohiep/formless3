@@ -230,7 +230,7 @@ function reset(object) {
 /*
  * Add a trigger to upload file
  */
-function updateFileEvent() {
+function updateFileEventInForm() {
     var signatures = document.getElementsByClassName('fileupload');
     for (i = 0; i < signatures.length; i++) {
         signature = signatures[i];
