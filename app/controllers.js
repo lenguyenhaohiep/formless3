@@ -4,8 +4,8 @@
  * @version 0.1
  */
 
-var mainApp;
-var DEFAULT_PROP_CHAR = " \u2192 ";
+ var mainApp;
+ var DEFAULT_PROP_CHAR = " \u2192 ";
 
 
 // Load some dependencies for the functionalitites of the form
@@ -28,8 +28,8 @@ else{
      * {item[]} models The list of items
      * {schema} schema The schema Service
      */
-    $scope.models = sharedData.models;
-    $scope.schema = schema;
+     $scope.models = sharedData.models;
+     $scope.schema = schema;
 
 
     /*
@@ -38,8 +38,11 @@ else{
      * 
      * @return {item} The item inserted 
      */
-    $scope.updateSemanticDrop = function(event, index, item, external, type, allowedType) {
+     $scope.updateSemanticDrop = function(event, index, item, external, type, allowedType) {
         $scope.selectItem(item);
+        if (item.semantic.class == null){
+            item.semantic.property = item.id
+        }
         return item;
     }
 
@@ -53,7 +56,7 @@ else{
      * @param {string} _class the name of class
      * @param {string[]} Properties corresponding to the class 
      */
-    $scope.findProperties = function(_class) {
+     $scope.findProperties = function(_class) {
         return schema.findProperties(_class);
     };
 
@@ -71,7 +74,7 @@ else{
      * @param {Item} the Item model for a control
      *  
      */
-    $scope.matchProperty = function(prop, item) {
+     $scope.matchProperty = function(prop, item) {
         //find the property from schema, if it doesn't belong to schema, it contains a prefix namespace
         var check = schema.getProp(prop);
         if (check.indexOf(PREFIX) == -1){
@@ -89,7 +92,7 @@ else{
      * @param {string} prop the name of property
      * @param {Item} the Item model for a control
      */
-    $scope.matchTypeOfProperty = function(prop, item) {
+     $scope.matchTypeOfProperty = function(prop, item) {
         var type = schema.getPropType(prop);
         item.name = type;
     }
@@ -101,7 +104,7 @@ else{
      * @param {item} item The item model
      * @param {option} option The option in item model 
      */
-    $scope.setSelect = function(item, option) {
+     $scope.setSelect = function(item, option) {
         //In case of checkbox
         if (item.name != 'Checkbox') {
             angular.forEach(item.field_options, function(i) {
@@ -131,7 +134,7 @@ else{
      * @param {item} item The item model
      * @param {int} index The last index of options
      */
-    $scope.addOption = function(item, index) {
+     $scope.addOption = function(item, index) {
         var new_option = {
             label: "Untitled",
             checked: false
@@ -150,7 +153,7 @@ else{
      * @param {item} item The item model
      * @param {int} the position of the option
      */
-    $scope.removeOption = function(item, index) {
+     $scope.removeOption = function(item, index) {
         var r = confirm(REMOVE_CONFIRM);
         if (r == true) {
             item.field_options.splice(index, 1);
@@ -162,7 +165,7 @@ else{
      *
      * @param {item} item The item to be deleted
      */
-    $scope.removeItem = function(item) {
+     $scope.removeItem = function(item) {
         var r = confirm(REMOVE_CONFIRM);
         if (r == true) {
             $scope.models.selected = null;
@@ -176,12 +179,12 @@ else{
      * @param {item[]} list The List of items
      * @param {item} node The item to be deleted
      */
-    $scope.removeNode = function(list, node) {
+     $scope.removeNode = function(list, node) {
         var l;
         if (list.templates[0] instanceof Array) {
             l = list.templates[0];
         } else
-            l = list.templates;
+        l = list.templates;
 
         for (var i = 0; i < l.length; i++) {
             item = l[i];
@@ -211,14 +214,14 @@ else{
      * @param {item[]} list The List of items
      * @param {item} node The item 
      */
-    $scope.updateSemantic = function(list, node) {
+     $scope.updateSemantic = function(list, node) {
         if (node.type == 'container')
             return;
         var l;
         if (list.templates[0] instanceof Array) {
             l = list.templates[0];
         } else
-            l = list.templates;
+        l = list.templates;
 
         angular.forEach(l, function(item) {
             if (item == node) {
@@ -237,7 +240,7 @@ else{
      *
      * @param {item} item The item/the form control
      */
-    $scope.selectItem = function(item) {
+     $scope.selectItem = function(item) {
         $scope.models.selected = item;
         $scope.updateSemantic($scope.models.dropzones, $scope.models.selected);
         setTimeout(function (){
@@ -253,7 +256,7 @@ else{
      * @param {item} item The item model
      * @param {string} img The Base64 value of an image
      */
-    $scope.deleteImage = function(item, img) {
+     $scope.deleteImage = function(item, img) {
         var r = confirm(REMOVE_CONFIRM);
         if (r == false)
             return;
@@ -272,7 +275,7 @@ else{
 /**
  * The main controller
  */
-mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, schema) {
+ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, schema) {
 
     /*
      * Variables
@@ -287,8 +290,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * {json[]} commands List of functions
      * {sharedData} sharedData SharedData Service
      */
-    $scope.schema = schema;
-    $scope.keys = {
+     $scope.schema = schema;
+     $scope.keys = {
         public_key: "",
         private_key: "",
         passphrase: ""
@@ -304,14 +307,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Operations
      */
-    $scope.init = function(){
+     $scope.init = function(){
         schema.init(SCHEMA);
     }
 
     /* 
      * Read the schema.org when the applications start
      */
-    $scope.initialize = function() {
+     $scope.initialize = function() {
         if (schema.file == null)
             return;
         var reader = new FileReader();
@@ -325,7 +328,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /* 
      * Read the form opened by
      */
-    $scope.loadfile = function(){
+     $scope.loadfile = function(){
         //sharedData.currentFunction = 6;
         if ($scope.openedfile != null){
             sharedData.hashCode = '';
@@ -342,7 +345,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * Update schema from a text, this function is used when interacting with chrome extension
      * schema file is read and stored as text in the localStorage
      */
-    $scope.updateSchema = function(text) {
+     $scope.updateSchema = function(text) {
         schema.parseFormText(text);
     }
 
@@ -353,7 +356,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {string} private_key The private key
      * @param {String} passphrase
      */
-    $scope.sign = function(text, private_key, passphrase) {
+     $scope.sign = function(text, private_key, passphrase) {
         try {
             // Check if private key and passphrase are provided
             if (private_key && passphrase) {
@@ -375,7 +378,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                     message = $scope.getDoc(true, message);
                     //assign the title 
                     sharedData.title = html.title;
-        
+                    
                     //change HTML Code
                     var s1 = '</body>\n\n</html>';
                     var s2 = '';
@@ -392,7 +395,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                 } 
                 // if sign a current form using the tool
                 else {
-                    updateStateOfForm();
+                    updateStateOfFormInTool();
                     message = $scope.getDoc(false, null);
                 }
 
@@ -410,7 +413,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
                 signed.then(function(msg) {
                     alert(SIGN_MESSAGE);
-                    console.log(msg);
                     //fix HTML
                     var s1 = "-----BEGIN PGP SIGNED MESSAGE-----";
                     var s2 = '';
@@ -441,7 +443,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {string} text The text to be signed
      * @param {string} public_key The public key
      */
-    $scope.verify = function(text, public_key) {
+     $scope.verify = function(text, public_key) {
         try {
             if (public_key)
                 $scope.keys.public_key = public_key;
@@ -491,11 +493,79 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * Fill the form automatically
      */
 
-    $scope.fill = function() {
+     $scope.fill = function() {
         sharedData.clear();
         var list = sharedData.models.dropzones.templates;
         $scope.fillAction(list);
+        $scope.fillNonObject(list);
     }
+
+
+    $scope.fillOneItem = function(item, data){
+        var _property = item.semantic.property;
+        var _prefix = item.semantic.prefix;
+        var prop = _prefix + _property;
+
+        var val = data
+
+        if (val != null && val != undefined)
+            switch (item.name) {
+                case "Number":
+                item.value = parseInt(val);
+                break;
+                case "Date":
+                strDate = val;
+                item.value = new Date(strDate.replace('"', '').replace('"', ''));
+                break;
+                case "Checkbox":
+                item.value = [];
+                if (!(val instanceof Array)){
+                    temp = [];
+                    temp.push(val);
+                    val = temp;
+                }
+                for (var kk = 0; kk < item.field_options.length; kk++) {
+                    item.field_options[kk].checked = false;
+                    for (jj = 0; jj < val.length; jj++) {
+                        if (item.field_options[kk].label == val[jj]) {
+                            item.field_options[kk].checked = true;
+                            item.value.push(item.field_options[kk]);
+                        }
+                    }
+                }
+                break;
+                case "Radio":
+                case "Dropdown":
+                alert(val)
+                for (var jj = 0; jj < item.field_options.length; jj++) {
+                    item.field_options[jj].checked = false;
+                    if (item.field_options[jj].label == val) {
+                        item.field_options[jj].checked = true;
+                        item.value = item.field_options[jj];
+                    }
+                }
+                break;
+                case "Signature":
+                item.value = [];
+                item.value.push(val);
+                break;
+                case "Attached File(s)":
+                if (!(val instanceof Array)){
+                    var temp = val;
+                    val = [];
+                    val.push(temp);
+                }    
+                item.value = [];
+                for (jj = 0; jj < val.length; jj++) {
+                    item.value.push(val[jj]);
+                }
+                break;
+                default:
+                item.value = data;
+                break;
+            }
+
+        }
 
     $scope.fillAction = function(list){
         if (!(list instanceof Array)) {
@@ -504,12 +574,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             list = temp;
         }
         for (var i = 0; i < $scope.rdfaCurrent.length; i++) {
+            if ($scope.rdfaCurrent[i].check == true)
+                continue;
             var str = $scope.rdfaCurrent[i].field;
 
             //source label (name, subtype, id)
             var _name = str.split(DEFAULT_PROP_CHAR)[0];
             var _subtype = str.split(DEFAULT_PROP_CHAR)[1];
-            //var _id = parseInt(str.split("-")[2]);
+            var _id = parseInt(str.split(DEFAULT_PROP_CHAR)[2]);
 
             if ($scope.rdfaCurrent[i].data == null)
                 break;
@@ -518,8 +590,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
             var _obj = str2.split(DEFAULT_PROP_CHAR)[1];
             var _subObj = str2.split(DEFAULT_PROP_CHAR)[2];
-            //var _sid = parseInt(str2.split("-")[3]);
-            var _sid = 1;
+            var _sid = parseInt(str2.split(DEFAULT_PROP_CHAR)[3]);
+            //var _sid = 1;
 
             for (var j = 0; j < list.length; j++) {
                 var node = list[j];
@@ -530,93 +602,65 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
                     while (tempSub.indexOf(" ") != -1)
                         tempSub = tempSub.replace(" ","_");
 
-                    if (node.name == _name && tempSub == _subtype) {
+                    if (node.name == _name && tempSub == _subtype && node.id == _id) {
                         for (k = 0; k < node.templates[0].length; k++) {
                             var item = node.templates[0][k];
 
                             if (item.type !== "item") {
-                                if (item.templates != null)
+                                if (item.templates != null){
                                     $scope.fillAction(item);
-                            } else {
-                                var _property = item.semantic.property;
-                                var _prefix = item.semantic.prefix;
-                                var prop = _prefix + _property;
-
-                                var val = null;
-                                
-                                try {
-                                    val = $scope.rdfaData[_nDoc][_obj][_subObj][_sid][prop];
-                                } catch (err) {}
-
-                                if (val != null && val != undefined)
-                                    switch (item.name) {
-                                    case "Number":
-                                        item.value = parseInt(val);
-                                        break;
-                                    case "Date":
-                                        strDate = val;
-                                        item.value = new Date(strDate.replace('"', '').replace('"', ''));
-                                        break;
-                                    case "Checkbox":
-                                        item.value = [];
-                                        if (!(val instanceof Array)){
-                                            temp = [];
-                                            temp.push(val);
-                                            val = temp;
-                                        }
-                                        for (var kk = 0; kk < item.field_options.length; kk++) {
-                                            item.field_options[kk].checked = false;
-                                            for (jj = 0; jj < val.length; jj++) {
-                                                if (item.field_options[kk].label == val[jj]) {
-                                                    item.field_options[kk].checked = true;
-                                                    item.value.push(item.field_options[kk]);
-                                                }
-                                            }
-                                        }
-                                        break;
-                                    case "Radio":
-                                    case "Dropdown":
-                                        for (var jj = 0; jj < item.field_options.length; jj++) {
-                                            item.field_options[jj].checked = false;
-                                            if (item.field_options[jj].label == val) {
-                                                item.field_options[jj].checked = true;
-                                                item.value = item.field_options[jj];
-                                            }
-                                        }
-                                        break;
-                                    case "Signature":
-                                        item.value = [];
-                                        item.value.push(val);
-                                        break;
-                                    case "Attached File(s)":
-                                        if (!(val instanceof Array)){
-                                            var temp = val;
-                                            val = [];
-                                            val.push(temp);
-                                        }    
-                                        item.value = [];
-                                        for (jj = 0; jj < val.length; jj++) {
-                                            item.value.push(val[jj]);
-                                        }
-                                        break;
-                                    default:
-                                        item.value = $scope.rdfaData[_nDoc][_obj][_subObj][_sid][prop];
-                                        break;
                                 }
-
+                            } else {
+                                $scope.rdfaCurrent[i].check = true;
+                                var data = null
+                                try{
+                                    data = $scope.rdfaData[_nDoc][_obj][_subObj][_sid][prop];
+                                } catch(err){
+                                }
+                                $scope.fillOneItem(item, data)
                             }
                         }
                     }
                 }
             }
+ 
         }
+}
+/*
+     * Handle menu tool bar
+     * @param {String} name The current function
+     */
+     $scope.fillNonObject = function(list) {
+        var index = ["Thing", "currentForm", 1].join(DEFAULT_PROP_CHAR)
+        var check = false
+        for (var i=0; i < $scope.rdfaCurrent.length; i++){
+            if ($scope.rdfaCurrent[i].field == index){
+                var str2 = $scope.rdfaCurrent[i].data;
+                var _nDoc = parseInt(str2.split(DEFAULT_PROP_CHAR)[0]) - 1;
+                var _obj = str2.split(DEFAULT_PROP_CHAR)[1];
+                var _subObj = str2.split(DEFAULT_PROP_CHAR)[2];
+                var _sid = parseInt(str2.split(DEFAULT_PROP_CHAR)[3]); 
+                check = true
+                break;           
+            }
+        }
+        if (check)
+            for (var i=0; i < list.length; i++){
+                var item = list[i]
+                if (item.type == "item"){
+                    var prop = item.semantic.prefix + item.id; 
+                    data = $scope.rdfaData[_nDoc][_obj][_subObj][_sid][prop];
+                    $scope.fillOneItem(item, data);
+                }
+            }
     }
+
 
     /*
      * Handle menu tool bar
      * @param {String} name The current function
      */
-    $scope.selectMenu = function(id) {
+     $scope.selectMenu = function(id) {
 
         $scope.sharedData.changeFunction(id);
 
@@ -632,7 +676,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
         if (sharedData.currentFunction == 4) {
             $scope.sharedData.changeFunction(6);
-            updateStateOfForm();
+            updateStateOfFormInTool();
             setTimeout(function() {
                 $scope.save();
             }, 100);
@@ -662,7 +706,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
 
         if (sharedData.currentFunction == 11) {
-            updateStateOfForm();
+            updateStateOfFormInTool();
         }
 
         if (sharedData.currentFunction == 7) {
@@ -677,7 +721,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Trigger to open a file
      */     
-    $scope.openFile = function() {
+     $scope.openFile = function() {
         document.getElementById("tempFile").click();
     }
 
@@ -688,14 +732,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {string} body The main html of the form to be signed
      * @return the html text of the form
      */
-    $scope.getDoc = function(signed, body) {
+     $scope.getDoc = function(signed, body) {
         //get the body part
         if (body == null){
             var node = document.getElementById("export").cloneNode(true); 
             cleanHTML(node);
             body =  clearComment(node.innerHTML);
         }
-                
+        
         if (signed == false){
             var js = formJS
             var exJs = formExJS
@@ -720,7 +764,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         s2 = "div"
         while (html.indexOf(s1) != -1)
             html = html.replace(s1, s2);
-            
+        
         //return the HTML code
         return html_beautify(html);
     }
@@ -730,22 +774,22 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
      * @param {String} text The text/html to be saved
      * @param {bool} signed Check if this is a signed text
      */
-    $scope.save = function(text, signed) {
+     $scope.save = function(text, signed) {
         var filename = sharedData.title != '' ? sharedData.title : "Untitled";
 
         //get the filename of form
         var enterFileName = prompt(ENTER_NAME, filename);
 
-            if (enterFileName != null && enterFileName !== false) {
+        if (enterFileName != null && enterFileName !== false) {
             sharedData.title = enterFileName;
             filename = enterFileName;
             if (text == null) {
                 if (sharedData.originDoc != '')
                     // signed form
-                    html = sharedData.originDoc;
+                html = sharedData.originDoc;
                 else
                     // unsigned form
-                    html = $scope.getDoc(false, null);
+                html = $scope.getDoc(false, null);
             } else {
                 html = text;
             }
@@ -768,7 +812,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Update the display button for the selection of a particular function 
      */
-    $scope.$watch("sharedData.currentFunction", function() {
+     $scope.$watch("sharedData.currentFunction", function() {
         setTimeout(function() {
             angular.forEach($scope.commands, function(item) {
                 item.selected = false;
@@ -779,7 +823,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
         }, 0);
     });
 
-    $scope.$watch("sharedData.lockCode", function() {
+     $scope.$watch("sharedData.lockCode", function() {
         //alert(sharedData.lockCode);
         if (sharedData.lockCode != '')
             $scope.restrictMode = true;    
@@ -788,7 +832,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Clear data of the current form
      */
-    $scope.clearDoc = function(){
+     $scope.clearDoc = function(){
         $scope.formsInput = [];
         $scope.rdfaCurrent = [];
         document.getElementById('fileSelection').value = '';
@@ -797,9 +841,9 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Matching same objects from the current form and from the data 
      */
-    $scope.findMatchers = function(){
+     $scope.findMatchers = function(){
         if ($scope.formsInput.length <= 0)
-                return;
+            return;
 
             //Objects for documents
             $scope.rdfa = [];
@@ -811,14 +855,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             //Detect objects and extract data from files given by user
             for (i = 0; i < $scope.formsInput.length; i++) {
                 //Detect objects
-                var objs = rdfa.parse($scope.formsInput[i], false);
+                var objs = rdfa.parse($scope.formsInput[i].data, false);
                 for (obj in objs) {
                     for (type in objs[obj]) {
                         for (id in objs[obj][type])
                         //Detect objets label 
-                        $scope.rdfa.push([i + 1, obj, type].join(DEFAULT_PROP_CHAR));
-                    }
+                    $scope.rdfa.push([i + 1, obj, type, id].join(DEFAULT_PROP_CHAR));
                 }
+            }
                 //Extract data
                 $scope.rdfaData.push(objs);
             }
@@ -836,10 +880,11 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             for (obj in currentObjs) {
                 for (type in currentObjs[obj]) {
                     for (id in currentObjs[obj][type])
-                    $scope.rdfaCurrent.push({
-                        field: [obj, type].join(DEFAULT_PROP_CHAR),
-                        data: null
-                    });
+                        $scope.rdfaCurrent.push({
+                            field: [obj, type, id].join(DEFAULT_PROP_CHAR),
+                            data: null,
+                            check: false
+                        });
                 }
             }
 
@@ -848,13 +893,13 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
 
             //Detect matched objects
             $scope.autoDectectObject();
-    }
+        }
 
     /*
      * Analyse the forms given by user, detect objects, extract data and automatically fill the current form
      * This function is for the tool, but it is currently disable because the tool doesn't need the fill function
      */
-    $scope.analyse = function() {
+     $scope.analyse = function() {
         $scope.findMatchers();
         $scope.fill();
     }
@@ -862,9 +907,8 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Analyse the form given by user, detect objects and extract data to fill into current form
      */
-    $scope.analyse2 = function(){
+     $scope.analyse2 = function(){
         $scope.findMatchers();
-        //$scope.fill2();
         setTimeout(function(){
             document.getElementById('b-fill').scrollIntoView()
         }, 100);
@@ -873,15 +917,14 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Fill the current form
      */
-    $scope.fill2 = function(){
+     $scope.fill2 = function(){
         // parse the form structure from the form
         sharedData.parseForm(document.documentElement.innerHTML, false);
         $scope.fill();
-        console.log($scope.sharedData)
         setTimeout( function () {
             //
             disableAll('form2', false);
-            updateStateOfForm('form2');
+            updateStateOfFormInTool('form2');
             var div = document.getElementById("form2").cloneNode(true);
             cleanHTML(div);
             body = clearComment(div.innerHTML);
@@ -890,7 +933,6 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
             while (body.indexOf(s1) != -1)
                 body = body.replace(s1, s2);
             var message = html_beautify(body);
-            
             sharedData.clearAll();
             document.getElementById('form').innerHTML = message;
             updateFileEvent();
@@ -903,7 +945,7 @@ mainApp.controller("FunctionCtr", function($scope, $compile, sharedData, rdfa, s
     /*
      * Detect relations between objects by its class name, its sub type and its id
      */
-    $scope.autoDectectObject = function(){
+     $scope.autoDectectObject = function(){
         var checked = [];
 
         for (var i=0; i<$scope.rdfaCurrent.length; i++){

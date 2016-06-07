@@ -13,6 +13,8 @@
  * 
  * @param html: text of html form
  * @return html text fixed
+
+ DEPRECATE
  */
 function fixHtml(html) {
     s1 = '\n-----BEGIN PGP SIGNATURE-----';

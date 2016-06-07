@@ -29,7 +29,6 @@
     <script src="app/directives.js"></script>
     <script src="app/services.js"></script>
     <script src="app/formlesscontrol.js"></script>
-    <script src="app/tool.js"></script>
     <script src="app/standalone.js"></script>
 </head>
 
@@ -262,9 +261,9 @@
                         </div>
 
                         <div id="export" ng-repeat="(zone, list) in models.dropzones" class="col-md-6 template-zone">
-                            <div id='form' class="box box-grey centerarea">
+                            <div id='form' class="box box-grey centerarea" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
                                 <!-- The dropzone also uses the list template -->
-                                    <div ng-include="'list2.html'" class='form-final' vocab="http://schema.org/" prefix="ov: http://personal.schema.example/">
+                                    <div ng-include="'list2.html'" class='form-final' resource="currentForm" typeof="Thing">
                                     </div>
                             </div>
                         </div>

@@ -74,9 +74,10 @@
 
                     var reader = new FileReader();
                     reader.onload = function(e) {
-                        scope.ngModel.push(e.target.result);
+                        scope.ngModel.push({name: this.fileName, data: e.target.result});
                         scope.$apply();
                     }
+                    reader.fileName = file.name;
                     reader.readAsText(file);
                 }
             });

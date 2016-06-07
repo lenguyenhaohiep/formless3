@@ -172,7 +172,8 @@ input[type=text], input[type=number], input[type=email], input[type=date]{
     overflow: auto;
     margin: 10px;
     float: left;
-    width: 100px;
+    height: 100px;
+    width: auto;
     max-width: 500px;
 }
 `
@@ -256,8 +257,12 @@ function save() {
         var t = document.title + ".html",
             n = window.prompt("Please enter the file name", t);
         if (null != n && n !== !1) {
+            if (n.indexOf('.html') == -1)
+                n = n + ".html"
+            c = document.documentElement.outerHTML
+            c = c.replace(c.substring(c.indexOf("head")+5, c.indexOf("meta")-1),'')
             var i = document.getElementById("b-save");
-            i.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), i.download = t
+            i.href = "data:Application/octet-stream," + encodeURIComponent(c), i.download = n
         }
     }
 }

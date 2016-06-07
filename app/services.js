@@ -7,7 +7,7 @@
 /* 
  *  SharedData Service with form models
  */ 
-mainApp.service('sharedData', function($compile, $sce) {
+ mainApp.service('sharedData', function($compile, $sce) {
     /*
      * Properties
      *
@@ -20,12 +20,12 @@ mainApp.service('sharedData', function($compile, $sce) {
      * {string} title The title of the current form
      * {json} models Structure of the form
      */
-    var sharedData = {};
+     var sharedData = {};
 
-    sharedData.signed = false;
-    sharedData.originDoc = "";
-    sharedData.currentFunction = 5;
-    sharedData.commands = [{
+     sharedData.signed = false;
+     sharedData.originDoc = "";
+     sharedData.currentFunction = 5;
+     sharedData.commands = [{
         id: 1,
         name: OPEN,
         icon: "glyphicon-folder-open",
@@ -289,7 +289,7 @@ mainApp.service('sharedData', function($compile, $sce) {
      *
      * @param {file} file The form 
      */
-    sharedData.load = function(file) {
+     sharedData.load = function(file) {
         var reader = new FileReader();
         reader.onload = function() {
             sharedData.parseForm(reader.result);
@@ -302,15 +302,15 @@ mainApp.service('sharedData', function($compile, $sce) {
      *
      * @param {string} name The name of function 
      */
-    sharedData.changeFunction = function(id) {
+     sharedData.changeFunction = function(id) {
         sharedData.currentFunction = id;
         if (id == 4)
             return;
         if (id == 5)
             //Disable form controls in design mode
-            setTimeout(function(){ 
-                disableAll('formExport', true);
-            }, 00);
+        setTimeout(function(){ 
+            disableAll('formExport', true);
+        }, 00);
 
         //if (id != 5)
             //enable forms controls 
@@ -324,15 +324,15 @@ mainApp.service('sharedData', function($compile, $sce) {
                     disableAll('export', true);
                 }
             }, 00);
-    }
+        }
 
-    sharedData.getHashCode = function(){
-        var copyTemplate = angular.copy(sharedData.models.dropzones);
-        sharedData.empty(copyTemplate);
-        var hashCode = hashFunction(JSON.stringify(copyTemplate));
+        sharedData.getHashCode = function(){
+            var copyTemplate = angular.copy(sharedData.models.dropzones);
+            sharedData.empty(copyTemplate);
+            var hashCode = hashFunction(JSON.stringify(copyTemplate));
 
-        return hashCode;
-    }
+            return hashCode;
+        }
 
     /*
      * Empty data of form
@@ -369,14 +369,14 @@ mainApp.service('sharedData', function($compile, $sce) {
     /*
      * Clear all data of the form
      */
-    sharedData.clear = function(){
+     sharedData.clear = function(){
         sharedData.empty(sharedData.models.dropzones);
     }
 
     /*
      * Clear all data and structure of the form
      */
-    sharedData.clearAll = function(){
+     sharedData.clearAll = function(){
         sharedData.models.dropzones.templates = [];
     }
 
@@ -385,11 +385,11 @@ mainApp.service('sharedData', function($compile, $sce) {
      *
      * @param {String} html The html form
      */
-    sharedData.parseForm = function(html, check){
-            parser = new DOMParser();
-            var signed = false;
+     sharedData.parseForm = function(html, check){
+        parser = new DOMParser();
+        var signed = false;
 
-            if (html.indexOf(CHECK_SIGNED_STRING) == -1){
+        if (html.indexOf(CHECK_SIGNED_STRING) == -1){
                 //clear form
                 sharedData.signed = false;
                 sharedData.originDoc = "";
@@ -426,7 +426,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                     alert(ERROR_MODIFICATION);
             }
             */
-    }
+        }
 
     /*
      * Parse in detail form controls from full/ partial HTML with class and id given
@@ -460,11 +460,11 @@ mainApp.service('sharedData', function($compile, $sce) {
             sharedData.lockCode = html.querySelector('#lockCode') != undefined ? html.querySelector('#lockCode').value : '';
         }*/
         if (html.title != '')
-        sharedData.title = html.title;
+            sharedData.title = html.title;
 
         var result = findByXpath(html,[xPath, xPath_old, xPath3, xPath3_old])
         var li = result.iterateNext();
-    
+        
         //in case of a container
 
         var count = 0;
@@ -501,7 +501,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                 } else {
                     //if it is a container => an object => find name, subtype, id
 
-                    var subProperty = angular.copy(sharedData.models.templates[14]);
+                    var subProperty = angular.copy(sharedData.models.templates[15]);
                     subProperty.name = div.getAttribute("typeof");
                     subProperty.subtype = div.getAttribute("property");
                     subProperty.id = parseInt(div.getAttribute('data-oid'));
@@ -653,7 +653,7 @@ mainApp.service('sharedData', function($compile, $sce) {
                                     checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
                                 };
                                 if (inputs[j].hasAttribute('value'))
-                                item.field_options.push(option)
+                                    item.field_options.push(option)
 
                                 if (inputs[j].getAttribute("selected") == "selected"){
                                     item.value = option;
@@ -688,7 +688,7 @@ mainApp.service('sharedData', function($compile, $sce) {
 /* 
  *  Schema Service to parse schema.json to array, to find property and class in the schema
  */
-mainApp.service('schema', function() {
+ mainApp.service('schema', function() {
     var schema = {};
 
     /*
@@ -699,12 +699,12 @@ mainApp.service('schema', function() {
      * {string[]} objects List of objects in schema
      * {string} path The path of schema
      */
-    schema.file = null;
-    schema.json = null;
-    schema.objects = [];
-    schema.path = 'assets/schema/schemaorg.json';
+     schema.file = null;
+     schema.json = null;
+     schema.objects = [];
+     schema.path = 'assets/schema/schemaorg.json';
 
-    schema.init = function(json){
+     schema.init = function(json){
         schema.json = json;
         angular.forEach(schema.json["types"], function(key, value) {
             schema.objects.push(value);
@@ -716,7 +716,7 @@ mainApp.service('schema', function() {
      *
      * @param {string} text The text of schema
      */
-    schema.initialize = function(text) {
+     schema.initialize = function(text) {
         try{
             schema.json = angular.fromJson(text);
         }catch(err){
@@ -738,7 +738,7 @@ mainApp.service('schema', function() {
      *
      * @param {string} jsonText The json text of schema
      */
-    schema.parseFormText = function(jsonText) {
+     schema.parseFormText = function(jsonText) {
         schema.json = angular.fromJson(jsonText);
         angular.forEach(schema.json["types"], function(key, value) {
             schema.objects.push(value);
@@ -751,7 +751,7 @@ mainApp.service('schema', function() {
      * @param {string} _class The class name
      * @return {string[]} Array of properties corresponding to a class, return [] if there is no property
      */
-    schema.findProperties = function(_class) {
+     schema.findProperties = function(_class) {
         if (schema.json["types"][_class] == null)
             return [];
         return schema.json["types"][_class]["properties"];
@@ -763,7 +763,7 @@ mainApp.service('schema', function() {
      * @param {string} type The type/classname
      * @return {string} The type, if it doesn't belong to schema.org, it will contain prefix, else, nothing changes
      */
-    schema.getType = function(type) {
+     schema.getType = function(type) {
         return type;
         if (schema.json["types"][type] == null)
             return "Thing";
@@ -775,7 +775,7 @@ mainApp.service('schema', function() {
      * @param {string} type The property
      * @return {string} The property, if it doesn't belong to schema.org, it will contain prefix, else, nothing changes
      */
-    schema.getProp = function(prop) {
+     schema.getProp = function(prop) {
         if (schema.json["properties"][prop] == null)
             return PREFIX + prop;
         return prop;
@@ -788,7 +788,7 @@ mainApp.service('schema', function() {
      * @param {string} prop The property
      * @return {string} The type, if the property doesn't belong to schema.org, it will return ''
      */
-    schema.getPropType = function(prop){
+     schema.getPropType = function(prop){
         if (schema.json["properties"][prop] == null)
             return '';
         return schema.json["properties"][prop]["ranges"][0];
@@ -800,7 +800,7 @@ mainApp.service('schema', function() {
      * @param {string} prop The given property
      * @return {string} The label corresponding to the property
      */
-    schema.getLabel = function(prop){
+     schema.getLabel = function(prop){
         if (schema.json["properties"][prop] == null)
             return '';
         return schema.json["properties"][prop]["label"];    
@@ -814,7 +814,7 @@ mainApp.service('schema', function() {
 /* 
  *  Rdfa Service to parse objects, data from an html file
  */
-mainApp.service('rdfa', function(){
+ mainApp.service('rdfa', function(){
     var rdfa = {};
     /*
      * Parse RDFa from an html text file
@@ -822,7 +822,7 @@ mainApp.service('rdfa', function(){
      * @param {string} html The form
      * @return {json} data parsed from the html form
      */    
-    rdfa.parse = function (html){
+     rdfa.parse = function (html){
 
         // in case of signed message
         if (html.indexOf(CHECK_SIGNED_STRING) != -1){
@@ -842,7 +842,7 @@ mainApp.service('rdfa', function(){
 
             if (_resource == null){
                 _resource = object.getAttribute('property');
-            } else {
+            } else if (_resource != "currentForm") {
                 _resource = _resource.substring(0, _resource.length - _id.length);
             }
 
@@ -858,7 +858,7 @@ mainApp.service('rdfa', function(){
             if (!rdfaInfo[_typeof][_resource]){
                 rdfaInfo[_typeof][_resource] = {};
             }
-            _id = 1; 
+            //_id = 1; 
 
             if (!rdfaInfo[_typeof][_resource][_id]){
                 rdfaInfo[_typeof][_resource][_id] = {};
@@ -891,7 +891,7 @@ mainApp.service('rdfa', function(){
                     }
                     else
                         //get from attribute content, textNode or href 
-                        _content = property.getAttribute('content') || property.textContent || property.getAttribute("href");
+                    _content = property.getAttribute('content') || property.textContent || property.getAttribute("href");
                     
                     if (!rdfaInfo[_typeof][_resource][_id][_property]){
                         rdfaInfo[_typeof][_resource][_id][_property] = _content;

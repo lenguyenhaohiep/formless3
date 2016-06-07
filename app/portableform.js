@@ -1,3 +1,6 @@
+/*
+This is used for the functions which use the external javascritps
+*/
 scriptFunctionLoaded = true;
 
 function sign () {
@@ -19,6 +22,7 @@ function printPage(){
 
 function signByImage(){
 	if (checkValidate() == true) {
+		overlay();
     	disableAll('form', true, null);
     	updateStateOfForm()
         var t = document.title + ".html",
@@ -34,7 +38,7 @@ function signByImage(){
 function overlay() {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-	document.body.style.overflow= (el.style.visibility == "visible") ? "hidden" : "auto";
+	document.body.style.overflow = (el.style.visibility == "visible") ? "hidden" : "auto";
 }
 
 /*
@@ -79,15 +83,16 @@ function display(func){
 	switch (func) {
 	    case "sign":
 	        funcHTML = 
-	        `<h3>Sign</h3>
+	        `<h3>Lock</h3>
 	        <div class='main'>
 	        	<h5>Private Key</h5>
 	        	<input id='file' type='file' />
 	        	<textarea id='private_key' rows='15' class='form-control' placeholder='Import your private key from file or enter here'></textarea>
 	        	<h5>Passphrase</h5>
-	        	<input id='passphrase' type='password' class='form-control' placeholder='Enter your passphrase'/>
-	        	<br/>
-	        	<button class='btn' id='sign'>PGP Sign</button>
+	        	<input id='passphrase' type='password' class='form-control' placeholder='Enter your passphrase'/>	
+	        	<br/><br/>       
+	        	<a class='btn' id='sign'>PGP Lock</a>
+	        	<a id='b-lock' onclick="signByImage()">Lock without PGP</a>
 	        </div>`
 	        break;
 	    case "verify":
@@ -137,11 +142,52 @@ function display(func){
 					</div>
 				</script> 
 				<div ng-repeat="(zone, list) in sharedData.models.dropzones" style="display:none" class="col-md-6 template-zone"> 
-					<div id="form2" class="box box-grey centerarea"> <div ng-include="\'list2.html\'" class="form-final" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/"> 
+					<div id="form2" class="box box-grey centerarea" vocab="http://schema.org/" prefix="ov: http://personal.schema.example/"> 
+						<div ng-include="\'list2.html\'" class="form-final" class='form-final' resource="currentForm" typeof="Thing"> 
+						</div>
 					</div>
-				</div>
-			</div>`;
-	    	funcHTML = "<h3>Import</h3>"+tempForm+" <h5>Forms</h5> <input id='fileSelection' file3 type='file' ng-model='formsInput' on-finish='alert()' multiple/> <br/> <span>{{formsInput.length}} Document(s) selected</span> <br/> <div ng-if='formsInput.length > 0'> <button class='btn' ng-click='clearDoc()'>Clear</button> <button class='btn' ng-click='analyse2()'>Import</button> <div ng-if='rdfaCurrent.length > 0'> <h5>Mapping</h5> <table class='table table-bordered'> <tbody> <tr ng-repeat='obj in rdfaCurrent'> <td> <label>{{obj.field}}</label> <select class='form-control' ng-change='fill()' ng-model='obj.data'> <option></option> <option ng-repeat='option in rdfa' value='{{option}}'>{{option}}</option> </select> </td></tr></tbody> </table> <button id='b-fill' class='btn' ng-click='fill2()'>Fill</button> </div></div></div>";
+				</div>`;
+	    	funcHTML = "<h3>Import</h3>"+tempForm+
+	    	`
+	    		<div class='left-block'>
+	    			<h5>Forms</h5> 
+		    		<input id='fileSelection' file3 type='file' ng-model='formsInput' on-finish='alert()' multiple/> 
+		    		<div ng-if='formsInput.length > 0'> 
+			    		<button class='btn' ng-click='clearDoc()'>Clear</button> 
+			    		<button class='btn' ng-click='analyse2()'>Import</button> 
+		    		</div>
+		    		<br/> 
+		    		<span>{{formsInput.length}} Document(s) selected</span>
+		    	</div>
+		    	<div class='right-block'>
+		    		<p ng-repeat='f in formsInput'>{{$index + 1}} - {{f.name}}</p> 
+	    		</div> 
+	    		<div ng-if='rdfaCurrent.length > 0'> 
+		    		<h5>Mapping</h5> 
+		    		<table class='table table-bordered'> 
+		    			<thead>
+		    				<tr>
+		    					<th>Object \u2192 Instance \u2192 ID</th>
+		    					<th>#Document \u2192 Object \u2192 Instance \u2192 ID</th>
+		    				</tr>
+		    			</thead>
+		    			<tbody> 
+		    				<tr ng-repeat='obj in rdfaCurrent'> 
+		    					<td>
+		    						<label>{{obj.field}}</label> 
+		    					</td>
+		    					<td> 
+		    						<select class='form-control' ng-change='fill()' ng-model='obj.data'> 
+		    							<option></option> 
+		    							<option ng-repeat='option in rdfa' value='{{option}}'>{{option}}</option> 
+		    						</select> 
+		    					</td>
+		    				</tr>
+		    			</tbody> 
+		    		</table> 
+	    			<button id='b-fill' class='btn' ng-click='fill2()'>Fill</button> 
+	    		</div>
+    		</div>`;
 	        break;
 	    default:
 	        break;
@@ -168,7 +214,7 @@ function display(func){
 		    } else {
 		        isEscape = evt.keyCode == 27;
 		    }
-		    if (isEscape) {
+		    if (isEscape && document.getElementById("overlay").style.visibility == "visible") {
 		    	overlay();
 		    }
 		};
