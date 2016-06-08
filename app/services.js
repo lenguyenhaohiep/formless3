@@ -295,7 +295,7 @@
                             label: "Date",
                             value: null,
                             component: COMPONENT_DATE,
-                            semantic: {class: "AggreeAction", id: null, property: "endTime", prefix: ""}
+                            semantic: {class: "AgreeAction", id: null, property: "endTime", prefix: ""}
                         }
                             ,
                         {
@@ -308,7 +308,7 @@
                             label: "City",
                             value: null,
                             component: COMPONENT_TEXT,
-                            semantic: {class: "AggreeAction", id: null, property: "location", prefix: ""}
+                            semantic: {class: "AgreeAction", id: null, property: "location", prefix: ""}
                         },
                         {
                             type: "item",
@@ -320,7 +320,7 @@
                             label: "Signature",
                             value: [],
                             component: COMPONENT_SIGNATURE,
-                            semantic: {class: "AggreeAction", id: null, property: "image", prefix: ""}
+                            semantic: {class: "AgreeAction", id: null, property: "image", prefix: ""}
                         }
             ] ]
         }
