@@ -280,7 +280,7 @@
         {
             type: "container",
             id: 1,
-            name: "AggreeAction",
+            name: "AgreeAction",
             subtype: '',
             icon: 'glyphicon-pencil',
             note: '',
