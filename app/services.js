@@ -622,7 +622,7 @@
 
                             //check if field is required
                             item.required = htmlDoc.getElementsByTagName("span")[0] ? "yes" : "no";
-                            note = htmlDoc.getElementsByClassName("note-attr")[1]
+                            note = htmlDoc.getElementsByClassName("note-attr")[0]
                             item.note = note ? note.textContent : '';
                             prop = control.getAttribute("property");
 

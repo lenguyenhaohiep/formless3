@@ -151,6 +151,7 @@ function display(func){
 	    		</script> 
 	    		<script type="text/ng-template" id="container2.html"> 
 		    		<h5 style="text-align: left">{{item.subtype}}</h5> 
+                    <span class="note-sec" ng-show="item.note != ''">{{item.note}}</span>
 		    		<div resource="{{item.subtype}}{{item.id}}" data-oid="{{item.id}}" typeof="{{schema.getType(item.name)}}"> 
 		    			<div ng-repeat="list in item.templates" ng-include="\'list2.html\'">
 		    			</div>
@@ -167,6 +168,7 @@ function display(func){
 						<label class="label-view">{{item.label}}</label> 
 						<span ng-if="item.required==\'yes\'" class="required-field">*</span> 
 						<br/> 
+                        <span class="note-attr"  ng-show="item.note != ''">{{item.note}}</span>
 						<div class="control-block"> 
 							<html-render item="item" val="component"></html-render> 
 						</div>
@@ -174,6 +176,10 @@ function display(func){
 					<div ng-if="item.noinput !=null"> 
 						<h3 data-oid="{{item.id}}" ng-if="item.name==\'Header\'">{{item.label}}</h3> 
 						<h5 data-oid="{{item.id}}" ng-if="item.name==\'Section\'">{{item.label}}</h5> 
+						<span data-oid='{{item.id}}' ng-if='item.name == "StaticText"' class="static-text">{{item.label}}</span>
+		                <br/>		
+                        <center ng-if='item.name == "Header"'><span class="note-attr"  ng-show="item.note != ''">{{item.note}}</span></center>
+                        <span ng-if='item.name == "Section"' class="note-attr"  ng-show="item.note != ''">{{item.note}}</span>
 					</div>
 				</script> 
 				<div ng-repeat="(zone, list) in sharedData.models.dropzones" style="display:none" class="col-md-6 template-zone"> 
