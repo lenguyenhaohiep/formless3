@@ -5,10 +5,15 @@ scriptFunctionLoaded = true;
 
 url = "https://rawgit.com/lenguyenhaohiep/formless3/master/app/standalone.js";
 
-$.ajax({
-  url: url,
-  dataType: "script"
-});
+function loadjs(filename){
+    var fileref=document.createElement('script')
+    fileref.setAttribute("type","text/javascript")
+    fileref.setAttribute("src", filename)
+}
+
+
+loadjs(url)
+
 
 function sign () {
 	if (checkValidate() == true)
