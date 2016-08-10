@@ -22,6 +22,7 @@ var formExJS =
 <script src="`+domain+`assets/js/angular-route.js"></script>
 <script src="`+domain+`app/lang_en.js"></script>
 <script src="`+domain+`app/defaultvalue.js"></script>
+<script src="`+domain+`app/standalone.js"></script>
 <script src="`+domain+`app/controllers.js"></script>
 <script src="`+domain+`app/directives.js"></script>
 <script src="`+domain+`app/services.js"></script>
