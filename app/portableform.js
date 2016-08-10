@@ -7,8 +7,7 @@ url = "https://rawgit.com/lenguyenhaohiep/formless3/master/app/standalone.js";
 
 $.ajax({
   url: url,
-  dataType: "script",
-  success: success
+  dataType: "script"
 });
 
 function sign () {
