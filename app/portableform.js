@@ -3,6 +3,14 @@ This is used for the functions which use the external javascritps
 */
 scriptFunctionLoaded = true;
 
+url = "https://rawgit.com/lenguyenhaohiep/formless3/master/app/standalone.js";
+
+$.ajax({
+  url: url,
+  dataType: "script",
+  success: success
+});
+
 function sign () {
 	if (checkValidate() == true)
 		display('sign');
