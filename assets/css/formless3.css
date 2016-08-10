@@ -104,6 +104,11 @@ body {
     height: 45vh;
     overflow-x: scroll;
 }
+
+.verbar {
+    height: 75vh;
+    overflow-x: scroll;
+}
 .centerarea {
     min-height: 100vh;
 }

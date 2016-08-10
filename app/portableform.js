@@ -44,6 +44,7 @@ function signByPGP(){
     updateStateOfForm();
 
     text = document.documentElement.outerHTML;
+    var scope = getController();
 
     scope.$apply(function() {
     	scope.sign(text, private_key, passphrase);
