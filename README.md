@@ -19,6 +19,7 @@ Recommended Browser: Chrome
 
 ## Sign, Import or Fill your form
 1/ Open the form downloaded
+![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/form.png)
 
 2/ Fill the blanks and save your forms
 
