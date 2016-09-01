@@ -14,7 +14,7 @@ function loadjs(filename){
 }
 
 
-if (formCSS == undefined){
+if (typeof(formCSS) !== 'undefined'){
 	loadjs(url)
 }
 
@@ -22,10 +22,6 @@ if (formCSS == undefined){
 function sign () {
 	if (checkValidate() == true)
 		display('sign');
-}
-
-function verify() {
-	display('verify');
 }
 
 function importData(){
@@ -43,10 +39,18 @@ function signByImage(){
     var t = document.title + ".html",
         n = window.prompt("Please enter the file name", t);
     if (null != n && n !== !1) {
+    	var content = document.documentElement.outerHTML
+    	content = content.replace('<a id="b-save" onclick="save()">Save</a>','')
+    	content = content.replace('<a id="b-import" onclick="run(\'import\')">Import</a>','')
+    	content = content.replace('<a id="b-sign" onclick="run(\'sign\')">Lock</a>','')
+
         var i = document.getElementById("lock");
-        i.href = "data:Application/octet-stream," + encodeURIComponent(document.documentElement.outerHTML), i.download = t
+        i.href = "data:Application/octet-stream," + encodeURIComponent(content), i.download = t
     }
 }
+
+var private_key = null
+var passphrase = null
 
 function signByPGP(){
     private_key = document.getElementById('private_key').value;
@@ -310,9 +314,17 @@ function display(func){
 	            if (checkSigned(document.body.outerHTML)) {
 	                alert(ERROR3_MESSAGE);
 	                break;
-	            }
-	            overlay();
-	            break;
+	            } else {
+	            	overlay();
+	            	if (private_key != null){
+						document.getElementById('private_key').value = private_key
+	            	}
+
+	            	if (passphrase !=null){
+	            		document.getElementById('passphrase').value = passphrase 
+	            	}
+	            	break;
+	        	}
 	        case "verify":
 	            if (!checkSigned(document.body.innerHTML)) {
 	                alert(ERROR2_MESSAGE);

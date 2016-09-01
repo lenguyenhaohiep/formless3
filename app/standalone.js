@@ -7,7 +7,8 @@ var htmlButtons =
 `
 
 var htmlButtonVerificaton = 
-`<a id="b-verify" onclick="verify()">Open Verification Tool</a>`
+`<a id="b-print" onclick="printPage()">Print/PDF</a>
+<a id="b-verify" onclick="verify()">Open Verification Tool</a>`
 
 
 var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
@@ -35,6 +36,9 @@ var formExJS =
 <link rel="stylesheet" href="`+domain+`assets/css/portableform.css"/>`
 
 
+var formSignedJS = 
+`<script src="`+domain+`app/portableform.js"></script>
+<link rel="stylesheet" href="`+domain+`assets/css/portableform.css"/>`
 
 var formCSS=
 `.form-final h3,

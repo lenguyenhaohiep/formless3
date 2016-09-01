@@ -22,6 +22,8 @@ var SIGNATURE2 = "User's info: ";
 var SIGNATURE3 = "Creation: ";
 var SIGNATURE4 = "Expiration: ";
 
+var NO_FORM = "Plase select a signed form"
+
 var ENTER_NAME = "Please enter a file name";
 var CLEAR_CONFIRM = 'Do you want to clear all data';
 var CLEARALL_CONFIRM = 'Do you want to clear both structure and data to create a new form';
@@ -32,6 +34,7 @@ var ERROR3_MESSAGE = "This is a signed document, modification is impossible";
 var ERROR4_MESSAGE = "This is not a signed form or the public key is invalid, Please try again !!!";
 var ERROR5_MESSAGE = "Cannot sign a signed form";
 var ERROR6_MESSAGE = "This is not a signed form";
+var ERROR7_MESSAGE = "The public key is invalid, please check !!!";
 
 var ERROR_MODIFICATION = "The form structure might be modifed, Please check";
 var MODIFY_CONFIRM = "Structure is modifed, do you want to save your form with this modification";

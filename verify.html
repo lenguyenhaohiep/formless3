@@ -52,6 +52,8 @@
                                     </uib-accordion-heading>
                      
                                 <div class='menubar'>
+                                    <h5>Signed Form</h5>
+
                                     <span href="#" ng-repeat="item in commands" ng-show="item.id == 1" tooltip-placement="bottom" uib-tooltip="{{item.name}}" class="glyphicon {{item.icon}} {{item.selected?'menuselected':''}}" aria-hidden="true" ng-click="selectMenu(item.id)">
     			    		       </span>
                                 </div>

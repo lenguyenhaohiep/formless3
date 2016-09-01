@@ -444,6 +444,10 @@ else{
      * @param {string} public_key The public key
      */
      $scope.verify = function(text, public_key) {
+        if (sharedData.originDoc == ''){
+            alert(NO_FORM)
+            return;
+        }
         try {
             if (public_key)
                 $scope.keys.public_key = public_key;
@@ -454,6 +458,10 @@ else{
 
                 //Read public key
                 var publicKeys = openpgp.key.readArmored(pubkey);
+                if (publicKeys.keys.length == 0){
+                    alert(ERROR7_MESSAGE);
+                    return
+                }
                 
                 var strCheck = "-----BEGIN PGP SIGNED MESSAGE-----";
 
@@ -484,7 +492,7 @@ else{
                 alert(KEY2_CONFIRM);
             }
         } catch (err) {
-            //alert(err);
+            alert(err);
             alert(ERROR4_MESSAGE);
         }
     }
@@ -747,14 +755,14 @@ else{
         }
         else {
             var js = "function verify(){window.open('https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html','_blank');}";
-            var exJs = '';
+            var exJs = formSignedJS;
         }
         
         var css = formCSS
         var saveButton = (signed == false || signed == undefined) ? htmlButtons : htmlButtonVerificaton;
 
         var title = sharedData.title != '' ? sharedData.title : "Untitled";
-        var html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>'+title+'</title><style type="text/css"> '+css+' </style><script type="text/javascript">'+js+'</script>'+exJs+'</head><body><form id="form-validate" onsubmit="return false;">\n' + saveButton + '\n'+body+'<input id="submit" type="submit" style="display:none"/></form></body></html>';
+        var html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>' +title+'</title><style type="text/css"> '+css+' </style><script type="text/javascript">'+js+'</script>'+exJs+'</head><body><form id="form-validate" onsubmit="return false;">\n' + saveButton + '\n'+body+'<input id="submit" type="submit" style="display:none"/></form></body></html>';
         
         //Append the body part into the html code
         //var s1 = '\n</body>';
