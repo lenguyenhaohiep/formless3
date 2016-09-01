@@ -33,7 +33,10 @@ Recommended Browser: Chrome
 5/ Wait for the process finished and download your signed form
 
 ## Verify the form signature
-1/ Open the signed form, click **Open the verification tool** which redirect to the Verification Page, you can also access directly to this page by the following address
+1/ Open the signed form, click **Open the verification tool** which redirect to the Verification Page
+
+You can also access directly to this page by the following address
+
 https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
 
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/verify.png)
