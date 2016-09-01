@@ -31,6 +31,8 @@ var ERROR2_MESSAGE = "Cannot verify unsigned form";
 var ERROR3_MESSAGE = "This is a signed document, modification is impossible";
 var ERROR4_MESSAGE = "This is not a signed form or the public key is invalid, Please try again !!!";
 var ERROR5_MESSAGE = "Cannot sign a signed form";
+var ERROR6_MESSAGE = "This is not a signed form";
+
 var ERROR_MODIFICATION = "The form structure might be modifed, Please check";
 var MODIFY_CONFIRM = "Structure is modifed, do you want to save your form with this modification";
 

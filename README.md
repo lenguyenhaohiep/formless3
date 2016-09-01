@@ -9,6 +9,8 @@ The project is an lightweight plugin that allows design, fill, sign and verify e
 1/ Go to this webpage and design the form that fits your need  
 https://rawgit.com/lenguyenhaohiep/formless3/master/index.html
 
+Recommended Browser: Chrome
+
 2/ Drag and drop form components into drop-zone   
 
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/create.png)

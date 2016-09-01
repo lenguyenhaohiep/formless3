@@ -110,7 +110,7 @@ body {
     overflow-x: scroll;
 }
 .centerarea {
-    min-height: 100vh;
+    min-height: 90vh;
 }
 .trashcan {
     bottom: 0;

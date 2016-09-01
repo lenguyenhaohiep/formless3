@@ -14,7 +14,9 @@ function loadjs(filename){
 }
 
 
-loadjs(url)
+if (formCSS == undefined){
+	loadjs(url)
+}
 
 
 function sign () {

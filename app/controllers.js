@@ -455,13 +455,13 @@ else{
                 //Read public key
                 var publicKeys = openpgp.key.readArmored(pubkey);
                 
-                if (text) {
-                    // Chrome extension
-                    message = openpgp.cleartext.readArmored(text);
-                } else {
-                    // current form in app
-                    message = openpgp.cleartext.readArmored(sharedData.originDoc);
+                var strCheck = "-----BEGIN PGP SIGNED MESSAGE-----";
+
+                if (sharedData.originDoc.indexOf(strCheck) == -1){
+                    alert(ERROR6_MESSAGE);
+                    return;
                 }
+                var message = openpgp.cleartext.readArmored(sharedData.originDoc);
 
                 // Verify
                 var verified = openpgp.verifyClearSignedMessage(publicKeys.keys, message);
@@ -484,7 +484,7 @@ else{
                 alert(KEY2_CONFIRM);
             }
         } catch (err) {
-            alert(err);
+            //alert(err);
             alert(ERROR4_MESSAGE);
         }
     }
