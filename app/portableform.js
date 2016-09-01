@@ -14,7 +14,7 @@ function loadjs(filename){
 }
 
 
-if (typeof(formCSS) !== 'undefined'){
+if (typeof(formCSS) == 'undefined'){
 	loadjs(url)
 }
 
