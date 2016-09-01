@@ -26,7 +26,9 @@ Recommended Browser: Chrome
 
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/import.png)
 
-4/ Click the button **Lock** to sign your form, you can enter the PGP private key and the passphrase (digital signing) to sign your form. If you leave them empty, your form is only locked (eletrical signing) 
+4/ Click the button **Lock**, you can enter the PGP private key and the passphrase (digital signing) to sign your form. 
+
+If you leave them empty, your form is only locked (electronic signing) 
 
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/sign.png)
 
