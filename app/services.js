@@ -700,7 +700,7 @@
                                     label: inputs[j].textContent,
                                     checked: (inputs[j].getAttribute("selected")=="selected") ? true : false
                                 };
-                                if (inputs[j].hasAttribute('value'))
+                                if (inputs[j].hasAttribute('value') && inputs[j].getAttribute('value') != '')
                                     item.field_options.push(option)
 
                                 if (inputs[j].getAttribute("selected") == "selected"){

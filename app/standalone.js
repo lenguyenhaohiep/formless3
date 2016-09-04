@@ -283,9 +283,17 @@ function updateStateOfForm() {
     if (null != e) {
         for (type = ["input", "textarea"], k = 0; k < type.length; k++)
             for (inputs = e.querySelectorAll(type[k]), i = 0; i < inputs.length; i++) input = inputs[i], "checkbox" == input.type || "radio" == input.type ? (input.checked ? (input.setAttribute("property", input.getAttribute("data-property2")), input.setAttribute("checked", "checked")) : (input.removeAttribute("property"), input.removeAttribute("checked")), disable(input)) : "textarea" == input.type ? (input.setAttribute("content", input.value), input.innerHTML = input.value) : "file" != input.type && (input.setAttribute("content", input.value), input.setAttribute("value", input.value));
-        var t = document.getElementsByTagName("select");
-        for (i = 0; i < t.length; i++) {
-            for (select = t[i], j = 0; j < select.options.length; j++) select.options[j].removeAttribute("selected"); - 1 != select.selectedIndex && select.options[select.selectedIndex].setAttribute("selected", "selected"), disable(select)
+        var selects = document.getElementsByTagName('select');
+        for (i = 0; i < selects.length; i++) {
+            select = selects[i];
+            for (j = 0; j < select.options.length; j++) {
+                select.options[j].removeAttribute("selected");
+            }
+            if (select.selectedIndex != -1){
+                select.options[select.selectedIndex].setAttribute("selected", "selected");
+                select.setAttribute('content', select.options[select.selectedIndex].label);
+            }
+            disable(select);
         }
     }
 }

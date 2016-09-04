@@ -96,6 +96,11 @@
 }
 
 @media print {
+
+     body{
+          color: rgba(0, 0, 0, 0);
+     }
+
      @page { 
           margin: 10%; 
      }

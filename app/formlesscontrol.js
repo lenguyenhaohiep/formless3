@@ -326,8 +326,10 @@ function updateStateOfFormInTool(id) {
         for (j = 0; j < select.options.length; j++) {
             select.options[j].removeAttribute("selected");
         }
-        if (select.selectedIndex != -1)
+        if (select.selectedIndex != -1){
             select.options[select.selectedIndex].setAttribute("selected", "selected");
+            select.setAttribute('content', select.options[select.selectedIndex].label);
+        }
         disable(select);
     }
 }

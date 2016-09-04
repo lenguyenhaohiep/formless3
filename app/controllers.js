@@ -496,7 +496,7 @@ else{
                 alert(KEY2_CONFIRM);
             }
         } catch (err) {
-            alert(err);
+            //alert(err);
             alert(ERROR4_MESSAGE);
         }
     }
