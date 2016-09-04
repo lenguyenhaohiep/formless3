@@ -13,7 +13,7 @@ var htmlButtonVerificaton =
 
 var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
 //for dev
-//var domain='/Volumes/DATA/dev/formless3/'
+var domain='/Volumes/DATA/dev/formless3/'
 
 
 var formExJS = 
@@ -259,6 +259,9 @@ function updateImageEvent() {
 
 function save() {
     if (checkValidate() == true) {
+        var i = document.getElementById("b-save");
+        i.removeAttribute("href");
+        i.removeAttribute("download");
         var e = document.getElementById("append");
         e && e.remove(), updateStateOfForm();
         var t = document.title + ".html",
