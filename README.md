@@ -50,7 +50,7 @@ https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
 
 4/ Click button **Verify** to verify the signature of your form
 
-Errors and bugs are possbile, you're welcome to report.
+**Errors and bugs are possbile, you're welcome to report.**
 
 For more details, please read the report in the Report folder or click the link below
 https://rawgit.com/lenguyenhaohiep/formless3/master/Report/finalreport.pdf
