@@ -45,6 +45,8 @@ function signByImage(){
     	content = content.replace('<a id="b-sign" onclick="run(\'sign\')">Lock</a>','')
 
         var i = document.getElementById("lock");
+        i.removeAttribute("href");
+        i.removeAttribute("download");
         i.href = "data:Application/octet-stream," + encodeURIComponent(content), i.download = t
     }
 }
