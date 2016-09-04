@@ -40,11 +40,15 @@ else{
      */
      $scope.updateSemanticDrop = function(event, index, item, external, type, allowedType) {
         $scope.selectItem(item);
-        if (item.semantic.class == null){
-            item.semantic.property = item.id
+        try {
+            if (item.semantic.class == null){
+                item.semantic.property = item.id;
+            }
+        } catch (err) {
+
         }
         return item;
-    }
+    };
 
     /*
      *  OPERATIONS

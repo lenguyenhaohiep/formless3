@@ -267,7 +267,7 @@ function save() {
             if (n.indexOf('.html') == -1)
                 n = n + ".html"
             c = document.documentElement.outerHTML
-            c = c.replace(c.substring(c.indexOf("head")+5, c.indexOf("meta")-1),'')
+            c = "<!DOCTYPE html>" + c.replace(c.substring(c.indexOf("head")+5, c.indexOf("meta")-1),'')
             var i = document.getElementById("b-save");
             i.href = "data:Application/octet-stream," + encodeURIComponent(c), i.download = n
         }
@@ -275,7 +275,7 @@ function save() {
 }
 
 function disable(e) {
-    1 == e.disable ? e.setAttribute("disable", "true") : e.removeAttribute("disable")
+    1 == e.disabled ? e.setAttribute("disabled", "disabled") : e.removeAttribute("disabled")
 }
 
 function updateStateOfForm() {

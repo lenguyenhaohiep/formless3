@@ -25,6 +25,18 @@ function cleanHTML(dom){
         atts.push(dom.attributes[i]);
     }
 
+    if (dom.tagName == "SELECT"){
+        var option = document.createElement("option");
+        option.setAttribute("value",'');
+        option.innerHTML = "&nbsp;"
+        dom.insertBefore(option, dom.firstChild);
+    }
+
+    if (dom.tagName == "OPTION"){
+        if (dom.innerHTML == "")
+            dom.remove();
+    }
+
     for (var i = 0; i < atts.length ; i++){
         var att = atts[i].nodeName;
 
@@ -34,7 +46,7 @@ function cleanHTML(dom){
             var val = dom.getAttribute(tag);
             dom.removeAttribute(tag);
             if (val == 'yes')
-                dom.setAttribute("required", true);
+                dom.setAttribute("required", "required");
         }
 
         for (var j=0; j < invalidAttrs.length; j++){
@@ -153,7 +165,7 @@ function disableAll(id, bool, doc) {
         for (i=0; i<inputs.length; i++){
             if (inputs[i].className.indexOf('input-transparent') == -1){
                 if (bool == true )
-                    inputs[i].setAttribute("disabled", '');
+                    inputs[i].setAttribute("disabled", 'disabled');
                 else
                     inputs[i].removeAttribute("disabled");
             }
@@ -287,6 +299,7 @@ function updateStateOfFormInTool(id) {
             if (input.type == "checkbox" || input.type == "radio") {
                 if (input.checked) {
                     input.setAttribute("property", input.getAttribute('data-property2'));
+                    input.checked = true;
                     input.setAttribute("checked", "checked");
                 } else {
                     input.removeAttribute('property');
@@ -320,5 +333,5 @@ function updateStateOfFormInTool(id) {
 }
 
 function disable(e) {
-    1 == e.disable ? e.setAttribute("disable", "true") : e.removeAttribute("disable")
+    1 == e.disabled ? e.setAttribute("disabled", "disabled") : e.removeAttribute("disabled")
 }
