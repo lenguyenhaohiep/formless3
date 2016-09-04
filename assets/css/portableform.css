@@ -107,10 +107,10 @@
      a {
           display: none;
      }
-     input, textarea, select, input:invalid, textarea:invalid{
+     input, textarea, select, input:invalid, textarea:invalid {
           border: none !important;
-          border-bottom: 1px black dotted !important;
-          color: black;
+          color: black !important;
+          border-bottom: 1px grey solid !important;
      }
      select{
           appearance: none;

@@ -13,7 +13,7 @@ var htmlButtonVerificaton =
 
 var domain="https://rawgit.com/lenguyenhaohiep/formless3/master/"
 //for dev
-var domain='/Volumes/DATA/dev/formless3/'
+//var domain='/Volumes/DATA/dev/formless3/'
 
 
 var formExJS = 
