@@ -39,14 +39,20 @@ function signByImage(){
     var t = document.title + ".html",
         n = window.prompt("Please enter the file name", t);
     if (null != n && n !== !1) {
+
+        var s = document.getElementById("b-save");
+        s.removeAttribute("href");
+        s.removeAttribute("download");
+
+        var i = document.getElementById("lock");
+        i.removeAttribute("href");
+        i.removeAttribute("download");
+
     	var content = document.documentElement.outerHTML
     	content = content.replace('<a id="b-save" onclick="save()">Save</a>','')
     	content = content.replace('<a id="b-import" onclick="run(\'import\')">Import</a>','')
     	content = content.replace('<a id="b-sign" onclick="run(\'sign\')">Lock</a>','')
 
-        var i = document.getElementById("lock");
-        i.removeAttribute("href");
-        i.removeAttribute("download");
         i.href = "data:Application/octet-stream," + encodeURIComponent(content), i.download = t
     }
 }
