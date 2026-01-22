@@ -7,7 +7,7 @@ The project is an lightweight plugin that allows design, fill, sign and verify d
 # How to use
 ## Form Creator Tool
 1/ Go to this webpage and design the form that fits your needs
-https://rawgit.com/lenguyenhaohiep/formless3/master/index.html
+https://raw.githack.com/lenguyenhaohiep/formless3/master/index.html
 
 Recommended Browser: Chrome
 
@@ -53,5 +53,5 @@ https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
 **Errors and bugs are possible, you're welcome to report.**
 
 For more details, please read the report in the Report folder or click the link below
-https://rawgit.com/lenguyenhaohiep/formless3/master/Report/finalreport.pdf
+https://raw.githack.com/lenguyenhaohiep/formless3/master/Report/finalreport.pdf
 
