@@ -40,7 +40,7 @@ If you leave them empty, your form is only locked (electronic signing)
 
 You can also access directly to this page by the following address
 
-https://rawgit.com/lenguyenhaohiep/formless3/master/verify.html
+https://raw.githack.com/lenguyenhaohiep/formless3/master/verify.html
 
 ![GitHub Logo](https://raw.githubusercontent.com/lenguyenhaohiep/formless3/master/Screenshots/verify.png)
 
